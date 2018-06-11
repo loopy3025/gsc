@@ -1,0 +1,6 @@
+name: Title Formatter
+type: module
+description: 'Adds a formatter that wraps the Display Title field in H3'
+core: 8.x
+dependencies:
+  - field

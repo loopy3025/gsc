@@ -1,0 +1,6 @@
+*/.sass-cache
+*/.sass-cache/*
+sites/*/files
+sites/*/private
+sites/simpletest
+

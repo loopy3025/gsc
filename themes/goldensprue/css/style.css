@@ -1,0 +1,385 @@
+/* line 5, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../../../../Ruby25-x64/lib/ruby/gems/2.5.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 3, ../sass/_header.scss */
+header .navbar-header {
+  width: 100%;
+}
+/* line 5, ../sass/_header.scss */
+header .navbar-header h1 {
+  text-align: justify;
+  padding: .5em .6em 0px .6em;
+}
+/* line 8, ../sass/_header.scss */
+header .navbar-header h1 span {
+  width: 100%;
+  height: 1px;
+  line-height: 1px;
+  display: inline-block;
+}
+@media (min-width: 894px) {
+  /* line 16, ../sass/_header.scss */
+  header .navbar-header .search-block-form {
+    position: absolute;
+    bottom: -5px;
+    right: 15px;
+    width: 348px;
+  }
+}
+/* line 27, ../sass/_header.scss */
+header .navbar-header h1 a:link, header .navbar-header h1 a:visited,
+header .navbar-collapse .navbar-default .navbar-nav a:link,
+header .navbar-collapse .navbar-default .navbar-nav a:visited {
+  color: #555;
+  cursor: pointer;
+}
+/* line 31, ../sass/_header.scss */
+header .navbar-header h1 a:hover, header .navbar-header h1 a:active,
+header .navbar-collapse .navbar-default .navbar-nav a:hover,
+header .navbar-collapse .navbar-default .navbar-nav a:active {
+  color: #000;
+  text-decoration: none;
+}
+
+/* line 3, ../sass/_content.scss */
+div.main-container aside h2 {
+  font-size: 1.5em;
+  letter-spacing: 2px;
+}
+/* line 7, ../sass/_content.scss */
+div.main-container aside h3, div.main-container aside h4 {
+  font-size: 1em;
+}
+/* line 10, ../sass/_content.scss */
+div.main-container aside p, div.main-container aside h5, div.main-container aside h6 {
+  font-size: .8em;
+}
+/* line 13, ../sass/_content.scss */
+div.main-container aside .nav li a {
+  padding: 0px;
+}
+@media (min-width: 768px) {
+  /* line 18, ../sass/_content.scss */
+  div.main-container .col-sm-3 {
+    width: 30%;
+  }
+  /* line 21, ../sass/_content.scss */
+  div.main-container .col-sm-9 {
+    width: 70%;
+  }
+}
+/* line 25, ../sass/_content.scss */
+div.main-container .col-sm-12 {
+  margin-bottom: 1.25em;
+}
+
+@media (min-width: 768px) {
+  /* line 31, ../sass/_content.scss */
+  .path-frontpage div.main-container .col-sm-3 {
+    width: 40%;
+  }
+  /* line 34, ../sass/_content.scss */
+  .path-frontpage div.main-container .col-sm-9 {
+    width: 60%;
+  }
+}
+/* line 40, ../sass/_content.scss */
+.content ul, .region-content ul {
+  list-style-type: disc;
+  margin-left: 40px;
+}
+/* line 43, ../sass/_content.scss */
+.content ul ul, .region-content ul ul {
+  list-style-type: square;
+}
+
+/* line 2, ../sass/_webforms.scss */
+.form-item ul li, .form-item p {
+  font-size: 16px;
+}
+
+/* line 7, ../sass/_webforms.scss */
+.content ul, .region-content ul {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+/* line 10, ../sass/_webforms.scss */
+.content ul ul, .region-content ul ul {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* line 2, ../sass/_lists.scss */
+.col-sm-3 h2 {
+  padding-top: .1em;
+}
+/* line 5, ../sass/_lists.scss */
+.col-sm-3 h5 {
+  padding-top: 0px;
+  padding-bottom: 1em;
+}
+/* line 10, ../sass/_lists.scss */
+.col-sm-3 .item-list a:link, .col-sm-3 .item-list a:visited {
+  cursor: pointer;
+  display: block;
+}
+/* line 14, ../sass/_lists.scss */
+.col-sm-3 .item-list a:hover, .col-sm-3 .item-list a:active {
+  text-decoration: none;
+  background-color: #eeeeee;
+}
+
+/* line 21, ../sass/_lists.scss */
+.titlescreen {
+  min-height: 350px;
+  position: relative;
+  background-position: center center;
+}
+@media (min-width: 894px) {
+  /* line 21, ../sass/_lists.scss */
+  .titlescreen {
+    background-size: 100% auto;
+  }
+}
+/* line 28, ../sass/_lists.scss */
+.titlescreen .event-titles {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background: linear-gradient(to bottom, transparent, black);
+}
+/* line 34, ../sass/_lists.scss */
+.titlescreen .event-titles h2, .titlescreen .event-titles h3 {
+  color: #ffffff;
+  padding-left: 1em;
+}
+/* line 38, ../sass/_lists.scss */
+.titlescreen .event-titles h3 {
+  padding-bottom: .5em;
+}
+
+/* line 44, ../sass/_lists.scss */
+.listing-page h4 {
+  padding: 1em .3em 0px;
+}
+/* line 47, ../sass/_lists.scss */
+.listing-page .view-content {
+  margin-top: .5em;
+}
+/* line 49, ../sass/_lists.scss */
+.listing-page .view-content .item-list ul {
+  list-style: none;
+  margin: 0px;
+}
+/* line 52, ../sass/_lists.scss */
+.listing-page .view-content .item-list ul ul {
+  list-style: none;
+}
+/* line 55, ../sass/_lists.scss */
+.listing-page .view-content .item-list ul li {
+  padding: .5em;
+}
+/* line 57, ../sass/_lists.scss */
+.listing-page .view-content .item-list ul li a:link, .listing-page .view-content .item-list ul li a:visited {
+  display: block;
+  padding: .5em;
+  color: #333;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+}
+/* line 67, ../sass/_lists.scss */
+.listing-page .view-content .item-list ul li a:hover, .listing-page .view-content .item-list ul li a:active {
+  color: #eee;
+  background-color: #333;
+  text-decoration: none;
+}
+
+/* line 79, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row, .view-list-submissions .views-row {
+  margin: 1em 0px;
+  padding: 1em;
+  border: 2px solid #999999;
+  background-color: #dddddd;
+}
+/* line 85, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row .army-list-element h5, .view-miniatures-for-review .views-row .army-list-element p, .view-list-submissions .views-row .army-list-element h5, .view-list-submissions .views-row .army-list-element p {
+  display: inline-block;
+}
+/* line 88, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row .army-list-element h5, .view-list-submissions .views-row .army-list-element h5 {
+  width: 25%;
+}
+/* line 91, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row .army-list-element p, .view-list-submissions .views-row .army-list-element p {
+  width: 75%;
+}
+/* line 94, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row .army-list-element blockquote, .view-list-submissions .views-row .army-list-element blockquote {
+  font-size: .9em;
+}
+/* line 99, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row .submitted-images ul, .view-list-submissions .views-row .submitted-images ul {
+  list-style: none;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+/* line 103, ../sass/_lists.scss */
+.view-miniatures-for-review .views-row .submitted-images ul li, .view-list-submissions .views-row .submitted-images ul li {
+  display: inline-block;
+  padding: 0px .5em 0px 0px;
+}
+
+/* line 2, ../sass/_footer.scss */
+.footer nav {
+  text-align: center;
+}
+/* line 4, ../sass/_footer.scss */
+.footer nav h2, .footer nav ul.menu, .footer nav ul.menu li {
+  font-size: 1em;
+  float: none;
+}
+/* line 8, ../sass/_footer.scss */
+.footer nav h2 {
+  letter-spacing: normal;
+}
+/* line 11, ../sass/_footer.scss */
+.footer nav ul.menu li {
+  display: inline-block;
+}
+
+/* line 10, ../sass/style.scss */
+h1, h2, h3, h4, h5, h6, li, p, blockquote,
+.field--name-field-display-title,
+.form-item {
+  font-family: "Verdana", "Genevam", "sans-serif";
+}
+
+/* line 15, ../sass/style.scss */
+li, p, blockquote,
+.form-item {
+  padding-bottom: .4em;
+  font-size: 1.2em;
+  line-height: 1.4em;
+}
+
+/* line 21, ../sass/style.scss */
+h1, h2, h3, h4, h5, h6,
+.field--name-field-display-title,
+.form-item label {
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+}
+
+/* line 29, ../sass/style.scss */
+h1 {
+  font-size: 2.7em;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+/* line 34, ../sass/style.scss */
+h2,
+.field--name-field-display-title {
+  font-size: 2em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* line 40, ../sass/style.scss */
+h3 {
+  font-size: 1.8em;
+}
+
+/* line 43, ../sass/style.scss */
+h4 {
+  font-size: 1.6em;
+}
+
+/* line 46, ../sass/style.scss */
+h5 {
+  font-size: 1.4em;
+}
+
+/* line 49, ../sass/style.scss */
+h6,
+.form-item label {
+  font-size: 1.2em;
+}
+
+/* line 53, ../sass/style.scss */
+.letter-wrap {
+  word-wrap: break-word;
+}
+
+/* line 56, ../sass/style.scss */
+strong {
+  font-weight: bold;
+}
