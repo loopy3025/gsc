@@ -1,0 +1,19 @@
+uuid: 631d5770-47bb-4fa4-81e5-d9417ac9c960
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_collection
+    - node
+id: node.field_model_review_request
+field_name: field_model_review_request
+entity_type: node
+type: field_collection
+settings: {  }
+module: field_collection
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

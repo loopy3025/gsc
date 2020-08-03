@@ -1,0 +1,22 @@
+uuid: 635ec270-0c70-42db-95c2-673326456372
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: redirects
+label: Redirects
+type: 'canonical_entities:node'
+pattern: 'redirect/[node:title]'
+selection_criteria:
+  3d750f14-4014-4639-aa3e-b31b0920862f:
+    id: node_type
+    bundles:
+      page_redirect: page_redirect
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 3d750f14-4014-4639-aa3e-b31b0920862f
+selection_logic: and
+weight: -5
+relationships: {  }

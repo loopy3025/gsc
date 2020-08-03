@@ -1,0 +1,23 @@
+uuid: 9f26fdfb-e355-4aa4-8b05-d3e1a3792d63
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: event_page
+label: 'Event Page'
+type: 'canonical_entities:node'
+pattern: '[node:field_event]/[node:field_display_title]'
+selection_criteria:
+  5baf341a-c468-447e-81fa-4c49658ed1ab:
+    id: node_type
+    bundles:
+      page: page
+      webform: webform
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 5baf341a-c468-447e-81fa-4c49658ed1ab
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,30 @@
+uuid: a509bac2-2c9a-4b93-bd9a-65339be1473c
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.events
+  module:
+    - system
+    - views
+  theme:
+    - goldensprue
+id: goldensprue_views_block__events_events
+theme: goldensprue
+region: sidebar_first
+weight: -9
+provider: null
+plugin: 'views_block:events-events'
+settings:
+  id: 'views_block:events-events'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

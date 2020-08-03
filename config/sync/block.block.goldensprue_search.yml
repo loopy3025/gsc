@@ -1,0 +1,22 @@
+uuid: eaaff2d2-244e-4cb3-8728-2c0a90a24de0
+langcode: en
+status: false
+dependencies:
+  module:
+    - search
+  theme:
+    - goldensprue
+_core:
+  default_config_hash: F3d5hyAFunLh4PhGviJF019fHn1Z3_zy5gzsQ0tX1K0
+id: goldensprue_search
+theme: goldensprue
+region: navigation
+weight: -5
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+visibility: {  }

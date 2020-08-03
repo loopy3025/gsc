@@ -1,0 +1,29 @@
+uuid: ae9b89c0-eee7-483e-ba2b-fc560af32311
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event
+    - node.type.model_approval_form
+    - taxonomy.vocabulary.events
+id: node.model_approval_form.field_event
+field_name: field_event
+entity_type: node
+bundle: model_approval_form
+label: 'Select the event you are attending'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      events: events
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

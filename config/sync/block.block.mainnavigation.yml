@@ -1,0 +1,24 @@
+uuid: 4e71931f-3f01-4767-8798-d7b5c1786b3d
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - goldensprue
+id: mainnavigation
+theme: goldensprue
+region: footer
+weight: 0
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Jump to a topic:'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 0
+visibility: {  }

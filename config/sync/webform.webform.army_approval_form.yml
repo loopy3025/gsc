@@ -1,0 +1,165 @@
+uuid: bfbd7cc4-b14c-470c-ae54-f4486918f0c0
+langcode: en
+status: open
+dependencies: {  }
+open: null
+close: null
+weight: 0
+uid: 1
+template: false
+archive: false
+id: army_approval_form
+title: 'Miniatures Approval Form'
+description: ''
+category: ''
+elements: "markup:\n  '#type': webform_markup\n  '#display_on': both\n  '#markup': \"<h2>Miniatures Approval Form</h2>\\nThis form is meant to allow players the opportunity to get pre-approval for their conversions and counts-as armies. In most of our events, it&#39;s best to get approval through this method rather than risk having to change your list on the day of the event.<br />\\n<br />\\nPlease see the rules for your specific event to get an idea of what kind of paintjobs are required on your miniatures and what level of proxying and conversions are allowed. If you have any questions, be sure to email the organizer of that event. Their email will be located on that event page.<br />\\n<br />\\nOnce you&#39;re certain of the requirements, go ahead and add pictures of your miniatures here.\"\nyour_name:\n  '#type': textfield\n  '#title': 'Your Name'\n  '#required': true\nselect_the_event_you_are_requesting_approval_for:\n  '#type': select\n  '#title': 'Select the event you are requesting approval for'\n  '#options': events\n  '#required': true\nupload_images:\n  '#type': webform_image_file\n  '#title': 'Upload Images'\n  '#multiple': 10\n  '#description': 'Note that you may have to resize your image until it is less than 1 MB. You can upload multiple files either by using [CONTROL]+click as you select them from your computer, or you can use &quot;Choose Files&quot; mutltiple times.'\n  '#required': true\n  '#max_filesize': '1'\n  '#sanitize': true\nsecret_word:\n  '#type': textfield\n  '#title': 'Secret Word'\n  '#description': 'You would have been provided a secret word to insert here to avoid random people submitting to the form. Check the email that sent you to this page.'\n  '#description_display': after\n  '#required': true\n  '#required_error': 'You would have been provided a secret word to insert here to avoid random people submitting to the form. Check the email that se'\n  '#pattern': ^|\\s)warhammer40000(\\s|$\n"
+css: ''
+javascript: ''
+settings:
+  ajax: false
+  ajax_scroll_top: form
+  page: true
+  page_submit_path: miniature-approval-form-dk36k4jh3kfwelwfwe
+  page_confirm_path: miniature-approval-form/thanks
+  form_title: both
+  form_submit_once: false
+  form_exception_message: ''
+  form_open_message: ''
+  form_close_message: ''
+  form_previous_submissions: false
+  form_confidential: false
+  form_confidential_message: ''
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_prepopulate_source_entity_type: ''
+  form_reset: false
+  form_disable_autocomplete: false
+  form_novalidate: false
+  form_disable_inline_errors: false
+  form_required: false
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_autofocus: false
+  form_details_toggle: false
+  form_access_denied: default
+  form_access_denied_title: ''
+  form_access_denied_message: ''
+  form_access_denied_attributes: {  }
+  form_file_limit: ''
+  submission_label: ''
+  submission_log: false
+  submission_views: {  }
+  submission_views_replace: {  }
+  submission_user_columns: {  }
+  submission_user_duplicate: false
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  submission_access_denied_attributes: {  }
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_excluded_elements: {  }
+  submission_exclude_empty: false
+  submission_exclude_empty_checkbox: false
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  autofill_message: ''
+  autofill_excluded_elements: {  }
+  wizard_progress_bar: true
+  wizard_progress_pages: false
+  wizard_progress_percentage: false
+  wizard_progress_link: false
+  wizard_start_label: ''
+  wizard_preview_link: false
+  wizard_confirmation: true
+  wizard_confirmation_label: ''
+  wizard_track: ''
+  preview: 0
+  preview_label: ''
+  preview_title: ''
+  preview_message: ''
+  preview_attributes: {  }
+  preview_excluded_elements: {  }
+  preview_exclude_empty: true
+  preview_exclude_empty_checkbox: false
+  draft: none
+  draft_multiple: false
+  draft_auto_save: false
+  draft_saved_message: ''
+  draft_loaded_message: ''
+  confirmation_type: page
+  confirmation_title: ''
+  confirmation_message: ''
+  confirmation_url: ''
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: ''
+  confirmation_back_attributes: {  }
+  confirmation_exclude_query: false
+  confirmation_exclude_token: false
+  limit_total: null
+  limit_total_interval: null
+  limit_total_message: ''
+  limit_total_unique: false
+  limit_user: null
+  limit_user_interval: null
+  limit_user_message: ''
+  limit_user_unique: false
+  entity_limit_total: null
+  entity_limit_total_interval: null
+  entity_limit_user: null
+  entity_limit_user_interval: null
+  purge: none
+  purge_days: null
+  results_disabled: false
+  results_disabled_ignore: false
+  token_update: false
+access:
+  create:
+    roles:
+      - anonymous
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles:
+      - anonymous
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  administer:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+handlers: {  }

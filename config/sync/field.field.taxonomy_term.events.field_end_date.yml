@@ -1,0 +1,21 @@
+uuid: c1e93ae6-5828-4415-9a59-dcc11d2c70e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_end_date
+    - taxonomy.vocabulary.events
+  module:
+    - datetime
+id: taxonomy_term.events.field_end_date
+field_name: field_end_date
+entity_type: taxonomy_term
+bundle: events
+label: 'End Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

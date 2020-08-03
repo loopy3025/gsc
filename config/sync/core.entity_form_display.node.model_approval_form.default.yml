@@ -1,0 +1,71 @@
+uuid: f7aab745-7885-4f4c-a1bc-d4b6bd7eae5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.model_approval_form.body
+    - field.field.node.model_approval_form.field_event
+    - field.field.node.model_approval_form.field_model_review_request
+    - field.field.node.model_approval_form.field_player_comments
+    - field.field.node.model_approval_form.field_your_email
+    - node.type.model_approval_form
+  module:
+    - comment
+    - field_collection
+    - text
+id: node.model_approval_form.default
+targetEntityType: node
+bundle: model_approval_form
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 3
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  field_event:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_model_review_request:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: field_collection_embed
+    region: content
+  field_player_comments:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
+    region: content
+  field_your_email:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  path: true
+  promote: true
+  status: true
+  sticky: true
+  uid: true
+  url_redirects: true

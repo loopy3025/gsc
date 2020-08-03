@@ -1,0 +1,30 @@
+uuid: 5c50ce67-ba53-4d2e-87a6-0f7d1068192c
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.taxonomy_term
+  module:
+    - system
+    - views
+  theme:
+    - bootstrap
+id: views_block__taxonomy_term_gsc_pages
+theme: bootstrap
+region: sidebar_first
+weight: -9
+provider: null
+plugin: 'views_block:taxonomy_term-gsc_pages'
+settings:
+  id: 'views_block:taxonomy_term-gsc_pages'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,32 @@
+uuid: 6e57d987-3bc6-44ae-b633-c1a0668ee56e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.random_home_hero
+  module:
+    - ctools
+    - views
+  theme:
+    - bootstrap
+id: views_block__random_home_hero_block_1
+theme: bootstrap
+region: header
+weight: -4
+provider: null
+plugin: 'views_block:random_home_hero-block_1'
+settings:
+  id: 'views_block:random_home_hero-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      page: page
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

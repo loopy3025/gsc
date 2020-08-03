@@ -1,0 +1,36 @@
+uuid: 6fd641c0-9f48-4f27-a305-ec49aba6057e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.page_redirect.body
+    - field.field.node.page_redirect.field_display_title
+    - field.field.node.page_redirect.field_event
+    - field.field.node.page_redirect.field_redirect
+    - node.type.page_redirect
+  module:
+    - text
+    - user
+id: node.page_redirect.teaser
+targetEntityType: node
+bundle: page_redirect
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_display_title: true
+  field_event: true
+  field_redirect: true

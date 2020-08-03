@@ -1,0 +1,22 @@
+uuid: 4d3f3973-88b2-4501-a3bf-255bce152e81
+langcode: en
+status: false
+dependencies:
+  theme:
+    - goldensprue
+_core:
+  default_config_hash: qHdtze2DZ2mFfaJadxjZz6epm92_SN9SAFY4yJGl8Fo
+id: goldensprue_local_tasks
+theme: goldensprue
+region: header
+weight: -5
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

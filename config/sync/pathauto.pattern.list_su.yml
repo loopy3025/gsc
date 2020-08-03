@@ -1,0 +1,22 @@
+uuid: 86612a3a-8a64-4433-86ed-e9655c00379a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: list_su
+label: 'List Submission'
+type: 'canonical_entities:node'
+pattern: 'list/[node:field_event]/[node:field_your_]'
+selection_criteria:
+  da521980-4751-4ea5-83e9-aad44ba34aec:
+    id: node_type
+    bundles:
+      list_submission: list_submission
+    negate: false
+    context_mapping:
+      node: node
+    uuid: da521980-4751-4ea5-83e9-aad44ba34aec
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,76 @@
+uuid: 98aa44b0-f3f8-4e42-bd41-4cc2cc554f52
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.list_submission.body
+    - field.field.node.list_submission.field_comments
+    - field.field.node.list_submission.field_event
+    - field.field.node.list_submission.field_your_
+    - field.field.node.list_submission.field_your_email
+    - node.type.list_submission
+  module:
+    - comment
+    - text
+id: node.list_submission.default
+targetEntityType: node
+bundle: list_submission
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 4
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  field_comments:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
+    region: content
+  field_event:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  field_your_:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_your_email:
+    weight: 3
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  path: true
+  promote: true
+  status: true
+  sticky: true
+  uid: true

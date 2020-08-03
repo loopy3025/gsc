@@ -1,0 +1,30 @@
+uuid: 01503f14-584b-4082-96ba-6dc27341595e
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.events
+  module:
+    - system
+    - views
+  theme:
+    - bootstrap
+id: views_block__events_events
+theme: bootstrap
+region: sidebar_first
+weight: -8
+provider: null
+plugin: 'views_block:events-events'
+settings:
+  id: 'views_block:events-events'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

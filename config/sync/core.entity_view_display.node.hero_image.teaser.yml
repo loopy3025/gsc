@@ -1,0 +1,24 @@
+uuid: 8dac5774-8e1f-4d1a-8dd2-d5e1816bbc3a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.hero_image.field_hero
+    - field.field.node.hero_image.field_slideshow
+    - node.type.hero_image
+  module:
+    - user
+id: node.hero_image.teaser
+targetEntityType: node
+bundle: hero_image
+mode: teaser
+content:
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_hero: true
+  field_slideshow: true

@@ -1,0 +1,21 @@
+uuid: 12d1f7ba-a3b0-42a0-94b9-27c2d6a2213b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_dae
+    - taxonomy.vocabulary.events
+  module:
+    - datetime
+id: taxonomy_term.events.field_dae
+field_name: field_dae
+entity_type: taxonomy_term
+bundle: events
+label: Date
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

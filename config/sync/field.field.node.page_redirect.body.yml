@@ -1,0 +1,22 @@
+uuid: 33eecdcd-5721-4bdd-8002-ec438191ffd9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.page_redirect
+  module:
+    - text
+id: node.page_redirect.body
+field_name: body
+entity_type: node
+bundle: page_redirect
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

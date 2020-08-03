@@ -1,0 +1,9 @@
+uuid: 584fd46f-e966-4a6d-9e17-057d28e6f9a5
+langcode: en
+status: true
+dependencies: {  }
+id: events
+label: Events
+category: ''
+likert: false
+options: "'Goldensprue Cup GT Warhammer 40,000': 'Goldensprue Cup GT Warhammer 40,000'\n'Goldensprue Cup GT Age of Sigmar': 'Goldensprue Cup GT Age of Sigmar'\n'Albany Exterminatus': 'Albany Exterminatus'\n'Headless Horseman RTT': 'Headless Horseman RTT'\n"

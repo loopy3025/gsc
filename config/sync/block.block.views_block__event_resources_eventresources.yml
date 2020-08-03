@@ -1,0 +1,32 @@
+uuid: dd2ec56f-0564-4489-9bb9-5f9af35a39ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.event_resources
+  module:
+    - ctools
+    - views
+  theme:
+    - bootstrap
+id: views_block__event_resources_eventresources
+theme: bootstrap
+region: highlighted
+weight: -9
+provider: null
+plugin: 'views_block:event_resources-eventresources'
+settings:
+  id: 'views_block:event_resources-eventresources'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      page: page
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

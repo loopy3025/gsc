@@ -1,0 +1,19 @@
+uuid: 99ca35ce-b9ac-4335-abd2-ec684f65d822
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_your_email
+    - node.type.model_approval_form
+id: node.model_approval_form.field_your_email
+field_name: field_your_email
+entity_type: node
+bundle: model_approval_form
+label: 'Your Email'
+description: 'This will not be displayed on the website.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

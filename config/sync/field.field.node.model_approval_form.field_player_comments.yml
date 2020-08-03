@@ -1,0 +1,33 @@
+uuid: cea79d5f-8957-491e-afd3-46309543b78d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_player_comments
+    - node.type.model_approval_form
+  module:
+    - comment
+id: node.model_approval_form.field_player_comments
+field_name: field_player_comments
+entity_type: node
+bundle: model_approval_form
+label: 'Player Comments'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    status: 2
+    cid: 0
+    last_comment_timestamp: 0
+    last_comment_name: null
+    last_comment_uid: 0
+    comment_count: 0
+default_value_callback: ''
+settings:
+  default_mode: 1
+  per_page: 50
+  anonymous: 0
+  form_location: true
+  preview: 1
+field_type: comment

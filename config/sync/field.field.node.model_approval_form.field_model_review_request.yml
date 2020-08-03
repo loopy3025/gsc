@@ -1,0 +1,25 @@
+uuid: af88d8e7-79da-4d95-8840-458807aa2f54
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_model_review_request
+    - node.type.model_approval_form
+  module:
+    - field_collection
+id: node.model_approval_form.field_model_review_request
+field_name: field_model_review_request
+entity_type: node
+bundle: model_approval_form
+label: 'Model Review Requests'
+description: "You may add any number of requests. Please provide both a photo and a description. Photos larger than 1200px per side will be automatically resized by the site, so you may want to resize your photos yourself. Note that you may also provide links instead of actual photos.\r\n\r\nClick the \"Add another item\" button to upload another photo."
+required: true
+translatable: false
+default_value:
+  - {  }
+  - {  }
+  - {  }
+  - {  }
+default_value_callback: ''
+settings: {  }
+field_type: field_collection

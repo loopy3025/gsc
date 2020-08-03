@@ -1,0 +1,38 @@
+uuid: d0834594-0955-4e77-8fe1-67b153ea533e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.model_approval_form.body
+    - field.field.node.model_approval_form.field_event
+    - field.field.node.model_approval_form.field_model_review_request
+    - field.field.node.model_approval_form.field_player_comments
+    - field.field.node.model_approval_form.field_your_email
+    - node.type.model_approval_form
+  module:
+    - text
+    - user
+id: node.model_approval_form.teaser
+targetEntityType: node
+bundle: model_approval_form
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event: true
+  field_model_review_request: true
+  field_player_comments: true
+  field_your_email: true

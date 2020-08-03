@@ -1,0 +1,17 @@
+uuid: 2f4832be-2ccb-47c8-96b1-1de36b49c9bc
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'Model Approval Form'
+type: model_approval_form
+description: 'Please upload as many photos as you feel is necessary to show the organizers any models that you may feel might raise an issue with the event''s painting, conversion, or counts-as policies. A staff member will respond soon after your submission. '
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

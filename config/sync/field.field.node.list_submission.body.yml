@@ -1,0 +1,22 @@
+uuid: 398b9ba6-69e3-415f-b02a-c461c3814d82
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.list_submission
+  module:
+    - text
+id: node.list_submission.body
+field_name: body
+entity_type: node
+bundle: list_submission
+label: List
+description: "Paste your list in this field.\r\n<ul>\r\n\t<li>Do not try pasting an image. Please use text only.</li>\r\n\t<li>Required Elements:\r\n\t<ul>\r\n\t\t<li>Unit decisions whether they cost points or not;</li>\r\n\t\t<li>Points values for anything that costs points;</li>\r\n\t\t<li>List decisions such as Faction Keywords and first Relic.</li>\r\n\t</ul>\r\n\t</li>\r\n\t<li>Please do not include:\r\n\t<ul>\r\n\t\t<li>Warlord Traits;</li>\r\n                <li>Pre-game CP expenditure decisions;</li>\r\n\t\t<li>Unit and equipment stats.</li>\r\n\t</ul>\r\n\t</li>\r\n\t<li>Your list <strong>will</strong> be displayed publicly</li>\r\n\t<li>If you are using <strong>Battlescribe</strong>, the easiest way to paste the perfect format is to go into the menu and select &quot;<strong>Share</strong>&quot;, then select &quot;<strong>Facebook</strong>&quot;. It will put the text into your clipbord for you to <strong>paste </strong>into this field.</li>\r\n</ul>\r\n"
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

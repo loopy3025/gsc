@@ -1,0 +1,22 @@
+uuid: 531114dd-0198-44b7-a2c6-644ec5aa003b
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - goldensprue
+_core:
+  default_config_hash: MhtNdV__HKRTab0ZPjkPNfYL4Ng4UPBucDLoC7Rg5Eo
+id: goldensprue_help
+theme: goldensprue
+region: help
+weight: -8
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,56 @@
+uuid: 0b392aa0-b8fb-48e4-8b2e-c4b15924581e
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.comment.comment.default
+    - field.field.node.list_submission.body
+    - field.field.node.list_submission.field_comments
+    - field.field.node.list_submission.field_event
+    - field.field.node.list_submission.field_your_
+    - field.field.node.list_submission.field_your_email
+    - node.type.list_submission
+  module:
+    - comment
+    - text
+    - user
+id: node.list_submission.default
+targetEntityType: node
+bundle: list_submission
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_comments:
+    weight: 3
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
+  field_event:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_your_:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_your_email: true
+  links: true

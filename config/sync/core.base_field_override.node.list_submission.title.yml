@@ -1,0 +1,18 @@
+uuid: e7541a4a-69ee-4a7e-8570-14f3142bd533
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.list_submission
+id: node.list_submission.title
+field_name: title
+entity_type: node
+bundle: list_submission
+label: 'List Title'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

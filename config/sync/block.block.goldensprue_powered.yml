@@ -1,0 +1,22 @@
+uuid: 3f7fb7b7-aed8-48f0-acf9-b10b5ee179a5
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - goldensprue
+_core:
+  default_config_hash: iggZSiUKz4mYP1YPJ8SsUfFu79HIgOTt6IDy3Up59aM
+id: goldensprue_powered
+theme: goldensprue
+region: footer
+weight: -6
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+visibility: {  }

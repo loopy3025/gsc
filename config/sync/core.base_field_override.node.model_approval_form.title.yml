@@ -1,0 +1,18 @@
+uuid: ef611045-8167-4f37-8534-ecbd3f0a18f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.model_approval_form
+id: node.model_approval_form.title
+field_name: title
+entity_type: node
+bundle: model_approval_form
+label: 'Your Name'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,30 @@
+uuid: 925cdbe8-a3c8-4fdc-9506-5e7c298cb6eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.taxonomy_term
+  module:
+    - system
+    - views
+  theme:
+    - goldensprue
+id: goldensprue_views_block__taxonomy_term_gsc_pages
+theme: goldensprue
+region: sidebar_first
+weight: -10
+provider: null
+plugin: 'views_block:taxonomy_term-gsc_pages'
+settings:
+  id: 'views_block:taxonomy_term-gsc_pages'
+  label: ''
+  provider: views
+  label_display: visible
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

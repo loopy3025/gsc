@@ -1,0 +1,21 @@
+uuid: 47729ae2-a056-41cc-ab03-45c7b893da2b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.field_collection_item.field_request_description_and_or
+    - field_collection.field_collection.field_model_review_request
+  module:
+    - text
+id: field_collection_item.field_model_review_request.field_request_description_and_or
+field_name: field_request_description_and_or
+entity_type: field_collection_item
+bundle: field_model_review_request
+label: 'Request description'
+description: 'You may also include links to images of your models here.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

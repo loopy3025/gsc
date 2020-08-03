@@ -1,0 +1,38 @@
+uuid: ef784006-d950-4ada-a1de-78dd73e8594f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.field_collection_item.field_reg
+    - field_collection.field_collection.field_model_review_request
+  module:
+    - image
+id: field_collection_item.field_model_review_request.field_reg
+field_name: field_reg
+entity_type: field_collection_item
+bundle: field_model_review_request
+label: 'Request Photo'
+description: 'Upload your photo here. Don''t forget to resize to 1200px per side or less.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: 1200x1200
+  min_resolution: 300x300
+  alt_field: false
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

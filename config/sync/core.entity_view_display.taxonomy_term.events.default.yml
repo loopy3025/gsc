@@ -1,0 +1,19 @@
+uuid: 154e976f-8426-4372-9c06-d6619fc83c2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.events.field_dae
+    - field.field.taxonomy_term.events.field_end_date
+    - field.field.taxonomy_term.events.field_hero
+    - taxonomy.vocabulary.events
+id: taxonomy_term.events.default
+targetEntityType: taxonomy_term
+bundle: events
+mode: default
+content: {  }
+hidden:
+  description: true
+  field_dae: true
+  field_end_date: true
+  field_hero: true

@@ -1,0 +1,23 @@
+uuid: 44c85fe6-90d5-405b-945e-aaef2498d2e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_redirect
+    - node.type.page_redirect
+  module:
+    - link
+id: node.page_redirect.field_redirect
+field_name: field_redirect
+entity_type: node
+bundle: page_redirect
+label: Redirect
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

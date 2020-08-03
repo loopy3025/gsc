@@ -1,0 +1,29 @@
+uuid: 1fbd91bb-b9f6-4996-bf43-4cdf2f5c17aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.partners
+  module:
+    - system
+  theme:
+    - goldensprue
+id: partners
+theme: goldensprue
+region: sidebar_first
+weight: -8
+provider: null
+plugin: 'system_menu_block:partners'
+settings:
+  id: 'system_menu_block:partners'
+  label: Partners
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

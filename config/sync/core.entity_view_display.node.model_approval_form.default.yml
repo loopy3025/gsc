@@ -1,0 +1,60 @@
+uuid: 3da9a0b0-cb2d-492e-b9e8-d97652e80ed4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.comment.comment.default
+    - field.field.node.model_approval_form.body
+    - field.field.node.model_approval_form.field_event
+    - field.field.node.model_approval_form.field_model_review_request
+    - field.field.node.model_approval_form.field_player_comments
+    - field.field.node.model_approval_form.field_your_email
+    - node.type.model_approval_form
+  module:
+    - comment
+    - field_collection
+    - text
+    - user
+id: node.model_approval_form.default
+targetEntityType: node
+bundle: model_approval_form
+mode: default
+content:
+  body:
+    label: above
+    type: text_default
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_event:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_model_review_request:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: field_collection_items
+    region: content
+  field_player_comments:
+    weight: 4
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_your_email: true

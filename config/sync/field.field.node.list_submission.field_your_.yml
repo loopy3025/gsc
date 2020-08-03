@@ -1,0 +1,19 @@
+uuid: 487f57c4-bfcc-4539-85a9-b3a8c7efd199
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_your_
+    - node.type.list_submission
+id: node.list_submission.field_your_
+field_name: field_your_
+entity_type: node
+bundle: list_submission
+label: 'Your Name'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

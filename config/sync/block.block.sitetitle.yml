@@ -1,0 +1,25 @@
+uuid: 2391505d-c248-4c0b-b99a-ee758e574b30
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:170097cc-8a42-4991-9c92-5ed2bcb4bb43'
+  module:
+    - block_content
+  theme:
+    - bootstrap
+id: sitetitle
+theme: bootstrap
+region: navigation
+weight: -7
+provider: null
+plugin: 'block_content:170097cc-8a42-4991-9c92-5ed2bcb4bb43'
+settings:
+  id: 'block_content:170097cc-8a42-4991-9c92-5ed2bcb4bb43'
+  label: 'Site Title'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

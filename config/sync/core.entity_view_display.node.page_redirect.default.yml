@@ -1,0 +1,53 @@
+uuid: 63aa1ec7-56bb-43bd-a6f7-0e48fa668602
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.page_redirect.body
+    - field.field.node.page_redirect.field_display_title
+    - field.field.node.page_redirect.field_event
+    - field.field.node.page_redirect.field_redirect
+    - node.type.page_redirect
+  module:
+    - link
+    - text
+    - user
+id: node.page_redirect.default
+targetEntityType: node
+bundle: page_redirect
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_display_title:
+    type: string
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_redirect:
+    weight: 2
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  links:
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event: true

@@ -1,0 +1,22 @@
+uuid: c1a0f59f-5c58-47cc-b155-f052dd2b321b
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - goldensprue
+_core:
+  default_config_hash: fNNLN48MSGSLiqwIFywCuxH2Dk_IxDbaP0kYhg_IPrg
+id: goldensprue_content
+theme: goldensprue
+region: content
+weight: -9
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

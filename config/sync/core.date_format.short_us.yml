@@ -1,0 +1,8 @@
+uuid: ed07bbc4-d69b-41f3-acec-0a6488f6a338
+langcode: en
+status: true
+dependencies: {  }
+id: short_us
+label: 'Short US'
+locked: false
+pattern: 'M j, Y'

@@ -1,0 +1,7 @@
+uuid: 690e2b92-db81-4209-84d3-0f035329d7f8
+langcode: en
+status: false
+dependencies: {  }
+formId: node_hero_image_form
+captchaType: default
+label: null

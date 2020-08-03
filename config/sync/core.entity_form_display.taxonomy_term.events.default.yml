@@ -1,0 +1,65 @@
+uuid: ff3701a2-ccf2-46df-960d-48631a7204de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.events.field_dae
+    - field.field.taxonomy_term.events.field_end_date
+    - field.field.taxonomy_term.events.field_hero
+    - image.style.thumbnail
+    - taxonomy.vocabulary.events
+  module:
+    - datetime
+    - focal_point
+    - path
+    - text
+id: taxonomy_term.events.default
+targetEntityType: taxonomy_term
+bundle: events
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 0
+    region: content
+    settings:
+      placeholder: ''
+      rows: 5
+    third_party_settings: {  }
+  field_dae:
+    weight: 31
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_end_date:
+    weight: 32
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_hero:
+    weight: 33
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+      preview_link: true
+      offsets: '50,50'
+    third_party_settings: {  }
+    type: image_focal_point
+    region: content
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

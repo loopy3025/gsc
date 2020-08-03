@@ -1,0 +1,31 @@
+uuid: 2a70799e-297f-4ae7-926d-05e97a125bf6
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:a7159898-dd69-44c0-bf7d-5b993205fa38'
+  module:
+    - block_content
+    - system
+  theme:
+    - bootstrap
+id: contact
+theme: bootstrap
+region: sidebar_second
+weight: -9
+provider: null
+plugin: 'block_content:a7159898-dd69-44c0-bf7d-5b993205fa38'
+settings:
+  id: 'block_content:a7159898-dd69-44c0-bf7d-5b993205fa38'
+  label: Contact
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }
