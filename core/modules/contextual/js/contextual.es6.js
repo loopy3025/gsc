@@ -99,7 +99,7 @@
 
     // Set the destination parameter on each of the contextual links.
     const destination = `destination=${Drupal.encodePath(
-      drupalSettings.path.currentPath,
+      Drupal.url(drupalSettings.path.currentPath),
     )}`;
     $contextual.find('.contextual-links a').each(function() {
       const url = this.getAttribute('href');
@@ -186,7 +186,9 @@
           // Drupal.contextual.collection.
           window.setTimeout(() => {
             initContextual(
-              $context.find(`[data-contextual-id="${contextualID.id}"]`),
+              $context
+                .find(`[data-contextual-id="${contextualID.id}"]:empty`)
+                .eq(0),
               html,
             );
           });
