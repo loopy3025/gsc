@@ -1,0 +1,47 @@
+div.main-container {
+  aside {    
+    h2 {
+      font-size: 1.5em;
+      letter-spacing: 2px;
+    }
+    h3, h4 {
+      font-size: 1em;
+    }
+    p, h5, h6 {
+      font-size: .8em;
+    }
+    .nav li a {
+      padding: 0px;
+    }
+  }
+  @media (min-width: 768px){
+    .col-sm-3 {
+      width: 30%;
+    }
+    .col-sm-9 {
+      width: 70%;
+    }
+  }  
+  .col-sm-12 {
+    margin-bottom: 1.25em;
+  }  
+}
+@media (min-width: 768px){
+  .path-frontpage div.main-container {
+    .col-sm-3 {
+      width: 40%;
+    }
+    .col-sm-9 {
+      width: 60%;
+    }        
+  }
+}
+.content, .region-content {
+  ul {
+    list-style-type: disc;
+    margin-left: 40px;    
+    ul {
+      list-style-type: square;
+    }
+  }
+}

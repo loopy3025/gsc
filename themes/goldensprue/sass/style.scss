@@ -1,3 +1,431 @@
 @import "compass/reset";
 @import "compass/utilities";
-@import "layout"
+//colors
+$color_fuscous_gray_approx: #555;
+$black: #000;
+$color_gallery_approx: #eeeeee;
+$white: #ffffff;
+$color_mine_shaft_approx: #333;
+$color_celeste_approx: #ccc;
+$color_mountain_mist_approx: #999999;
+$color_alto_approx: #dddddd;
+
+//fonts
+$font_0: Verdana;
+$font_1: Genevam;
+$font_2: sans-serif;
+
+//@extend-elements
+//original selectors
+//html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video
+%extend_1 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+//original selectors
+//ol, ul
+%extend_2 {
+  list-style: none;
+}
+
+//original selectors
+//caption, th, td
+%extend_3 {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+//original selectors
+//q, blockquote
+%extend_4 {
+  quotes: none;
+}
+
+//original selectors
+//q:before, q:after, blockquote:before, blockquote:after
+%extend_5 {
+  content: "";
+  content: none;
+}
+
+//original selectors
+//article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary
+%extend_6 {
+  display: block;
+}
+
+
+html {
+  @extend %extend_1;
+  line-height: 1;
+}
+body {
+  @extend %extend_1;
+}
+div {
+  @extend %extend_1;
+  &.main-container {
+    aside {
+      h2 {
+        font-size: 1.5em;
+        letter-spacing: 2px;
+      }
+      h3 {
+        font-size: 1em;
+      }
+      h4 {
+        font-size: 1em;
+      }
+      p {
+        font-size: .8em;
+      }
+      h5 {
+        font-size: .8em;
+      }
+      h6 {
+        font-size: .8em;
+      }
+      .nav li a {
+        padding: 0;
+      }
+    }
+    .col-sm-12 {
+      margin-bottom: 1.25em;
+    }
+  }
+}
+span {
+  @extend %extend_1;
+}
+applet {
+  @extend %extend_1;
+}
+object {
+  @extend %extend_1;
+}
+iframe {
+  @extend %extend_1;
+}
+h1 {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  font-size: 2.7em;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+h2 {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  font-size: 2em;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+h3 {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  font-size: 1.8em;
+}
+h4 {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  font-size: 1.6em;
+}
+h5 {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  font-size: 1.4em;
+}
+h6 {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  font-size: 1.2em;
+}
+p {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  padding-bottom: .4em;
+  font-size: 1.2em;
+  line-height: 1.4em;
+}
+blockquote {
+  @extend %extend_1;
+  @extend %extend_4;
+  font-family: $font_0, $font_1, $font_2;
+  padding-bottom: .4em;
+  font-size: 1.2em;
+  line-height: 1.4em;
+  &:before {
+    @extend %extend_5;
+  }
+  &:after {
+    @extend %extend_5;
+  }
+}
+pre {
+  @extend %extend_1;
+}
+a {
+  @extend %extend_1;
+  img {
+    border: none;
+  }
+}
+abbr {
+  @extend %extend_1;
+}
+acronym {
+  @extend %extend_1;
+}
+address {
+  @extend %extend_1;
+}
+big {
+  @extend %extend_1;
+}
+cite {
+  @extend %extend_1;
+}
+code {
+  @extend %extend_1;
+}
+del {
+  @extend %extend_1;
+}
+dfn {
+  @extend %extend_1;
+}
+em {
+  @extend %extend_1;
+}
+img {
+  @extend %extend_1;
+}
+ins {
+  @extend %extend_1;
+}
+kbd {
+  @extend %extend_1;
+}
+q {
+  @extend %extend_1;
+  @extend %extend_4;
+  &:before {
+    @extend %extend_5;
+  }
+  &:after {
+    @extend %extend_5;
+  }
+}
+s {
+  @extend %extend_1;
+}
+samp {
+  @extend %extend_1;
+}
+small {
+  @extend %extend_1;
+}
+strike {
+  @extend %extend_1;
+}
+strong {
+  @extend %extend_1;
+  font-weight: bold;
+}
+sub {
+  @extend %extend_1;
+}
+sup {
+  @extend %extend_1;
+}
+tt {
+  @extend %extend_1;
+}
+var {
+  @extend %extend_1;
+}
+b {
+  @extend %extend_1;
+}
+u {
+  @extend %extend_1;
+}
+i {
+  @extend %extend_1;
+}
+center {
+  @extend %extend_1;
+}
+dl {
+  @extend %extend_1;
+}
+dt {
+  @extend %extend_1;
+}
+dd {
+  @extend %extend_1;
+}
+ol {
+  @extend %extend_1;
+  @extend %extend_2;
+}
+ul {
+  @extend %extend_1;
+  @extend %extend_2;
+}
+li {
+  @extend %extend_1;
+  font-family: $font_0, $font_1, $font_2;
+  padding-bottom: .4em;
+  font-size: 1.2em;
+  line-height: 1.4em;
+}
+fieldset {
+  @extend %extend_1;
+}
+form {
+  @extend %extend_1;
+}
+label {
+  @extend %extend_1;
+}
+legend {
+  @extend %extend_1;
+}
+table {
+  @extend %extend_1;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+caption {
+  @extend %extend_1;
+  @extend %extend_3;
+}
+tbody {
+  @extend %extend_1;
+}
+tfoot {
+  @extend %extend_1;
+}
+thead {
+  @extend %extend_1;
+}
+tr {
+  @extend %extend_1;
+}
+th {
+  @extend %extend_1;
+  @extend %extend_3;
+}
+td {
+  @extend %extend_1;
+  @extend %extend_3;
+}
+article {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+aside {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+canvas {
+  @extend %extend_1;
+}
+details {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+embed {
+  @extend %extend_1;
+}
+figure {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+figcaption {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+footer {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+
+@import "header";
+
+hgroup {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+menu {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+nav {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+output {
+  @extend %extend_1;
+}
+ruby {
+  @extend %extend_1;
+}
+section {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+summary {
+  @extend %extend_1;
+  @extend %extend_6;
+}
+time {
+  @extend %extend_1;
+}
+mark {
+  @extend %extend_1;
+}
+audio {
+  @extend %extend_1;
+}
+video {
+  @extend %extend_1;
+}
+main {
+  @extend %extend_6;
+}
+
+@import "layout";
+@import "lists";
+@import "footer";

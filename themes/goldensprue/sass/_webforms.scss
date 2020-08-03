@@ -1,0 +1,15 @@
+.form-item {
+  ul li, p {
+    font-size: 16px;
+  }
+}
+.content, .region-content {
+  ul {
+    margin-top: 20px;
+    margin-bottom: 20px;    
+    ul {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+  }
+}

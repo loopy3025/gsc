@@ -6,6 +6,7 @@ dependencies:
       - webform_test
 open: null
 close: null
+weight: 0
 uid: null
 template: false
 archive: false
@@ -142,13 +143,42 @@ elements: |
       '#title': URL
       '#description': 'This is a description for the ''url'' element.'
       '#description_display': tooltip
+  file_upload_elements:
+    '#type': details
+    '#title': 'File upload elements'
+    '#open': true
+    webform_audio_file:
+      '#type': webform_audio_file
+      '#title': 'Audio file'
+      '#description': 'This is a description for the ''webform_audio_file'' element.'
+      '#description_display': tooltip
+    webform_document_file:
+      '#type': webform_document_file
+      '#title': 'Document file'
+      '#description': 'This is a description for the ''webform_document_file'' element.'
+      '#description_display': tooltip
+    managed_file:
+      '#type': managed_file
+      '#title': File
+      '#description': 'This is a description for the ''managed_file'' element.'
+      '#description_display': tooltip
+    webform_image_file:
+      '#type': webform_image_file
+      '#title': 'Image file'
+      '#description': 'This is a description for the ''webform_image_file'' element.'
+      '#description_display': tooltip
+    webform_video_file:
+      '#type': webform_video_file
+      '#title': 'Video file'
+      '#description': 'This is a description for the ''webform_video_file'' element.'
+      '#description_display': tooltip
   composite_elements:
     '#type': details
     '#title': 'Composite elements'
     '#open': true
     webform_address:
       '#type': webform_address
-      '#title': Address
+      '#title': 'Basic address'
       '#description': 'This is a description for the ''webform_address'' element.'
       '#description_display': tooltip
     webform_contact:
@@ -178,13 +208,13 @@ elements: |
       '#title': Link
       '#description': 'This is a description for the ''webform_link'' element.'
       '#description_display': tooltip
-    webform_location:
-      '#type': webform_location
+    webform_location_geocomplete:
+      '#type': webform_location_places
       '#title': Location
       '#map': true
       '#geolocation': true
       '#format': map
-      '#description': 'This is a description for the ''webform_location'' element.'
+      '#description': 'This is a description for the ''webform_location_geocomplete'' element.'
       '#description_display': tooltip
     webform_name:
       '#type': webform_name
@@ -195,35 +225,6 @@ elements: |
       '#type': webform_telephone
       '#title': 'Telephone advanced'
       '#description': 'This is a description for the ''webform_telephone'' element.'
-      '#description_display': tooltip
-  file_upload_elements:
-    '#type': details
-    '#title': 'File upload elements'
-    '#open': true
-    webform_audio_file:
-      '#type': webform_audio_file
-      '#title': 'Audio file'
-      '#description': 'This is a description for the ''webform_audio_file'' element.'
-      '#description_display': tooltip
-    webform_document_file:
-      '#type': webform_document_file
-      '#title': 'Document file'
-      '#description': 'This is a description for the ''webform_document_file'' element.'
-      '#description_display': tooltip
-    managed_file:
-      '#type': managed_file
-      '#title': File
-      '#description': 'This is a description for the ''managed_file'' element.'
-      '#description_display': tooltip
-    webform_image_file:
-      '#type': webform_image_file
-      '#title': 'Image file'
-      '#description': 'This is a description for the ''webform_image_file'' element.'
-      '#description_display': tooltip
-    webform_video_file:
-      '#type': webform_video_file
-      '#title': 'Video file'
-      '#description': 'This is a description for the ''webform_video_file'' element.'
       '#description_display': tooltip
   options_elements:
     '#type': details
@@ -472,6 +473,7 @@ elements: |
       '#title': 'Machine name'
       '#description': 'This is a description for the ''machine_name'' element.'
       '#description_display': tooltip
+  
 css: ''
 javascript: ''
 settings:
@@ -480,6 +482,7 @@ settings:
   page: true
   page_submit_path: ''
   page_confirm_path: ''
+  form_title: source_entity_webform
   form_submit_once: false
   form_exception_message: ''
   form_open_message: ''
@@ -502,15 +505,26 @@ settings:
   form_submit_back: false
   form_autofocus: false
   form_details_toggle: false
-  form_login: false
-  form_login_message: ''
+  form_access_denied: default
+  form_access_denied_title: ''
+  form_access_denied_message: ''
+  form_access_denied_attributes: {  }
+  form_file_limit: ''
   submission_label: ''
   submission_log: false
+  submission_views: {  }
+  submission_views_replace: {  }
   submission_user_columns: {  }
-  submission_login: false
-  submission_login_message: ''
+  submission_user_duplicate: false
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  submission_access_denied_attributes: {  }
   submission_exception_message: ''
   submission_locked_message: ''
+  submission_excluded_elements: {  }
+  submission_exclude_empty: false
+  submission_exclude_empty_checkbox: false
   previous_submission_message: ''
   previous_submissions_message: ''
   autofill: false
@@ -519,7 +533,9 @@ settings:
   wizard_progress_bar: true
   wizard_progress_pages: false
   wizard_progress_percentage: false
+  wizard_progress_link: false
   wizard_start_label: ''
+  wizard_preview_link: false
   wizard_confirmation: true
   wizard_confirmation_label: ''
   wizard_track: ''
@@ -549,9 +565,11 @@ settings:
   limit_total: null
   limit_total_interval: null
   limit_total_message: ''
+  limit_total_unique: false
   limit_user: null
   limit_user_interval: null
   limit_user_message: ''
+  limit_user_unique: false
   entity_limit_total: null
   entity_limit_total_interval: null
   entity_limit_user: null

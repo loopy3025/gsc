@@ -1,0 +1,88 @@
+
+.view-miniatures-for-review .views-row {
+  margin: 1em 0;
+  padding: 1em;
+  border: 2px solid $color_mountain_mist_approx;
+  background-color: $color_alto_approx;
+  .army-list-element {
+    h5 {
+      display: inline-block;
+      width: 25%;
+    }
+    p {
+      display: inline-block;
+      width: 75%;
+    }
+    blockquote {
+      font-size: .9em;
+    }
+  }
+  .submitted-images ul {
+    list-style: none;
+    margin-left: 0;
+    margin-right: 0;
+    li {
+      display: inline-block;
+      padding: 0 .5em 0 0;
+    }
+  }
+}
+// army lists
+.view-list-submissions {
+  table {
+    font-family: $font_0, $font_1, $font_2;
+    font-size: 1em;
+    thead {
+      th, th a {
+        background-color: $color_mine_shaft_approx;
+        font-weight: bold;
+        color: $white;
+        cursor: pointer;
+      }
+      th {
+        a:link, a:visited {
+          display: block;
+          background-color: $color_mine_shaft_approx;
+        }
+        a:hover, a:active {
+          color: $color_mine_shaft_approx;
+          background-color: $white;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .form-actions .btn {
+    margin-bottom: 6px;
+  }
+}
+.page-node-type-list-submission {
+  h3, h4 {
+    label, div {
+      display: inline;
+    }
+  }
+  .player-list {
+    padding: 10px;
+    border: 5px solid $color_mine_shaft_approx;
+    background-color: $color_gallery_approx;
+  }
+  .comments {
+    h2 {
+      font-size: 1.5em;
+    }
+    margin-top: 20px;
+    border: 3px solid $color_mine_shaft_approx;
+    padding: 10px;
+    background-color: $color_gallery_approx;
+    .js-comment {
+      padding: 10px;
+      background-color: $white;
+      border: 2px solid $color_mine_shaft_approx;
+    }
+  }
+  h5 {
+    margin-top: 10px;
+    text-align: right;
+  }
+}

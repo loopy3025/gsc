@@ -5,14 +5,16 @@
  * Archived Webform update hooks.
  */
 
+use Drupal\Component\Uuid\Php as Uuud;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
+use Drupal\views\Entity\View;
 use Drupal\webform\Entity\Webform;
 use Drupal\webform\Entity\WebformOptions;
-use Drupal\webform\Plugin\WebformHandler\ActionWebformHandler;
 use Drupal\webform\Plugin\WebformHandler\EmailWebformHandler;
 use Drupal\webform\WebformInterface;
 use Drupal\webform\Plugin\WebformHandler\RemotePostWebformHandler;
@@ -20,6 +22,18 @@ use Drupal\webform\Utility\WebformArrayHelper;
 use Drupal\webform\Utility\WebformOptionsHelper;
 use Drupal\webform\Utility\WebformReflectionHelper;
 use Drupal\webform\Utility\WebformYaml;
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function webform_update_dependencies() {
+  // Ensure that system_update_8501() runs before the webform update, so that
+  // the new revision_default field is installed in the correct table.
+  // @see https://www.drupal.org/project/webform/issues/2958102
+  $dependencies['webform'][8099]['system'] = 8501;
+
+  return $dependencies;
+}
 
 /******************************************************************************/
 // Webform-8.x-5.0-beta1 - December 7, 2016 (No update required).
@@ -228,6 +242,9 @@ function webform_update_8011() {
  *   A form element.
  */
 function _webform_update_8011(array &$element) {
+  // Issue #2863986: Allow updating modules with new service dependencies.
+  \Drupal::service('kernel')->rebuildContainer();
+
   if (isset($element['#format'])) {
     /** @var \Drupal\webform\Plugin\WebformElementManagerInterface $element_manager */
     $element_manager = \Drupal::service('plugin.manager.webform.element');
@@ -297,6 +314,9 @@ function webform_update_8014() {
  *   A form element.
  */
 function _webform_update_8014(array &$element) {
+  // Issue #2863986: Allow updating modules with new service dependencies.
+  \Drupal::service('kernel')->rebuildContainer();
+
   /** @var \Drupal\webform\Plugin\WebformElementManagerInterface $element_manager */
   $element_manager = \Drupal::service('plugin.manager.webform.element');
 
@@ -474,6 +494,9 @@ function webform_update_8024() {
  * Issue #2857417: Add support for open and close date/time to Webform nodes. Update database scheme.
  */
 function webform_update_8025() {
+  // Issue #2863986: Allow updating modules with new service dependencies.
+  \Drupal::service('kernel')->rebuildContainer();
+
   /** @var \Drupal\webform\WebformEntityReferenceManagerInterface $entity_reference_manager */
   $entity_reference_manager = \Drupal::service('webform.entity_reference_manager');
 
@@ -612,7 +635,7 @@ function webform_update_8030() {
  * Issue #2854021: Send email based on element options selection.
  */
 function webform_update_8031() {
-  _webform_update_webform_handler_configuration(EmailWebformHandler::class);
+  _webform_update_webform_handler_settings();
 }
 
 /**
@@ -717,7 +740,7 @@ function webform_update_8034() {
 /******************************************************************************/
 
 /******************************************************************************/
-// Webform-8.x-5.0-beta12 -  April 21, 2017.
+// Webform-8.x-5.0-beta12 - April 21, 2017.
 /******************************************************************************/
 
 /**
@@ -996,7 +1019,7 @@ function webform_update_8046() {
  *   Webform config data.
  *
  * @return array
- *   Webform config data with 'webfor_actions' element.
+ *   Webform config data with 'webform_actions' element.
  */
 function _webform_update_8046_convert_data(array $data) {
   $button_names = [
@@ -1180,7 +1203,7 @@ function webform_update_8057() {
 }
 
 /**
- * Issue #2888076: Redirect users to login page when trying to access the a protected webform file.
+ * Issue #2888076: Redirect users to login page when trying to access a protected webform file.
  */
 function webform_update_8058() {
   _webform_update_admin_settings();
@@ -1567,7 +1590,7 @@ function webform_update_8077() {
  */
 function webform_update_8078() {
   _webform_update_admin_settings();
-  _webform_update_webform_handler_configuration(EmailWebformHandler::class);
+  _webform_update_webform_handler_settings();
 }
 
 /**
@@ -1597,7 +1620,7 @@ function webform_update_8080() {
  * Issue #2913215: Remote Post handler add GET method support.
  */
 function webform_update_8081() {
-  _webform_update_webform_handler_configuration(RemotePostWebformHandler::class);
+  _webform_update_webform_handler_settings();
 }
 
 /**
@@ -1810,7 +1833,7 @@ function webform_update_8096() {
  * Issue #2932607: Add Twig support to email body.
  */
 function webform_update_8097() {
-  _webform_update_webform_handler_configuration(EmailWebformHandler::class);
+  _webform_update_webform_handler_settings();
 }
 
 /******************************************************************************/
@@ -1875,7 +1898,7 @@ function webform_update_8099() {
  */
 function webform_update_8100() {
   // Add locked to action handler.
-  _webform_update_webform_handler_configuration(ActionWebformHandler::class);
+  _webform_update_webform_handler_settings();
 
   // Add locked to remote post handler's excluded data.
   /** @var \Drupal\webform\WebformInterface[] $webforms */
@@ -1957,7 +1980,7 @@ function webform_update_8105() {
 }
 
 /******************************************************************************/
-// Webform-8.x-5.0-rc4
+// Webform-8.x-5.0-rc4 - March 13, 2018.
 /******************************************************************************/
 
 /**
@@ -2032,7 +2055,6 @@ function webform_update_8110() {
     $excluded_elements['password_confirm'] = 'password_confirm';
     $admin_config->set('element.excluded_elements', $excluded_elements);
     $admin_config->save();
-
   }
 }
 
@@ -2105,12 +2127,28 @@ function webform_update_8114() {
     ->execute();
 }
 
+/******************************************************************************/
+// Webform-8.x-5.0-rc5 - March 14, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc6 - March 16, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc7 - March 23, 2018.
+/******************************************************************************/
+
 /**
  * Issue #2955218: Allow query and token to be removed from confirmation URL.
  */
 function webform_update_8115() {
   _webform_update_webform_settings();
 }
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc8 - April 2, 2018.
+/******************************************************************************/
 
 /**
  * Stop #multiple__label and #multiple__labels from being saved with every element.
@@ -2129,11 +2167,15 @@ function webform_update_8117() {
   $config = \Drupal::configFactory()->getEditable('webform.settings');
   $names = Yaml::decode($config->get('test.names'));
   $names += [
-    'postal_code' => ['11111', '12345', '12345-6789']
+    'postal_code' => ['11111', '12345', '12345-6789'],
   ];
-  $config->set('test.names', WebformYaml::tidy(Yaml::encode($names)));
+  $config->set('test.names', WebformYaml::encode($names));
   $config->save();
 }
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc9 - April 7, 2018.
+/******************************************************************************/
 
 /**
  * Issue #2957074: Invalid Tokens in Email Handler.
@@ -2146,6 +2188,12 @@ function webform_update_8118() {
  * Issue #2957002: Same webform multiple times on the same page.
  */
 function webform_update_8119() {
+  // Issue #2863986: Allow updating modules with new service dependencies.
+  \Drupal::service('kernel')->rebuildContainer();
+
+  // Issue #2982273: Route "webform.config.libraries" does not exist.
+  \Drupal::service('router.builder')->rebuild();
+
   /** @var \Drupal\webform\WebformHelpManagerInterface $help_manager */
   $help_manager = \Drupal::service('webform.help_manager');
   $help_manager->addNotification('webform_update_8119',
@@ -2160,22 +2208,38 @@ function webform_update_8119() {
  * Issue #2953929: Remote handler does not display messages when HTTP status is different than 200.
  */
 function webform_update_8120() {
-  _webform_update_webform_handler_configuration(RemotePostWebformHandler::class);
+  _webform_update_webform_handler_settings();
 }
 
 /**
  * Issue #2953929: Remote handler does not display messages when HTTP status is different than 200.
  */
 function webform_update_8121() {
-  _webform_update_webform_handler_configuration(RemotePostWebformHandler::class);
+  _webform_update_webform_handler_settings();
 }
 
+/******************************************************************************/
+// Webform-8.x-5.0-rc10 - April 9, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc11 - April 20, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc12 - April 25 2018.
+/******************************************************************************/
+
 /**
- * Issue #2952419: Attached files are deleted without usage checking
+ * Issue #2952419: Attached files are deleted without usage checking.
  */
 function webform_update_8122() {
   _webform_update_admin_settings();
 }
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc13 - June 4, 2018.
+/******************************************************************************/
 
 /**
  * Issue #2962442: Remove [webform-authenticated-user] token and use [current-user] token with clear value option.
@@ -2238,6 +2302,10 @@ function webform_update_8126() {
   _webform_update_webform_settings();
 }
 
+/******************************************************************************/
+// Webform-8.x-5.0-rc14 - June 6, 2018.
+/******************************************************************************/
+
 /**
  * Issue #2974597: Enable default publishing status of new webforms.
  */
@@ -2258,5 +2326,426 @@ function webform_update_8128() {
 function webform_update_8129() {
   _webform_update_admin_settings();
   _webform_update_webform_settings();
-  _webform_update_webform_handler_configuration(EmailWebformHandler::class);
+  _webform_update_webform_handler_settings();
+}
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc15 - June 12, 2018.
+/******************************************************************************/
+
+/**
+ * Issue #2974153: Non admin duplicate form.
+ */
+function webform_update_8130() {
+  _webform_update_webform_settings();
+}
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc16 - June 29, 2018.
+/******************************************************************************/
+
+/**
+ * Issue #2980470: Convert email handler "default" settings to use "_default_" to prevent localization issues.
+ */
+function webform_update_8131() {
+  // Get all webform handlers that are instances of the email handler.
+  // This allows any custom handler that extends the EmailWebformHandler to be
+  // updated.
+  /** @var \Drupal\webform\Plugin\WebformHandlerManagerInterface $handler_manager */
+  $handler_manager = \Drupal::service('plugin.manager.webform.handler');
+  $definitions = $handler_manager->getDefinitions();
+  $email_handler_ids = [];
+  foreach ($definitions as $plugin_id => $definition) {
+    if ($handler_manager->createInstance($plugin_id) instanceof EmailWebformHandler) {
+      $email_handler_ids[$plugin_id] = $plugin_id;
+    }
+  }
+
+  $default_settings = [
+    'to_mail',
+    'from_mail',
+    'from_name',
+    'subject',
+    'body',
+  ];
+
+  $config_factory = \Drupal::configFactory();
+  // Update 'webform.webform.*' configuration.
+  foreach ($config_factory->listAll('webform.webform.') as $webform_config_name) {
+    $webform_config = $config_factory->getEditable($webform_config_name);
+
+    // Get data.
+    $data = $webform_config->getRawData();
+
+    // Change 'default' to '_default' is email handler settings.
+    $save_handler = FALSE;
+    foreach ($data['handlers'] as &$handler) {
+      if (!isset($email_handler_ids[$handler['id']])) {
+        continue;
+      }
+
+      foreach ($handler['settings'] as $settings_key => $setting_value) {
+        if ($setting_value === 'default' && in_array($settings_key, $default_settings)) {
+          $handler['settings'][$settings_key] = EmailWebformHandler::DEFAULT_VALUE;
+          $save_handler = TRUE;
+        }
+      }
+    }
+
+    if ($save_handler) {
+      $webform_config->setData($data)->save();
+    }
+  }
+}
+
+/**
+ * Issue #2980276: Webform assumes the /tmp directory is always the same, but if there are multiple servers, each may have its own /tmp directory.
+ */
+function webform_update_8132() {
+  _webform_update_admin_settings();
+}
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc17 - August 6, 2018.
+/******************************************************************************/
+
+/**
+ * Issue #2890861: Webform toggle element is not accessible.
+ */
+function webform_update_8133() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('webform.webform.') as $webform_config_name) {
+    $webform_config = $config_factory->getEditable($webform_config_name);
+    $data = $webform_config->getRawData();
+    $yaml = Yaml::encode($data);
+    if (strpos($yaml, 'webform_toggle')) {
+      return;
+    }
+  }
+
+  $admin_config = \Drupal::configFactory()->getEditable('webform.settings');
+  $settings = $admin_config->getRawData();
+  $settings['libraries']['excluded_libraries'][] = 'jquery.toggles';
+  $admin_config->setData($settings)->save();
+}
+
+/**
+ * Issue #2984348: Link to relevant wizard page on preview.
+ */
+function webform_update_8134() {
+  _webform_update_admin_settings();
+}
+
+/**
+ * Issue #2984868: Allow to specify the text format for emails.
+ */
+function webform_update_8135() {
+  $admin_config = \Drupal::configFactory()->getEditable('webform.settings');
+  $settings = $admin_config->getRawData();
+  $settings['html_editor']['element_format'] = $settings['html_editor']['format'];
+  $settings['html_editor']['mail_format'] = $settings['html_editor']['format'];
+  unset($settings['html_editor']['format']);
+  $admin_config->setData($settings)->save();
+}
+
+/**
+ * Issue #2987174: Replace and improve word/character counter.
+ */
+function webform_update_8136() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('webform.webform.') as $webform_config_name) {
+    $webform_config = $config_factory->getEditable($webform_config_name);
+
+    $data = $webform_config->getRawData();
+    if (strpos($data['elements'], "'#counter_message'") === FALSE) {
+      continue;
+    }
+
+    $elements = Yaml::decode($data['elements']);
+    _webform_update_8136($elements);
+
+    $data['elements'] = Yaml::encode($elements);
+    $webform_config->setData($data);
+    $webform_config->save();
+  }
+}
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc18 - August 7, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc19 - September 6, 2018.
+/******************************************************************************/
+
+/**
+ * Update #counter_* attributes.
+ *
+ * Replace 'X' in counter message with '%d' and
+ * move '#counter_message' to '#counter_maximum_message'.
+ *
+ * @param array $element
+ *   A form element.
+ */
+function _webform_update_8136(array &$element) {
+  if (isset($element['#counter_message'])) {
+    if (strpos($element['#counter_message'], 'X') === FALSE) {
+      $element['#counter_message'] = '%d ' . $element['#counter_message'];
+    }
+    else {
+      $element['#counter_message'] = str_replace('X', '%d', $element['#counter_message']);
+    }
+    $element['#counter_maximum_message'] = $element['#counter_message'];
+    unset($element['#counter_message']);
+  }
+
+  foreach (Element::children($element) as $key) {
+    if (is_array($element[$key])) {
+      _webform_update_8136($element[$key]);
+    }
+  }
+}
+
+/**
+ * Issue #2983137: WYSIWYG editor not saving inline images for advanced html/text editor.
+ */
+function webform_update_8137() {
+  _webform_update_admin_settings();
+}
+
+/**
+ * Issue #2947303: Location element's geocomplete library is not supported.
+ */
+function webform_update_8138() {
+  _webform_update_admin_settings();
+
+  // Track if webform location geocomplete is being used.
+  $has_geocomplete_element = FALSE;
+
+  // Convert 'webform_location' to 'webform_location_geocomplete'.
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('webform.webform.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    $elements = $config->get('elements');
+    if (strpos($elements, "'#type': webform_location") !== FALSE) {
+      $elements = str_replace("'#type': webform_location", "'#type': webform_location_geocomplete", $elements);
+      $config->set('elements', $elements);
+      $config->save(TRUE);
+      $has_geocomplete_element = TRUE;
+    }
+  }
+
+  // Update exclude elements.
+  $admin_config = \Drupal::configFactory()->getEditable('webform.settings');
+  $excluded_elements = $admin_config->get('element.excluded_elements') ?: [];
+  if (isset($excluded_elements['webform_location'])) {
+    // Convert 'webform_location' to 'webform_location_geocomplete'.
+    unset($excluded_elements['webform_location']);
+    $excluded_elements['webform_location_geocomplete'] = 'webform_location_geocomplete';
+  }
+  elseif (!$has_geocomplete_element) {
+    // If location geocomplete element is not being used then excluded it.
+    $excluded_elements['webform_location_geocomplete'] = 'webform_location_geocomplete';
+  }
+  $admin_config->set('element.excluded_elements', $excluded_elements);
+  $admin_config->save();
+}
+
+/**
+ * Issue #2918669: Elements separated by conditional inside multistep wizard are both saved to submission.
+ */
+function webform_update_8139() {
+  $build = [
+    'list' => [
+      '#theme' => 'item_list',
+      '#title' => t('IMPORTANT! Elements, containers, and pages that are hidden using conditional logic will now have their submission data cleared when a webform is submitted.'),
+      '#items' => [
+        t('Please make sure to test any webform that contains conditionally hidden elements, containers, or pages.'),
+        t('Any element that is conditionally hidden will have its submission data cleared.'),
+        t("Existing submissions that have conditionally hidden elements will have the element's submission data cleared when the submission is updated."),
+      ],
+    ],
+    'link' => [
+      '#type' => 'link',
+      '#title' => t('Learn more'),
+      '#url' => Url::fromUri('https://www.drupal.org/node/2956589'),
+    ],
+  ];
+
+  /** @var \Drupal\webform\WebformHelpManagerInterface $help_manager */
+  $help_manager = \Drupal::service('webform.help_manager');
+  $help_manager->addNotification(__FUNCTION__, $build, 'warning');
+}
+
+/**
+ * Issue #2994411: Allow help to be hidden.
+ */
+function webform_update_8140() {
+  _webform_update_admin_settings();
+}
+
+/**
+ * Issue #2993327: Provide Default View to Override Submission Results Tab.
+ */
+function webform_update_8141() {
+  _webform_update_admin_settings();
+  _webform_update_webform_settings();
+
+  // Copied from: redirect_update_8103()
+  $message = NULL;
+  if (\Drupal::moduleHandler()->moduleExists('views') && !View::load('webform_submissions')) {
+    $config_path = drupal_get_path('module', 'webform') . '/config/optional/views.view.webform_submissions.yml';
+    $data = ['uuid' => (new Uuud())->generate()] + Yaml::decode(file_get_contents($config_path));
+    \Drupal::configFactory()->getEditable('views.view.webform_submissions')->setData($data)->save(TRUE);
+    $message = 'The new webform submissions view has been created.';
+  }
+  else {
+    $message = 'Not creating a webform submissions view since it already exists.';
+  }
+  return $message;
+}
+
+/**
+ * Issue #2995413: Allow email handler theme to be customized.
+ */
+function webform_update_8142() {
+  _webform_update_webform_handler_settings();
+}
+
+/**
+ * Issue #2943879: How to display alternate text when the user is not allowed to create a Webform?
+ */
+function webform_update_8143() {
+  $admin_config = \Drupal::configFactory()->getEditable('webform.settings');
+  // Convert form login message to access denied message.
+  if ($admin_config->get('settings.default_form_login_message') !== NULL) {
+    $admin_config->set('settings.default_form_access_denied_message', $admin_config->get('settings.default_form_login_message'));
+    $admin_config->clear('settings.default_form_login_message');
+  }
+  $admin_config->save();
+  _webform_update_admin_settings();
+
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('webform.webform.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+    // Convert form login to access denied.
+    if ($config->get('settings.form_login') !== NULL) {
+      $config->set('settings.form_access_denied', $config->get('settings.form_login') ? WebformInterface::ACCESS_DENIED_LOGIN : WebformInterface::ACCESS_DENIED_DEFAULT);
+      $config->clear('settings.form_login');
+    }
+    // Convert form login message to access denied message.
+    if ($config->get('settings.form_login_message') !== NULL) {
+      $config->set('settings.form_access_denied_message', $config->get('settings.form_login_message'));
+      $config->clear('settings.form_login_message');
+    }
+
+    // Convert submission login to access denied.
+    if ($config->get('settings.submission_login') !== NULL) {
+      $config->set('settings.submission_access_denied', $config->get('settings.submission_login') ? WebformInterface::ACCESS_DENIED_LOGIN : WebformInterface::ACCESS_DENIED_DEFAULT);
+      $config->clear('settings.submission_login');
+    }
+    // Convert submission login message to access denied message.
+    if ($config->get('settings.submission_login_message') !== NULL) {
+      $config->set('settings.submission_access_denied_message', $config->get('settings.submission_login_message'));
+      $config->clear('settings.submission_login_message');
+    }
+
+    $config->save();
+  }
+  _webform_update_webform_settings();
+}
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc20 - September 7, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc21 - September 8, 2018 (No update required).
+/******************************************************************************/
+
+/******************************************************************************/
+// Webform-8.x-5.0-rc22.
+/******************************************************************************/
+
+/**
+ * Issue #2998239: Swift Mailer no longer working after custom email handler theme option was added.
+ */
+function webform_update_8144() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('webform.webform.') as $webform_config_name) {
+    $webform_config = $config_factory->getEditable($webform_config_name);
+
+    $data = $webform_config->getRawData();
+    $has_email_handler = FALSE;
+    foreach ($data['handlers'] as &$handler) {
+      if (in_array($handler['id'], ['email', 'scheduled_email'])) {
+        // Change 'theme' setting to 'theme_name' to prevent conflicts with
+        // Swift Mailer.
+        if (isset($handler['settings']['theme'])) {
+          $handler['settings']['theme_name'] = $handler['settings']['theme'];
+          unset($handler['settings']['theme']);
+          $has_email_handler = TRUE;
+        }
+      }
+    }
+    if ($has_email_handler) {
+      $webform_config->setData($data);
+      $webform_config->save();
+    }
+  }
+}
+
+/**
+ * Issue #3002183: Upload Total Limit instead of Upload File limit.
+ */
+function webform_update_8145() {
+  _webform_update_admin_settings();
+  _webform_update_webform_settings();
+}
+
+/**
+ * Issue #3000542: Remove webform_devel.module logger debugging.
+ */
+function webform_update_8146() {
+  if ($config = \Drupal::configFactory()->getEditable('webform_devel.settings')) {
+    $config->delete();
+  }
+}
+
+/**
+ * Issue #3006468: Hide empty fields on on submission page.
+ */
+function webform_update_8147() {
+  _webform_update_webform_settings();
+}
+
+/**
+ * Issue #3007215: Option to retain webform title when source entity is provided.
+ */
+function webform_update_8148() {
+  _webform_update_webform_settings();
+}
+
+/**
+ * Issue #3007247: Custom composite fields appear as block elements.
+ */
+function webform_update_8149() {
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('webform.webform.') as $webform_config_name) {
+    $webform_config = $config_factory->getEditable($webform_config_name);
+    $elements = $webform_config->get('elements');
+    if (strpos($elements, "'add_more'") !== FALSE) {
+      $elements = str_replace("'#add_more'", "'#add_more_items'", $elements);
+      $elements = str_replace("'#multiple__add_more'", "'#multiple__add_more_items'", $elements);
+      $webform_config->set('elements', $elements);
+      $webform_config->save(TRUE);
+    }
+  }
+}
+
+/**
+ * Issue #2980032: SUBMISSION BEHAVIORS: Allow edit the previous submission.
+ */
+function webform_update_8150() {
+  _webform_update_webform_settings();
 }

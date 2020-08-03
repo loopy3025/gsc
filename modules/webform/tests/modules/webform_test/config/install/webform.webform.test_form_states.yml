@@ -6,6 +6,7 @@ dependencies:
       - webform_test
 open: null
 close: null
+weight: 0
 uid: null
 template: false
 archive: false
@@ -71,16 +72,19 @@ elements: |
         required:
           ':input[name="visible_trigger"]':
             checked: true
-    visible_webform_address:
-      '#type': webform_address
-      '#title': Address
+    visible_address:
+      '#type': address
+      '#title': 'Advanced address'
       '#default_value':
-        address: '10 Main Street'
-        address_2: '10 Main Street'
-        city: Springfield
-        state_province: Alabama
-        postal_code: '11111'
-        country: Afghanistan
+        given_name: John
+        family_name: Smith
+        organization: 'Google Inc.'
+        address_line1: '1098 Alta Ave'
+        postal_code: '94043'
+        locality: 'Mountain View'
+        administrative_area: CA
+        country_code: US
+        langcode: en
       '#states':
         visible:
           ':input[name="visible_trigger"]':
@@ -112,6 +116,23 @@ elements: |
       '#type': webform_autocomplete
       '#title': Autocomplete
       '#default_value': Loremipsum
+      '#states':
+        visible:
+          ':input[name="visible_trigger"]':
+            checked: true
+        required:
+          ':input[name="visible_trigger"]':
+            checked: true
+    visible_webform_address:
+      '#type': webform_address
+      '#title': 'Basic address'
+      '#default_value':
+        address: '10 Main Street'
+        address_2: '10 Main Street'
+        city: Springfield
+        state_province: Alabama
+        postal_code: '11111'
+        country: Afghanistan
       '#states':
         visible:
           ':input[name="visible_trigger"]':
@@ -304,14 +325,11 @@ elements: |
             Male: Male
             Female: Female
       '#default_value':
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
       '#states':
         visible:
@@ -323,7 +341,7 @@ elements: |
     visible_date:
       '#type': date
       '#title': Date
-      '#default_value': '2026-06-22T01:12:56-0400'
+      '#default_value': '2025-12-07T23:03:39-0500'
       '#states':
         visible:
           ':input[name="visible_trigger"]':
@@ -335,7 +353,7 @@ elements: |
       '#type': datetime
       '#title': Date/time
       '#description': '<b>Known Issues:</b><br /><a href="https://www.drupal.org/node/2419131">Issue #2419131: #states attribute does not work on #type datetime</a>'
-      '#default_value': '2010-09-02T11:55:59-0400'
+      '#default_value': '2031-05-08T00:29:17-0400'
       '#states':
         visible:
           ':input[name="visible_trigger"]':
@@ -346,7 +364,7 @@ elements: |
     visible_datelist:
       '#type': datelist
       '#title': 'Date list'
-      '#default_value': '2013-06-05T17:39:18-0400'
+      '#default_value': '2036-12-05T02:05:53-0500'
       '#states':
         visible:
           ':input[name="visible_trigger"]':
@@ -596,8 +614,8 @@ elements: |
         required:
           ':input[name="visible_trigger"]':
             checked: true
-    visible_webform_location:
-      '#type': webform_location
+    visible_webform_location_places:
+      '#type': webform_location_places
       '#title': Location
       '#map': true
       '#geolocation': true
@@ -1082,16 +1100,19 @@ elements: |
         invisible:
           ':input[name="invisible_trigger"]':
             checked: true
-    invisible_webform_address:
-      '#type': webform_address
-      '#title': Address
+    invisible_address:
+      '#type': address
+      '#title': 'Advanced address'
       '#default_value':
-        address: '10 Main Street'
-        address_2: '10 Main Street'
-        city: Springfield
-        state_province: Alabama
-        postal_code: '11111'
-        country: Afghanistan
+        given_name: John
+        family_name: Smith
+        organization: 'Google Inc.'
+        address_line1: '1098 Alta Ave'
+        postal_code: '94043'
+        locality: 'Mountain View'
+        administrative_area: CA
+        country_code: US
+        langcode: en
       '#states':
         invisible:
           ':input[name="invisible_trigger"]':
@@ -1114,6 +1135,20 @@ elements: |
       '#type': webform_autocomplete
       '#title': Autocomplete
       '#default_value': Loremipsum
+      '#states':
+        invisible:
+          ':input[name="invisible_trigger"]':
+            checked: true
+    invisible_webform_address:
+      '#type': webform_address
+      '#title': 'Basic address'
+      '#default_value':
+        address: '10 Main Street'
+        address_2: '10 Main Street'
+        city: Springfield
+        state_province: Alabama
+        postal_code: '11111'
+        country: Afghanistan
       '#states':
         invisible:
           ':input[name="invisible_trigger"]':
@@ -1267,14 +1302,11 @@ elements: |
             Male: Male
             Female: Female
       '#default_value':
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
       '#states':
         invisible:
@@ -1283,7 +1315,7 @@ elements: |
     invisible_date:
       '#type': date
       '#title': Date
-      '#default_value': '2012-09-09T14:24:41-0400'
+      '#default_value': '2029-09-22T22:31:32-0400'
       '#states':
         invisible:
           ':input[name="invisible_trigger"]':
@@ -1292,7 +1324,7 @@ elements: |
       '#type': datetime
       '#title': Date/time
       '#description': '<b>Known Issues:</b><br /><a href="https://www.drupal.org/node/2419131">Issue #2419131: #states attribute does not work on #type datetime</a>'
-      '#default_value': '2018-12-28T05:58:05-0500'
+      '#default_value': '2012-11-08T22:22:22-0500'
       '#states':
         invisible:
           ':input[name="invisible_trigger"]':
@@ -1300,7 +1332,7 @@ elements: |
     invisible_datelist:
       '#type': datelist
       '#title': 'Date list'
-      '#default_value': '2034-07-13T18:52:51-0400'
+      '#default_value': '2030-03-15T14:17:44-0400'
       '#states':
         invisible:
           ':input[name="invisible_trigger"]':
@@ -1496,8 +1528,8 @@ elements: |
         invisible:
           ':input[name="invisible_trigger"]':
             checked: true
-    invisible_webform_location:
-      '#type': webform_location
+    invisible_webform_location_places:
+      '#type': webform_location_places
       '#title': Location
       '#map': true
       '#geolocation': true
@@ -1850,16 +1882,19 @@ elements: |
     disabled_trigger:
       '#type': checkbox
       '#title': 'Disable elements'
-    disabled_webform_address:
-      '#type': webform_address
-      '#title': Address
+    disabled_address:
+      '#type': address
+      '#title': 'Advanced address'
       '#default_value':
-        address: '10 Main Street'
-        address_2: '10 Main Street'
-        city: Springfield
-        state_province: Alabama
-        postal_code: '11111'
-        country: Afghanistan
+        given_name: John
+        family_name: Smith
+        organization: 'Google Inc.'
+        address_line1: '1098 Alta Ave'
+        postal_code: '94043'
+        locality: 'Mountain View'
+        administrative_area: CA
+        country_code: US
+        langcode: en
       '#states':
         disabled:
           ':input[name="disabled_trigger"]':
@@ -1882,6 +1917,20 @@ elements: |
       '#type': webform_autocomplete
       '#title': Autocomplete
       '#default_value': Loremipsum
+      '#states':
+        disabled:
+          ':input[name="disabled_trigger"]':
+            checked: true
+    disabled_webform_address:
+      '#type': webform_address
+      '#title': 'Basic address'
+      '#default_value':
+        address: '10 Main Street'
+        address_2: '10 Main Street'
+        city: Springfield
+        state_province: Alabama
+        postal_code: '11111'
+        country: Afghanistan
       '#states':
         disabled:
           ':input[name="disabled_trigger"]':
@@ -2035,14 +2084,11 @@ elements: |
             Male: Male
             Female: Female
       '#default_value':
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
-        -
-          name: Loremipsum
+        - name: Loremipsum
           gender: Male
       '#states':
         disabled:
@@ -2051,7 +2097,7 @@ elements: |
     disabled_date:
       '#type': date
       '#title': Date
-      '#default_value': '2023-03-04T06:00:33-0500'
+      '#default_value': '2015-04-28T17:21:41-0400'
       '#states':
         disabled:
           ':input[name="disabled_trigger"]':
@@ -2060,7 +2106,7 @@ elements: |
       '#type': datetime
       '#title': Date/time
       '#description': '<b>Known Issues:</b><br /><a href="https://www.drupal.org/node/2419131">Issue #2419131: #states attribute does not work on #type datetime</a>'
-      '#default_value': '2011-07-16T08:52:39-0400'
+      '#default_value': '2009-06-05T06:32:08-0400'
       '#states':
         disabled:
           ':input[name="disabled_trigger"]':
@@ -2068,7 +2114,7 @@ elements: |
     disabled_datelist:
       '#type': datelist
       '#title': 'Date list'
-      '#default_value': '2023-07-20T18:43:53-0400'
+      '#default_value': '2012-04-05T08:52:12-0400'
       '#states':
         disabled:
           ':input[name="disabled_trigger"]':
@@ -2264,8 +2310,8 @@ elements: |
         disabled:
           ':input[name="disabled_trigger"]':
             checked: true
-    disabled_webform_location:
-      '#type': webform_location
+    disabled_webform_location_places:
+      '#type': webform_location_places
       '#title': Location
       '#map': true
       '#geolocation': true
@@ -2612,6 +2658,7 @@ elements: |
         disabled:
           ':input[name="disabled_trigger"]':
             checked: true
+  
 css: ''
 javascript: ''
 settings:
@@ -2620,6 +2667,7 @@ settings:
   page: true
   page_submit_path: ''
   page_confirm_path: ''
+  form_title: source_entity_webform
   form_submit_once: false
   form_exception_message: ''
   form_open_message: ''
@@ -2642,15 +2690,26 @@ settings:
   form_submit_back: false
   form_autofocus: false
   form_details_toggle: false
-  form_login: false
-  form_login_message: ''
+  form_access_denied: default
+  form_access_denied_title: ''
+  form_access_denied_message: ''
+  form_access_denied_attributes: {  }
+  form_file_limit: ''
   submission_label: ''
   submission_log: false
+  submission_views: {  }
+  submission_views_replace: {  }
   submission_user_columns: {  }
-  submission_login: false
-  submission_login_message: ''
+  submission_user_duplicate: false
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  submission_access_denied_attributes: {  }
   submission_exception_message: ''
   submission_locked_message: ''
+  submission_excluded_elements: {  }
+  submission_exclude_empty: false
+  submission_exclude_empty_checkbox: false
   previous_submission_message: ''
   previous_submissions_message: ''
   autofill: false
@@ -2659,7 +2718,9 @@ settings:
   wizard_progress_bar: true
   wizard_progress_pages: false
   wizard_progress_percentage: false
+  wizard_progress_link: false
   wizard_start_label: ''
+  wizard_preview_link: false
   wizard_confirmation: true
   wizard_confirmation_label: ''
   wizard_track: ''
@@ -2689,9 +2750,11 @@ settings:
   limit_total: null
   limit_total_interval: null
   limit_total_message: ''
+  limit_total_unique: false
   limit_user: null
   limit_user_interval: null
   limit_user_message: ''
+  limit_user_unique: false
   entity_limit_total: null
   entity_limit_total_interval: null
   entity_limit_user: null
