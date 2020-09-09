@@ -2,6 +2,7 @@
 
 namespace Drupal\bootstrap\Plugin\Preprocess;
 
+use Drupal\bootstrap\Utility\Crypt;
 use Drupal\bootstrap\Utility\Element;
 use Drupal\bootstrap\Utility\Unicode;
 use Drupal\bootstrap\Utility\Variables;
@@ -77,10 +78,9 @@ class BootstrapDropdown extends PreprocessBase implements PreprocessInterface {
             $wrapper_attributes['hreflang'] = $element['language']->getId();
 
             // Ensure the Url language is set on the object itself.
-            // @todo Possibly a core bug?
-            if (empty($element['url']->getOption('language'))) {
-              $element['url']->setOption('language', $element['language']);
-            }
+            // @todo Revisit, possibly a core bug?
+            // @see https://www.drupal.org/project/bootstrap/issues/2868100
+            $element['url']->setOption('language', $element['language']);
           }
 
           // Preserve query parameters (if any)
@@ -103,6 +103,7 @@ class BootstrapDropdown extends PreprocessBase implements PreprocessInterface {
 
       $items = Element::createStandalone();
 
+      /** @var \Drupal\bootstrap\Utility\Element $primary_action */
       $primary_action = NULL;
       $links = Element::create($variables->links);
 
@@ -117,11 +118,17 @@ class BootstrapDropdown extends PreprocessBase implements PreprocessInterface {
           $child->setAttribute('formnovalidate', 'formnovalidate');
         }
 
+        // Generate the unique suffix to use with identifiers. This helps
+        // eliminate any render cache issues when dealing with multiple
+        // dropdown elements on the same page, as in a listing.
+        // @see https://www.drupal.org/project/bootstrap/issues/2939166
+        $suffix = Crypt::randomBytesBase64(8);
+
         // The first item is always the "primary link".
         if ($i === 0) {
           // Must generate an ID for this child because the toggle will use it.
           if (!$child->getAttribute('id')) {
-            $child->setAttribute('id', $child->getProperty('id', Html::getUniqueId('dropdown-item')));
+            $child->setAttribute('id', $child->getProperty('id', Html::getUniqueId("dropdown-item-$suffix")));
           }
           $primary_action = $child->addClass('hidden');
         }
@@ -135,7 +142,7 @@ class BootstrapDropdown extends PreprocessBase implements PreprocessInterface {
           // events to the "dropdown-target" (the original element).
           $id = $child->getAttribute('id');
           if (!$id) {
-            $id = $child->getProperty('id', Html::getUniqueId('dropdown-item'));
+            $id = $child->getProperty('id', Html::getUniqueId("dropdown-item-$suffix"));
             $child->setAttribute('id', $id);
           }
 
@@ -154,6 +161,11 @@ class BootstrapDropdown extends PreprocessBase implements PreprocessInterface {
           if ($i === 0) {
             $child->addClass('hidden');
           }
+        }
+
+        // If no HTML ID was found, automatically create one.
+        if ($child->hasProperty('ajax') && !$child->hasProperty('ajax_processed') && !$child->hasProperty('id')) {
+          $child->setProperty('id', $child->getAttribute('id', Html::getUniqueId("ajax-link-$suffix")));
         }
 
         $items->$key = $child->getArrayCopy();

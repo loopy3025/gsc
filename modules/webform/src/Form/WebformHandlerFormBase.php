@@ -201,7 +201,7 @@ abstract class WebformHandlerFormBase extends FormBase {
       '#return_value' => TRUE,
       '#default_value' => $this->webformHandler->isEnabled(),
       // Disable broken plugins.
-      '#disabled' => ($this->webformHandler->getPluginId() == 'broken'),
+      '#disabled' => ($this->webformHandler->getPluginId() === 'broken'),
     ];
 
     $form['#parents'] = [];
@@ -233,7 +233,8 @@ abstract class WebformHandlerFormBase extends FormBase {
           'enabled' => $this->t('Enabled'),
           'disabled' => $this->t('Disabled'),
         ],
-        '#selector_options' => $webform->getElementsSelectorOptions(),
+        '#selector_options' => $webform->getElementsSelectorOptions(['excluded_elements' => []]),
+        '#selector_sources' => $webform->getElementsSelectorSourceValues(),
         '#multiple' => FALSE,
         '#default_value' => $this->webformHandler->getConditions(),
       ];
@@ -355,7 +356,7 @@ abstract class WebformHandlerFormBase extends FormBase {
     $label = (string) $this->webformHandler->label();
 
     // Get current langcode.
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
 
     // Get machine name.
     $suggestion = $this->transliteration->transliterate($label, $langcode, '_', static::MACHINE_NAME_MAXLENGHTH);

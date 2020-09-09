@@ -6,3 +6,5 @@ sites/simpletest
 
 sites/default/local.drush.yml
 sites/default/settings/local.settings.php
+# Local htaccess has to be different for some reason
+.htaccess
