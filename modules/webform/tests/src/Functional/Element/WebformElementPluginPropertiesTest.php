@@ -117,6 +117,7 @@ address:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   available_countries: {  }
   default_value: {  }
@@ -137,6 +138,7 @@ address:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -148,6 +150,7 @@ address:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -178,6 +181,7 @@ checkbox:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: false
@@ -224,6 +228,7 @@ checkboxes:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -289,6 +294,7 @@ color:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   color_size: medium
@@ -348,6 +354,7 @@ date:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   date_date_format: Y-m-d
@@ -384,6 +391,7 @@ date:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -395,6 +403,7 @@ date:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   placeholder: ''
   prepopulate: false
@@ -428,6 +437,7 @@ datelist:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   date_abbreviate: true
@@ -474,6 +484,7 @@ datelist:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -485,6 +496,7 @@ datelist:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -515,6 +527,7 @@ datetime:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   date_date_datepicker_button: false
@@ -561,6 +574,7 @@ datetime:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -572,6 +586,7 @@ datetime:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -602,6 +617,7 @@ details:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   description: ''
@@ -640,6 +656,7 @@ email:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -667,6 +684,7 @@ email:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -678,6 +696,7 @@ email:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -713,6 +732,7 @@ entity_autocomplete:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -736,6 +756,7 @@ entity_autocomplete:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -747,6 +768,7 @@ entity_autocomplete:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -781,6 +803,7 @@ fieldset:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   description: ''
@@ -838,6 +861,7 @@ item:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   description: ''
   description_display: ''
@@ -873,6 +897,7 @@ label:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   description: ''
@@ -897,6 +922,7 @@ language_select:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -945,6 +971,7 @@ machine_name:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -993,6 +1020,7 @@ managed_file:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   button: false
@@ -1055,6 +1083,7 @@ number:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -1081,6 +1110,7 @@ number:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -1092,6 +1122,7 @@ number:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   placeholder: ''
   prepopulate: false
@@ -1126,6 +1157,7 @@ processed_text:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   display_on: form
   flex: 1
@@ -1151,6 +1183,7 @@ radios:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -1205,6 +1238,7 @@ range:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -1261,6 +1295,7 @@ search:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -1317,6 +1352,7 @@ select:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -1383,6 +1419,7 @@ tableselect:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -1439,6 +1476,7 @@ tel:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -1469,6 +1507,7 @@ tel:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -1480,6 +1519,7 @@ tel:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -1515,6 +1555,7 @@ text_format:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   allowed_formats: {  }
   default_value: {  }
@@ -1554,6 +1595,7 @@ textarea:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -1585,6 +1627,7 @@ textarea:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -1596,6 +1639,7 @@ textarea:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -1632,6 +1676,7 @@ textfield:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -1665,6 +1710,7 @@ textfield:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -1676,6 +1722,7 @@ textfield:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -1711,6 +1758,7 @@ url:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -1738,6 +1786,7 @@ url:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -1749,6 +1798,7 @@ url:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -1787,6 +1837,7 @@ view:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   arguments: {  }
   display_id: ''
@@ -1811,8 +1862,13 @@ webform_actions:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
+  delete__attributes: {  }
+  delete__dialog: false
+  delete__label: ''
+  delete_hide: true
   draft__attributes: {  }
   draft__label: ''
   draft_hide: false
@@ -1833,6 +1889,9 @@ webform_actions:
   submit__label: ''
   submit_hide: false
   title: ''
+  update__attributes: {  }
+  update__label: ''
+  update_hide: false
   wizard_next__attributes: {  }
   wizard_next__label: ''
   wizard_next_hide: false
@@ -1871,6 +1930,7 @@ webform_address:
   address__title: Address
   address__title_display: ''
   address__type: textfield
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -1914,6 +1974,7 @@ webform_address:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -1926,6 +1987,7 @@ webform_address:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   postal_code__access: true
   postal_code__description: ''
@@ -1970,6 +2032,7 @@ webform_attachment_token:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   display_on: none
   download: false
@@ -2001,6 +2064,7 @@ webform_attachment_twig:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   display_on: none
   download: false
@@ -2032,6 +2096,7 @@ webform_attachment_url:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   display_on: none
   download: false
@@ -2063,6 +2128,7 @@ webform_audio_file:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   button: false
@@ -2125,6 +2191,7 @@ webform_autocomplete:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete_existing: false
@@ -2162,6 +2229,7 @@ webform_autocomplete:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -2173,6 +2241,7 @@ webform_autocomplete:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -2208,6 +2277,7 @@ webform_card:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   format: details
   format_attributes: {  }
@@ -2238,6 +2308,7 @@ webform_checkboxes_other:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -2318,6 +2389,7 @@ webform_codemirror:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -2369,6 +2441,7 @@ webform_computed_token:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   ajax: false
   description: ''
@@ -2407,6 +2480,7 @@ webform_computed_twig:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   ajax: false
   description: ''
@@ -2462,6 +2536,7 @@ webform_contact:
   address__title: Address
   address__title_display: ''
   address__type: textfield
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -2521,6 +2596,7 @@ webform_contact:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -2533,6 +2609,7 @@ webform_contact:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   name__access: true
   name__description: ''
@@ -2593,6 +2670,7 @@ webform_custom_composite:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -2619,6 +2697,7 @@ webform_custom_composite:
   more: ''
   more_title: ''
   multiple: true
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -2631,6 +2710,7 @@ webform_custom_composite:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -2658,6 +2738,7 @@ webform_document_file:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   button: false
@@ -2721,6 +2802,7 @@ webform_email_confirm:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -2748,6 +2830,7 @@ webform_email_confirm:
   minlength: null
   more: ''
   more_title: ''
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -2758,6 +2841,7 @@ webform_email_confirm:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -2794,6 +2878,7 @@ webform_email_multiple:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   autocomplete: 'on'
@@ -2817,6 +2902,7 @@ webform_email_multiple:
   minlength: null
   more: ''
   more_title: ''
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -2828,6 +2914,7 @@ webform_email_multiple:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   pattern: ''
   pattern_error: ''
@@ -2863,6 +2950,7 @@ webform_entity_checkboxes:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -2926,6 +3014,7 @@ webform_entity_radios:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -2981,6 +3070,7 @@ webform_entity_select:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -3061,6 +3151,7 @@ webform_image_file:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attachment_image_style: ''
   attributes: {  }
@@ -3126,6 +3217,7 @@ webform_image_select:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -3191,6 +3283,7 @@ webform_likert:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   answers: {  }
   answers_description_display: description
@@ -3241,6 +3334,7 @@ webform_link:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -3267,6 +3361,7 @@ webform_link:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -3279,6 +3374,7 @@ webform_link:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -3321,6 +3417,7 @@ webform_location_geocomplete:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   administrative_area_level_1__access: false
   administrative_area_level_1__title: State/Province
@@ -3396,6 +3493,7 @@ webform_location_places:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   administrative__access: false
   administrative__title: State/Province
@@ -3466,6 +3564,7 @@ webform_mapping:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   arrow: →
   default_value: {  }
@@ -3515,6 +3614,7 @@ webform_markup:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   display_on: form
   flex: 1
@@ -3538,6 +3638,7 @@ webform_message:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   display_on: form
@@ -3566,6 +3667,7 @@ webform_more:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   display_on: form
@@ -3590,6 +3692,7 @@ webform_name:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -3648,6 +3751,7 @@ webform_name:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -3660,6 +3764,7 @@ webform_name:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   prepopulate: false
   private: false
@@ -3704,6 +3809,7 @@ webform_name:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -3768,6 +3874,7 @@ webform_name:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -3832,6 +3939,7 @@ webform_radios_other:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -3904,6 +4012,7 @@ webform_rating:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: 0
@@ -3958,6 +4067,7 @@ webform_same:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: false
@@ -4005,6 +4115,7 @@ webform_scale:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4062,6 +4173,7 @@ webform_section:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   description: ''
@@ -4100,6 +4212,7 @@ webform_select_other:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -4182,6 +4295,7 @@ webform_signature:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4231,6 +4345,7 @@ webform_table:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   caption: ''
@@ -4277,6 +4392,7 @@ webform_table_row:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   flex: 1
@@ -4300,6 +4416,7 @@ webform_table_sort:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4352,6 +4469,7 @@ webform_tableselect_sort:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4408,6 +4526,7 @@ webform_telephone:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   choices: false
@@ -4441,6 +4560,7 @@ webform_telephone:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -4453,6 +4573,7 @@ webform_telephone:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   phone__access: true
   phone__description: ''
@@ -4499,6 +4620,7 @@ webform_term_checkboxes:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   breadcrumb: false
@@ -4566,6 +4688,7 @@ webform_term_select:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   breadcrumb: false
@@ -4630,6 +4753,7 @@ webform_terms_of_service:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: false
@@ -4674,6 +4798,7 @@ webform_time:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4699,6 +4824,7 @@ webform_time:
   more: ''
   more_title: ''
   multiple: false
+  multiple__add: true
   multiple__add_more: true
   multiple__add_more_button_label: Add
   multiple__add_more_input: true
@@ -4710,6 +4836,7 @@ webform_time:
   multiple__min_items: null
   multiple__no_items_message: 'No items entered. Please add items below.'
   multiple__operations: true
+  multiple__remove: true
   multiple__sorting: true
   placeholder: ''
   prepopulate: false
@@ -4744,6 +4871,7 @@ webform_toggle:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: false
@@ -4793,6 +4921,7 @@ webform_toggles:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4849,6 +4978,7 @@ webform_variant:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   default_value: ''
@@ -4888,6 +5018,7 @@ webform_video_file:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   button: false
@@ -4950,6 +5081,7 @@ webform_wizard_page:
     - anonymous
     - authenticated
   access_view_users: {  }
+  admin_notes: ''
   admin_title: ''
   attributes: {  }
   format: details
