@@ -77,7 +77,7 @@
   });
 
   $(document).on({
-    'columnschange.TableHeader drupalToolbarTrayChange': tableHeaderResizeHandler,
+    'columnschange.TableHeader': tableHeaderResizeHandler,
 
     'drupalViewportOffsetChange.TableHeader': tableHeaderOffsetChangeHandler
   });
@@ -98,7 +98,7 @@
     createSticky: function createSticky() {
       var $stickyHeader = this.$originalHeader.clone(true);
 
-      this.$stickyTable = $('<table class="sticky-header"></table>').css({
+      this.$stickyTable = $('<table class="sticky-header"/>').css({
         visibility: 'hidden',
         position: 'fixed',
         top: '0px'
@@ -164,4 +164,4 @@
   });
 
   Drupal.TableHeader = TableHeader;
-})(jQuery, Drupal, window.Drupal.displace);
+})(jQuery, Drupal, window.parent.Drupal.displace);

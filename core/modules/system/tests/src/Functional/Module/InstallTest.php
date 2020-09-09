@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Tests\BrowserTestBase;
 
@@ -22,16 +20,11 @@ class InstallTest extends BrowserTestBase {
   public static $modules = ['module_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Verify that drupal_get_schema() can be used during module installation.
    */
   public function testGetSchemaAtInstallTime() {
     // @see module_test_install()
-    $value = Database::getConnection()->query("SELECT data FROM {module_test}")->fetchField();
+    $value = db_query("SELECT data FROM {module_test}")->fetchField();
     $this->assertIdentical($value, 'varchar');
   }
 
@@ -58,7 +51,7 @@ class InstallTest extends BrowserTestBase {
 
     $post_update_key_value = \Drupal::keyValue('post_update');
     $existing_updates = $post_update_key_value->get('existing_updates', []);
-    $this->assertContains('module_test_post_update_test', $existing_updates);
+    $this->assertTrue(in_array('module_test_post_update_test', $existing_updates));
   }
 
   /**
@@ -69,7 +62,7 @@ class InstallTest extends BrowserTestBase {
 
     $post_update_key_value = \Drupal::keyValue('post_update');
     $existing_updates = $post_update_key_value->get('existing_updates', []);
-    $this->assertNotContains('module_test_post_update_test', $existing_updates);
+    $this->assertFalse(in_array('module_test_post_update_test', $existing_updates));
   }
 
   /**
@@ -77,7 +70,7 @@ class InstallTest extends BrowserTestBase {
    */
   public function testModuleNameLength() {
     $module_name = 'invalid_module_name_over_the_maximum_allowed_character_length';
-    $message = new FormattableMarkup('Exception thrown when enabling module %name with a name length over the allowed maximum', ['%name' => $module_name]);
+    $message = format_string('Exception thrown when enabling module %name with a name length over the allowed maximum', ['%name' => $module_name]);
     try {
       $this->container->get('module_installer')->install([$module_name]);
       $this->fail($message);
@@ -87,7 +80,7 @@ class InstallTest extends BrowserTestBase {
     }
 
     // Since for the UI, the submit callback uses FALSE, test that too.
-    $message = new FormattableMarkup('Exception thrown when enabling as if via the UI the module %name with a name length over the allowed maximum', ['%name' => $module_name]);
+    $message = format_string('Exception thrown when enabling as if via the UI the module %name with a name length over the allowed maximum', ['%name' => $module_name]);
     try {
       $this->container->get('module_installer')->install([$module_name], FALSE);
       $this->fail($message);

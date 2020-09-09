@@ -98,7 +98,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
       'subject' => 'My comment title',
       'uid' => $this->adminUser->id(),
       'entity_type' => 'entity_test',
-      'field_name' => 'comment',
       'comment_type' => 'comment',
       'status' => 1,
       'entity_id' => $entity->id(),
@@ -114,7 +113,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
       'mail' => 'test@example.com',
       'homepage' => 'https://example.com',
       'entity_type' => 'entity_test',
-      'field_name' => 'comment',
       'comment_type' => 'comment',
       'created' => 123456,
       'status' => 1,
@@ -164,7 +162,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->assertField('langcode');
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(2, $elements, 'There are two comments on the page.');
+    $this->assertEquals(2, count($elements), 'There are two comments on the page.');
     $this->assertText($comment->label());
     $this->assertText($comment_anonymous->label());
     $executable->destroy();
@@ -176,7 +174,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(1, $elements, 'Only anonymous comment is visible.');
+    $this->assertEquals(1, count($elements), 'Only anonymous comment is visible.');
     $this->assertNoText($comment->label());
     $this->assertText($comment_anonymous->label());
     $executable->destroy();
@@ -187,7 +185,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(1, $elements, 'Only admin comment is visible.');
+    $this->assertEquals(1, count($elements), 'Only admin comment is visible.');
     $this->assertText($comment->label());
     $this->assertNoText($comment_anonymous->label());
     $executable->destroy();
@@ -199,7 +197,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(1, $elements, 'Only anonymous comment is visible.');
+    $this->assertEquals(1, count($elements), 'Only anonymous comment is visible.');
     $this->assertNoText($comment->label());
     $this->assertText($comment_anonymous->label());
     $executable->destroy();
@@ -211,7 +209,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(1, $elements, 'Only admin comment is visible.');
+    $this->assertEquals(1, count($elements), 'Only admin comment is visible.');
     $this->assertText($comment->label());
     $this->assertNoText($comment_anonymous->label());
     $executable->destroy();
@@ -223,7 +221,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(2, $elements, 'Both comments are visible.');
+    $this->assertEquals(2, count($elements), 'Both comments are visible.');
     $this->assertText($comment->label());
     $this->assertText($comment_anonymous->label());
     $executable->destroy();
@@ -258,7 +256,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
-    $this->assertCount(2, $elements, 'Both comments are visible.');
+    $this->assertEquals(2, count($elements), 'Both comments are visible.');
     $this->assertNoText($comment->label());
     $this->assertNoText($comment_anonymous->label());
     $this->assertText($comment_translation->label());

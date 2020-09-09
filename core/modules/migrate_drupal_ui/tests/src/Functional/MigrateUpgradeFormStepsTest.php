@@ -25,11 +25,6 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
     // Log in as user 1. Migrations in the UI can only be performed as user 1.
@@ -62,9 +57,7 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
     // Overview form and for an incremental migration it is the Incremental
     // form.
     $session = $this->assertSession();
-    // Get the current major version.
-    list($destination_site_version) = explode('.', \Drupal::VERSION, 2);
-    $expected['initial'] = "Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $destination_site_version.";
+    $expected['initial'] = 'Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal 8.';
     $expected['incremental'] = "An upgrade has already been performed on this site.";
 
     foreach (['/upgrade', '/upgrade/incremental'] as $expected) {
@@ -115,7 +108,7 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
     // Test that the credential form is displayed for incremental migrations.
     $store->set('step', 'overview');
     $this->drupalGet('/upgrade');
-    $session->pageTextContains("An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal $destination_site_version. Rollbacks are not yet supported through the user interface.");
+    $session->pageTextContains('An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal 8. Rollbacks are not yet supported through the user interface.');
     $this->drupalPostForm(NULL, [], t('Import new configuration and content from old site'));
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
   }

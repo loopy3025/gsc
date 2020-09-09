@@ -36,13 +36,12 @@ class DbImportCommand extends DbCommandBase {
     $script = $input->getArgument('script');
     if (!is_file($script)) {
       $output->writeln('File must exist.');
-      return 1;
+      return;
     }
 
     $connection = $this->getDatabaseConnection($input);
     $this->runScript($connection, $script);
     $output->writeln('Import completed successfully.');
-    return 0;
   }
 
   /**

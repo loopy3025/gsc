@@ -94,7 +94,7 @@ interface QueryInterface extends AlterableInterface {
    *   and another does not they are not presumed to apply to the same
    *   translation.
    *
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    * @see \Drupal\Core\Entity\Query\andConditionGroup
    * @see \Drupal\Core\Entity\Query\orConditionGroup
    */
@@ -107,8 +107,7 @@ interface QueryInterface extends AlterableInterface {
    *   Name of a field.
    * @param $langcode
    *   Language code (optional).
-   *
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    */
   public function exists($field, $langcode = NULL);
 
@@ -119,8 +118,7 @@ interface QueryInterface extends AlterableInterface {
    *   Name of a field.
    * @param $langcode
    *   Language code (optional).
-   *
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    */
   public function notExists($field, $langcode = NULL);
 
@@ -134,7 +132,7 @@ interface QueryInterface extends AlterableInterface {
    *   An optional integer to distinguish between multiple pagers on one page.
    *   If not provided, one is automatically calculated.
    *
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
   public function pager($limit = 10, $element = NULL);
@@ -142,7 +140,7 @@ interface QueryInterface extends AlterableInterface {
   /**
    * @param null $start
    * @param null $length
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
   public function range($start = NULL, $length = NULL);
@@ -153,7 +151,7 @@ interface QueryInterface extends AlterableInterface {
    * @param string $direction
    * @param $langcode
    *   Language code (optional).
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
   public function sort($field, $direction = 'ASC', $langcode = NULL);
@@ -163,7 +161,7 @@ interface QueryInterface extends AlterableInterface {
    *
    * For count queries, execute() returns the number entities found.
    *
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
   public function count();
@@ -177,13 +175,13 @@ interface QueryInterface extends AlterableInterface {
    *   specify what to sort on. This can be an entity or a field as described
    *   in condition().
    *
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
   public function tableSort(&$headers);
 
   /**
-   * @return $this
+   * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The called object.
    */
   public function accessCheck($access_check = TRUE);

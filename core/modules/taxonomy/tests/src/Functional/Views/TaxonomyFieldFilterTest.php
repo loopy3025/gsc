@@ -22,19 +22,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'language',
-    'taxonomy',
-    'taxonomy_test_views',
-    'text',
-    'views',
-    'node',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  public static $modules = ['language', 'taxonomy', 'taxonomy_test_views', 'text', 'views', 'node'];
 
   /**
    * Views used by this test.
@@ -68,7 +56,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     $this->termNames = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nourriture en Paris',
+      'fr' => 'Nouriture en Paris',
     ];
 
     // Create a vocabulary.

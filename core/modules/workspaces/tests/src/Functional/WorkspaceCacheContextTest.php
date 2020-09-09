@@ -23,11 +23,6 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
   public static $modules = ['block', 'node', 'workspaces'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests the 'workspace' cache context.
    */
   public function testWorkspaceCacheContext() {
@@ -54,15 +49,15 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
 
     // Render it so the default cache contexts are applied.
     $renderer->renderRoot($build);
-    $this->assertContains('workspace', $build['#cache']['contexts']);
+    $this->assertTrue(in_array('workspace', $build['#cache']['contexts'], TRUE));
 
     $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys($build['#cache']['contexts'])->getKeys());
-    $this->assertContains('[workspace]=live', $cid_parts);
+    $this->assertTrue(in_array('[workspace]=live', $cid_parts, TRUE));
 
     // Test that a cache entry is created.
     $cid = implode(':', $cid_parts);
     $bin = $build['#cache']['bin'];
-    $this->assertInstanceOf(\stdClass::class, $this->container->get('cache.' . $bin)->get($cid));
+    $this->assertTrue($this->container->get('cache.' . $bin)->get($cid), 'The entity render element has been cached.');
 
     // Switch to the 'stage' workspace and check that the correct workspace
     // cache context is used.
@@ -80,15 +75,10 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
 
     // Render it so the default cache contexts are applied.
     $renderer->renderRoot($build);
-    $this->assertContains('workspace', $build['#cache']['contexts']);
+    $this->assertTrue(in_array('workspace', $build['#cache']['contexts'], TRUE));
 
     $cid_parts = array_merge($build['#cache']['keys'], $cache_contexts_manager->convertTokensToKeys($build['#cache']['contexts'])->getKeys());
-    $this->assertContains('[workspace]=stage', $cid_parts);
-
-    // Test that a cache entry is created.
-    $cid = implode(':', $cid_parts);
-    $bin = $build['#cache']['bin'];
-    $this->assertInstanceOf(\stdClass::class, $this->container->get('cache.' . $bin)->get($cid));
+    $this->assertTrue(in_array('[workspace]=stage', $cid_parts, TRUE));
   }
 
 }

@@ -24,19 +24,7 @@ class MenuLinkTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = [
-    'views',
-    'views_ui',
-    'user',
-    'node',
-    'menu_ui',
-    'block',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  public static $modules = ['views', 'views_ui', 'user', 'node', 'menu_ui', 'block'];
 
   /**
    * A user with permission to administer views, menus and view content.
@@ -53,10 +41,7 @@ class MenuLinkTest extends ViewTestBase {
 
     $this->enableViewsTestModule();
 
-    $this->adminUser = $this->drupalCreateUser([
-      'administer views',
-      'administer menu',
-    ]);
+    $this->adminUser = $this->drupalCreateUser(['administer views', 'administer menu']);
     $this->drupalPlaceBlock('system_menu_block:main');
     $this->drupalCreateContentType(['type' => 'page']);
   }
@@ -105,7 +90,7 @@ class MenuLinkTest extends ViewTestBase {
 
     // Go to the node page and ensure that both the first and second level items
     // are visible.
-    $this->drupalGet($node->toUrl());
+    $this->drupalGet($node->urlInfo());
     $this->assertText('Primary level node');
     $this->assertText('Secondary level view page');
   }

@@ -24,11 +24,6 @@ class FilterSecurityTest extends BrowserTestBase {
   public static $modules = ['node', 'filter_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * A user with administrative permissions.
    *
    * @var \Drupal\user\UserInterface
@@ -46,11 +41,7 @@ class FilterSecurityTest extends BrowserTestBase {
     $filtered_html_permission = $filtered_html_format->getPermissionName();
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [$filtered_html_permission]);
 
-    $this->adminUser = $this->drupalCreateUser([
-      'administer modules',
-      'administer filters',
-      'administer site configuration',
-    ]);
+    $this->adminUser = $this->drupalCreateUser(['administer modules', 'administer filters', 'administer site configuration']);
     $this->drupalLogin($this->adminUser);
   }
 

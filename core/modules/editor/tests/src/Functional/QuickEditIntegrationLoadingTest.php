@@ -22,11 +22,6 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
   public static $modules = ['quickedit', 'filter', 'node', 'editor'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
-
-  /**
    * The basic permissions necessary to view content and use in-place editing.
    *
    * @var array
@@ -108,11 +103,11 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
         $message = "The 'access in-place editing' permission is required.";
       }
       else {
-        $message = "The 'edit any article content' permission is required.";
+        $message = '';
       }
 
       $body = Json::decode($response->getBody());
-      $this->assertSame($message, $body['message']);
+      $this->assertIdentical($message, $body['message']);
     }
   }
 
@@ -139,7 +134,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
 
     $this->assertEquals(200, $response->getStatusCode());
     $ajax_commands = Json::decode($response->getBody());
-    $this->assertCount(1, $ajax_commands, 'The untransformed text POST request results in one AJAX command.');
+    $this->assertIdentical(1, count($ajax_commands), 'The untransformed text POST request results in one AJAX command.');
     $this->assertIdentical('editorGetUntransformedText', $ajax_commands[0]['command'], 'The first AJAX command is an editorGetUntransformedText command.');
     $this->assertIdentical('<p>Do you also love Drupal?</p><img src="druplicon.png" data-caption="Druplicon" />', $ajax_commands[0]['data'], 'The editorGetUntransformedText command contains the expected data.');
   }

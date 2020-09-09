@@ -20,11 +20,6 @@ class ResponseTest extends BrowserTestBase {
   public static $modules = ['form_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests that enforced responses propagate through subscribers and middleware.
    */
   public function testFormResponse() {
@@ -34,7 +29,7 @@ class ResponseTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('form-test/response', $edit, 'Submit');
     $content = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertIdentical($edit['content'], $content, 'Response content matches');
     $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Response-Event'), 'Response handled by kernel response subscriber');
     $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Stack-Middleware'), 'Response handled by kernel middleware');
@@ -45,7 +40,7 @@ class ResponseTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('form-test/response', $edit, 'Submit');
     $content = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertSession()->statusCodeEquals(418);
+    $this->assertResponse(418);
     $this->assertIdentical($edit['content'], $content, 'Response content matches');
     $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Response-Event'), 'Response handled by kernel response subscriber');
     $this->assertIdentical('invoked', $this->drupalGetHeader('X-Form-Test-Stack-Middleware'), 'Response handled by kernel middleware');

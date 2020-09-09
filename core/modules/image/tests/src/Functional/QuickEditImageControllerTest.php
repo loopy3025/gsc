@@ -25,11 +25,6 @@ class QuickEditImageControllerTest extends BrowserTestBase {
   public static $modules = ['node', 'image', 'quickedit'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * The machine name of our image field.
    *
    * @var string
@@ -86,7 +81,7 @@ class QuickEditImageControllerTest extends BrowserTestBase {
       'title' => t('Test Node'),
     ]);
     $this->drupalGet('quickedit/image/info/node/' . $node->id() . '/' . $this->fieldName . '/' . $node->language()->getId() . '/default');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse('403');
 
     /** @var \Symfony\Component\BrowserKit\Client $client */
     $client = $this->getSession()->getDriver()->getClient();
@@ -131,11 +126,11 @@ class QuickEditImageControllerTest extends BrowserTestBase {
         break;
       }
     }
-    $this->assertNotFalse($valid_image);
+    $this->assertTrue($valid_image);
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($valid_image, $node->id(), $this->fieldName, $node->language()->getId());
-    $this->assertStringContainsString('"fid":"1"', $this->getSession()->getPage()->getContent(), 'Valid upload completed successfully.');
+    $this->assertContains('"fid":"1"', $this->getSession()->getPage()->getContent(), 'Valid upload completed successfully.');
   }
 
   /**
@@ -160,11 +155,11 @@ class QuickEditImageControllerTest extends BrowserTestBase {
         break;
       }
     }
-    $this->assertNotFalse($invalid_image);
+    $this->assertTrue($invalid_image);
 
     $this->drupalLogin($this->contentAuthorUser);
     $this->uploadImage($invalid_image, $node->id(), $this->fieldName, $node->language()->getId());
-    $this->assertStringContainsString('"main_error":"The image failed validation."', $this->getSession()->getPage()->getContent(), 'Invalid upload returned errors.');
+    $this->assertContains('"main_error":"The image failed validation."', $this->getSession()->getPage()->getContent(), 'Invalid upload returned errors.');
   }
 
   /**

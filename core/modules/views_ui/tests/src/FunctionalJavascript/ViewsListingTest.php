@@ -20,11 +20,6 @@ class ViewsListingTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -133,7 +128,6 @@ class ViewsListingTest extends WebDriverTestBase {
    * Removes any non-visible elements from the passed array.
    *
    * @param array $elements
-   *
    * @return array
    */
   protected function filterVisibleElements($elements) {

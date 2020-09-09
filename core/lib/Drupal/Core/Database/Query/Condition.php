@@ -61,8 +61,6 @@ class Condition implements ConditionInterface, \Countable {
 
   /**
    * The identifier of the query placeholder this condition has been compiled against.
-   *
-   * @var string
    */
   protected $queryPlaceholderIdentifier;
 
@@ -156,13 +154,6 @@ class Condition implements ConditionInterface, \Countable {
    */
   public function notExists(SelectInterface $select) {
     return $this->condition('', $select, 'NOT EXISTS');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function alwaysFalse() {
-    return $this->where('1 = 0');
   }
 
   /**
@@ -399,7 +390,7 @@ class Condition implements ConditionInterface, \Countable {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    return new static($conjunction);
+    return new Condition($conjunction);
   }
 
   /**

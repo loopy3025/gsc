@@ -3,8 +3,8 @@
 namespace Drupal\Tests\views\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\simpletest\ContentTypeCreationTrait;
+use Drupal\simpletest\NodeCreationTrait;
 
 /**
  * Tests the basic AJAX functionality of Views exposed forms.
@@ -20,11 +20,6 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   public static $modules = ['node', 'views', 'views_test_modal'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -63,8 +58,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Ensure that the Content we're testing for is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page One', $html);
-    $this->assertStringContainsString('Page Two', $html);
+    $this->assertContains('Page One', $html);
+    $this->assertContains('Page Two', $html);
 
     // Search for "Page One".
     $this->submitForm(['title' => 'Page One'], t('Filter'));
@@ -72,8 +67,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Verify that only the "Page One" Node is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page One', $html);
-    $this->assertStringNotContainsString('Page Two', $html);
+    $this->assertContains('Page One', $html);
+    $this->assertNotContains('Page Two', $html);
 
     // Search for "Page Two".
     $this->submitForm(['title' => 'Page Two'], t('Filter'));
@@ -81,8 +76,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Verify that only the "Page Two" Node is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page Two', $html);
-    $this->assertStringNotContainsString('Page One', $html);
+    $this->assertContains('Page Two', $html);
+    $this->assertNotContains('Page One', $html);
 
     // Submit bulk actions form to ensure that the previous AJAX submit does not
     // break it.
@@ -117,8 +112,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $session = $this->getSession();
     // Ensure that the Content we're testing for is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page One', $html);
-    $this->assertStringContainsString('Page Two', $html);
+    $this->assertContains('Page One', $html);
+    $this->assertContains('Page Two', $html);
 
     // Search for "Page One".
     $session->getPage()->fillField('title', 'Page One');
@@ -127,8 +122,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Verify that only the "Page One" Node is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page One', $html);
-    $this->assertStringNotContainsString('Page Two', $html);
+    $this->assertContains('Page One', $html);
+    $this->assertNotContains('Page Two', $html);
 
     // Close and re-open the modal.
     $assert->buttonExists('Close', $dialog)->press();
@@ -137,8 +132,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Ensure that the Content we're testing for is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page One', $html);
-    $this->assertStringContainsString('Page Two', $html);
+    $this->assertContains('Page One', $html);
+    $this->assertContains('Page Two', $html);
 
     // Search for "Page One".
     $session->getPage()->fillField('title', 'Page One');
@@ -147,8 +142,8 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Verify that only the "Page One" Node is present.
     $html = $session->getPage()->getHtml();
-    $this->assertStringContainsString('Page One', $html);
-    $this->assertStringNotContainsString('Page Two', $html);
+    $this->assertContains('Page One', $html);
+    $this->assertNotContains('Page Two', $html);
   }
 
 }

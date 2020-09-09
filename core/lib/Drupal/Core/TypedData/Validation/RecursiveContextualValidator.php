@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\TypedData\Validation;
 
-use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -127,17 +126,10 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     $metadata = $this->metadataFactory->getMetadataFor($data);
     $cache_key = spl_object_hash($data);
     $property_path = $is_root_call ? '' : PropertyPath::append($previous_path, $data->getName());
-
-    // Prefer a specific instance of the typed data manager stored by the data
-    // if it is available. This is necessary for specialized typed data objects,
-    // for example those using the typed config subclass of the manager.
-    $typed_data_manager = method_exists($data, 'getTypedDataManager') ? $data->getTypedDataManager() : $this->typedDataManager;
-
     // Pass the canonical representation of the data as validated value to
     // constraint validators, such that they do not have to care about Typed
     // Data.
-    $value = $typed_data_manager->getCanonicalRepresentation($data);
-    $constraints_given = isset($constraints);
+    $value = $this->typedDataManager->getCanonicalRepresentation($data);
     $this->context->setNode($value, $data, $metadata, $property_path);
 
     if (isset($constraints) || !$this->context->isGroupValidated($cache_key, Constraint::DEFAULT_GROUP)) {
@@ -150,10 +142,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
 
     // If the data is a list or complex data, validate the contained list items
     // or properties. However, do not recurse if the data is empty.
-    // Next, we do not recurse if given constraints are validated against an
-    // entity, since we should determine whether the entity matches the
-    // constraints and not whether the entity validates.
-    if (($data instanceof ListInterface || $data instanceof ComplexDataInterface) && !$data->isEmpty() && !($data instanceof EntityAdapter && $constraints_given)) {
+    if (($data instanceof ListInterface || $data instanceof ComplexDataInterface) && !$data->isEmpty()) {
       foreach ($data as $name => $property) {
         $this->validateNode($property);
       }

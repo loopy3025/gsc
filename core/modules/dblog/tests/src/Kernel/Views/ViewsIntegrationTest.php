@@ -5,7 +5,6 @@ namespace Drupal\Tests\dblog\Kernel\Views;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
@@ -93,10 +92,10 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     $view = Views::getView('dblog_integration_test');
     $view->setDisplay('page_1');
     // The uid relationship should now join to the {users_field_data} table.
-    $base_tables = $view->getBaseTables();
-    $this->assertArrayHasKey('users_field_data', $base_tables);
-    $this->assertArrayNotHasKey('users', $base_tables);
-    $this->assertArrayHasKey('watchdog', $base_tables);
+    $tables = array_keys($view->getBaseTables());
+    $this->assertTrue(in_array('users_field_data', $tables));
+    $this->assertFalse(in_array('users', $tables));
+    $this->assertTrue(in_array('watchdog', $tables));
   }
 
   /**
@@ -178,15 +177,12 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     // Setup a watchdog entry without tokens.
     $entries[] = [
       'message' => $this->randomMachineName(),
-      'variables' => ['link' => Link::fromTextAndUrl('Link', Url::fromRoute('<front>'))->toString()],
+      'variables' => ['link' => \Drupal::l('Link', new Url('<front>'))],
     ];
     // Setup a watchdog entry with one token.
     $entries[] = [
       'message' => '@token1',
-      'variables' => [
-        '@token1' => $this->randomMachineName(),
-        'link' => Link::fromTextAndUrl('Link', Url::fromRoute('<front>'))->toString(),
-      ],
+      'variables' => ['@token1' => $this->randomMachineName(), 'link' => \Drupal::l('Link', new Url('<front>'))],
     ];
     // Setup a watchdog entry with two tokens.
     $entries[] = [
@@ -197,7 +193,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       'variables' => [
         '@token1' => $this->randomMachineName(),
         '@token2' => $this->randomMachineName(),
-        'link' => '<a href="' . Url::fromRoute('<front>')->toString() . '"><object>Link</object></a>',
+        'link' => '<a href="' . \Drupal::url('<front>') . '"><object>Link</object></a>',
       ],
     ];
     // Setup a watchdog entry with severity WARNING.

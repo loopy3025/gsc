@@ -53,7 +53,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
   protected function assertEntity($fid, $name, $size, $uri, $type, $uid) {
     /** @var \Drupal\file\FileInterface $file */
     $file = File::load($fid);
-    $this->assertInstanceOf(FileInterface::class, $file);
+    $this->assertTrue($file instanceof FileInterface);
     $this->assertIdentical($name, $file->getFilename());
     $this->assertIdentical($size, $file->getSize());
     $this->assertIdentical($uri, $file->getFileUri());
@@ -101,13 +101,18 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->fields(['value' => serialize('files/test')])
       ->condition('name', 'file_directory_path')
       ->execute();
+    Database::getConnection('default', 'migrate')
+      ->update('variable')
+      ->fields(['value' => serialize(file_directory_temp())])
+      ->condition('name', 'file_directory_temp')
+      ->execute();
 
     $this->executeMigration('d6_file');
 
     // File 2, when migrated for the second time, is treated as a different file
     // (due to having a different uri this time) and is given fid 6.
     $file = File::load(6);
-    $this->assertIdentical('public://core/tests/fixtures/files/image-2.jpg', $file->getFileUri());
+    $this->assertIdentical('public://core/modules/simpletest/files/image-2.jpg', $file->getFileUri());
 
     $map_table = $this->getMigration('d6_file')->getIdMap()->mapTableName();
     $map = \Drupal::database()
@@ -133,7 +138,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     // then it would have an fid of 9.
     $this->assertNull(File::load(9));
 
-    $this->assertCount(8, File::loadMultiple());
+    $this->assertEquals(8, count(File::loadMultiple()));
   }
 
   /**
@@ -146,7 +151,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->condition('fid', 3)
       ->fields([
         'filename' => 'image-3.jpg',
-        'filepath' => 'core/tests/fixtures/files/image-3.jpg',
+        'filepath' => 'core/modules/simpletest/files/image-3.jpg',
       ])
       ->execute();
 

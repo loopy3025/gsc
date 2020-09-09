@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Core\Database\Database;
-
 /**
  * Tests that node access queries are properly altered by the node module.
  *
@@ -17,11 +15,6 @@ class NodeQueryAlterTest extends NodeTestBase {
    * @var array
    */
   public static $modules = ['node_access_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * User with permission to view content.
@@ -46,19 +39,9 @@ class NodeQueryAlterTest extends NodeTestBase {
 
     // Create user with simple node access permission. The 'node test view'
     // permission is implemented and granted by the node_access_test module.
-    $this->accessUser = $this->drupalCreateUser([
-      'access content overview',
-      'access content',
-      'node test view',
-    ]);
-    $this->noAccessUser = $this->drupalCreateUser([
-      'access content overview',
-      'access content',
-    ]);
-    $this->noAccessUser2 = $this->drupalCreateUser([
-      'access content overview',
-      'access content',
-    ]);
+    $this->accessUser = $this->drupalCreateUser(['access content overview', 'access content', 'node test view']);
+    $this->noAccessUser = $this->drupalCreateUser(['access content overview', 'access content']);
+    $this->noAccessUser2 = $this->drupalCreateUser(['access content overview', 'access content']);
   }
 
   /**
@@ -70,17 +53,17 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterLowLevelWithAccess() {
     // User with access should be able to view 4 nodes.
     try {
-      $query = Database::getConnection()->select('node', 'mytab')
+      $query = db_select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
       $query->addMetaData('account', $this->accessUser);
 
       $result = $query->execute()->fetchAll();
-      $this->assertCount(4, $result, 'User with access can see correct nodes');
+      $this->assertEqual(count($result), 4, 'User with access can see correct nodes');
     }
     catch (\Exception $e) {
-      $this->fail('Altered query is malformed');
+      $this->fail(t('Altered query is malformed'));
     }
   }
 
@@ -95,7 +78,7 @@ class NodeQueryAlterTest extends NodeTestBase {
         ->allRevisions()
         ->execute();
 
-      $this->assertCount(4, $result, 'User with access can see correct nodes');
+      $this->assertEqual(count($result), 4, 'User with access can see correct nodes');
     }
     catch (\Exception $e) {
       $this->fail('Altered query is malformed');
@@ -111,17 +94,17 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterLowLevelNoAccess() {
     // User without access should be able to view 0 nodes.
     try {
-      $query = Database::getConnection()->select('node', 'mytab')
+      $query = db_select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
       $query->addMetaData('account', $this->noAccessUser);
 
       $result = $query->execute()->fetchAll();
-      $this->assertCount(0, $result, 'User with no access cannot see nodes');
+      $this->assertEqual(count($result), 0, 'User with no access cannot see nodes');
     }
     catch (\Exception $e) {
-      $this->fail('Altered query is malformed');
+      $this->fail(t('Altered query is malformed'));
     }
   }
 
@@ -134,19 +117,19 @@ class NodeQueryAlterTest extends NodeTestBase {
   public function testNodeQueryAlterLowLevelEditAccess() {
     // User with view-only access should not be able to edit nodes.
     try {
-      $query = Database::getConnection()->select('node', 'mytab')
+      $query = db_select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'update');
       $query->addMetaData('account', $this->accessUser);
 
       $result = $query->execute()->fetchAll();
-      $this->assertCount(0, $result, 'User with view-only access cannot edit nodes');
+      $this->assertEqual(count($result), 0, 'User with view-only access cannot edit nodes');
     }
     catch (\Exception $e) {
       $this->fail($e->getMessage());
       $this->fail((string) $query);
-      $this->fail('Altered query is malformed');
+      $this->fail(t('Altered query is malformed'));
     }
   }
 
@@ -168,24 +151,23 @@ class NodeQueryAlterTest extends NodeTestBase {
       'grant_update' => 0,
       'grant_delete' => 0,
     ];
-    $connection = Database::getConnection();
-    $connection->insert('node_access')->fields($record)->execute();
+    db_insert('node_access')->fields($record)->execute();
 
     // Test that the noAccessUser still doesn't have the 'view'
     // privilege after adding the node_access record.
     drupal_static_reset('node_access_view_all_nodes');
     try {
-      $query = $connection->select('node', 'mytab')
+      $query = db_select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
       $query->addMetaData('account', $this->noAccessUser);
 
       $result = $query->execute()->fetchAll();
-      $this->assertCount(0, $result, 'User view privileges are not overridden');
+      $this->assertEqual(count($result), 0, 'User view privileges are not overridden');
     }
     catch (\Exception $e) {
-      $this->fail('Altered query is malformed');
+      $this->fail(t('Altered query is malformed'));
     }
 
     // Have node_test_node_grants return a node_access_all privilege,
@@ -197,17 +179,17 @@ class NodeQueryAlterTest extends NodeTestBase {
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
     drupal_static_reset('node_access_view_all_nodes');
     try {
-      $query = $connection->select('node', 'mytab')
+      $query = db_select('node', 'mytab')
         ->fields('mytab');
       $query->addTag('node_access');
       $query->addMetaData('op', 'view');
       $query->addMetaData('account', $this->noAccessUser);
 
       $result = $query->execute()->fetchAll();
-      $this->assertCount(4, $result, 'User view privileges are overridden');
+      $this->assertEqual(count($result), 4, 'User view privileges are overridden');
     }
     catch (\Exception $e) {
-      $this->fail('Altered query is malformed');
+      $this->fail(t('Altered query is malformed'));
     }
     \Drupal::state()->delete('node_access_test.no_access_uid');
   }

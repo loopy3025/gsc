@@ -18,11 +18,6 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
   public static $modules = ['language'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -56,7 +51,7 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
     $this->blockContentInfos = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nourriture en Paris',
+      'fr' => 'Nouriture en Paris',
     ];
 
     // Create block_content with translations.

@@ -20,7 +20,16 @@ class NodeEntityTranslation extends FieldableEntity {
    */
   public function query() {
     $query = $this->select('entity_translation', 'et')
-      ->fields('et')
+      ->fields('et', [
+        'entity_id',
+        'revision_id',
+        'language',
+        'source',
+        'uid',
+        'status',
+        'created',
+        'changed',
+      ])
       ->fields('n', [
         'title',
         'type',
@@ -79,16 +88,14 @@ class NodeEntityTranslation extends FieldableEntity {
    */
   public function fields() {
     return [
-      'entity_type' => $this->t('The entity type this translation relates to'),
-      'entity_id' => $this->t('The entity ID this translation relates to'),
-      'revision_id' => $this->t('The entity revision ID this translation relates to'),
-      'language' => $this->t('The target language for this translation.'),
-      'source' => $this->t('The source language from which this translation was created.'),
-      'uid' => $this->t('The author of this translation.'),
-      'status' => $this->t('Boolean indicating whether the translation is published (visible to non-administrators).'),
-      'translate' => $this->t('A boolean indicating whether this translation needs to be updated.'),
-      'created' => $this->t('The Unix timestamp when the translation was created.'),
-      'changed' => $this->t('The Unix timestamp when the translation was most recently saved.'),
+      'entity_id' => $this->t('Entity ID'),
+      'revision_id' => $this->t('Revision ID'),
+      'language' => $this->t('Node translation language'),
+      'source' => $this->t('Node translation source language'),
+      'uid' => $this->t('Node translation authored by (uid)'),
+      'status' => $this->t('Published'),
+      'created' => $this->t('Created timestamp'),
+      'changed' => $this->t('Modified timestamp'),
       'title' => $this->t('Node title'),
       'type' => $this->t('Node type'),
       'promote' => $this->t('Promoted to front page'),

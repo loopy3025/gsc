@@ -19,11 +19,6 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -37,7 +32,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
    */
   protected function getFormBuildId() {
     $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $build_id_fields, 'One form build id field on the page');
+    $this->assertEquals(count($build_id_fields), 1, 'One form build id field on the page');
     return $build_id_fields[0]->getValue();
   }
 

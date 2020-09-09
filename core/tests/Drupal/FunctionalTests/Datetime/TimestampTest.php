@@ -18,7 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class TimestampTest extends BrowserTestBase {
 
   /**
-   * An array of display options to pass to EntityDisplayRepositoryInterface::getViewDisplay().
+   * An array of display options to pass to entity_get_display().
    *
    * @var array
    */
@@ -42,11 +42,6 @@ class TimestampTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   public static $modules = ['node', 'entity_test', 'field_ui'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -109,14 +104,14 @@ class TimestampTest extends BrowserTestBase {
     $date = new DrupalDateTime($value, 'UTC');
 
     // Update the timezone to the system default.
-    $date->setTimezone(timezone_open(date_default_timezone_get()));
+    $date->setTimezone(timezone_open(drupal_get_user_timezone()));
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
 
     // Make sure the "datetime_timestamp" widget is on the page.
     $fields = $this->xpath('//div[contains(@class, "field--widget-datetime-timestamp") and @id="edit-field-timestamp-wrapper"]');
-    $this->assertCount(1, $fields);
+    $this->assertEquals(1, count($fields));
 
     // Look for the widget elements and make sure they are empty.
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');

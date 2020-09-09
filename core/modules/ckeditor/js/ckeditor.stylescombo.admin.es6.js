@@ -15,7 +15,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches admin behavior to the "stylescombo" button.
+   *   Attaches admin behaviour to the "stylescombo" button.
    */
   Drupal.behaviors.ckeditorStylesComboSettings = {
     attach(context) {
@@ -92,7 +92,7 @@
         const element = classes.shift();
 
         // Build the data structure CKEditor's stylescombo plugin expects.
-        // @see https://ckeditor.com/docs/ckeditor4/latest/guide/dev_howtos_styles.html
+        // @see http://docs.cksource.com/CKEditor_3.x/Developers_Guide/Styles
         stylesSet.push({
           attributes: { class: classes.join(' ') },
           element,
@@ -110,7 +110,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches summary behavior to the plugin settings vertical tab.
+   *   Attaches summary behaviour to the plugin settings vertical tab.
    */
   Drupal.behaviors.ckeditorStylesComboSettingsSummary = {
     attach() {

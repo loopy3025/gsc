@@ -65,7 +65,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * as appropriate.
    *
    * @param object $cache
-   *   An item loaded from self::get() or self::getMultiple().
+   *   An item loaded from cache_get() or cache_get_multiple().
    * @param bool $allow_invalid
    *   (optional) If TRUE, cache items may be returned even if they have expired
    *   or been invalidated.
@@ -156,9 +156,10 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * {@inheritdoc}
    */
   public function invalidateMultiple(array $cids) {
-    $items = array_intersect_key($this->cache, array_flip($cids));
-    foreach ($items as $cid => $item) {
-      $this->cache[$cid]->expire = $this->getRequestTime() - 1;
+    foreach ($cids as $cid) {
+      if (isset($this->cache[$cid])) {
+        $this->cache[$cid]->expire = $this->getRequestTime() - 1;
+      }
     }
   }
 

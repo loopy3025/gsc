@@ -24,8 +24,8 @@ class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('block_content');
     $this->installConfig(static::$modules);
+    $this->installEntitySchema('block_content');
 
     $this->executeMigrations([
       'd7_filter_format',
@@ -40,7 +40,7 @@ class MigrateCustomBlockTest extends MigrateDrupal7TestBase {
    */
   public function testCustomBlockMigration() {
     $block = BlockContent::load(1);
-    $this->assertInstanceOf(BlockContentInterface::class, $block);
+    $this->assertTrue($block instanceof BlockContentInterface);
     /** @var \Drupal\block_content\BlockContentInterface $block */
     $this->assertIdentical('Limerick', $block->label());
 

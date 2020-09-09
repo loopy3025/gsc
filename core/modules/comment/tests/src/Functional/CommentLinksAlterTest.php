@@ -11,11 +11,6 @@ class CommentLinksAlterTest extends CommentTestBase {
 
   public static $modules = ['comment_test'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   protected function setUp() {
     parent::setUp();
 
@@ -34,7 +29,7 @@ class CommentLinksAlterTest extends CommentTestBase {
 
     $this->drupalGet('node/' . $this->node->id());
 
-    $this->assertSession()->linkExists(t('Report'));
+    $this->assertLink(t('Report'));
   }
 
 }

@@ -19,18 +19,7 @@ class ConfigImportUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
-    'config',
-    'config_test',
-    'config_import_test',
-    'text',
-    'options',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
+  public static $modules = ['config', 'config_test', 'config_import_test', 'text', 'options'];
 
   /**
    * A user with the 'synchronize configuration' permission.
@@ -82,12 +71,12 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync->write($dynamic_name, $original_dynamic_data);
     $this->assertIdentical($sync->exists($dynamic_name), TRUE, $dynamic_name . ' found.');
 
-    // Enable the Automated Cron and Ban modules during import. The Ban
-    // module is used because it creates a table during the install.
-    // The Automated Cron module is used because it creates a single simple
-    // configuration file during the install.
+    // Enable the Action and Ban modules during import. The Ban
+    // module is used because it creates a table during the install. The Action
+    // module is used because it creates a single simple configuration file
+    // during the install.
     $core_extension = $this->config('core.extension')->get();
-    $core_extension['module']['automated_cron'] = 0;
+    $core_extension['module']['action'] = 0;
     $core_extension['module']['ban'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
     // Bartik is a subtheme of classy so classy must be enabled.
@@ -104,10 +93,10 @@ class ConfigImportUITest extends BrowserTestBase {
     $system_theme['default'] = 'bartik';
     $sync->write('system.theme', $system_theme);
 
-    // Read the automated_cron config from module default config folder.
-    $settings = $install_storage->read('automated_cron.settings');
-    $settings['interval'] = 10000;
-    $sync->write('automated_cron.settings', $settings);
+    // Read the action config from module default config folder.
+    $action_settings = $install_storage->read('action.settings');
+    $action_settings['recursion_limit'] = 50;
+    $sync->write('action.settings', $action_settings);
 
     // Uninstall the Options and Text modules to ensure that dependencies are
     // handled correctly. Options depends on Text so Text should be installed
@@ -125,7 +114,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertRaw('<td>' . $dynamic_name);
     $this->assertRaw('<td>core.extension');
     $this->assertRaw('<td>system.theme');
-    $this->assertRaw('<td>automated_cron.settings');
+    $this->assertRaw('<td>action.settings');
     $this->assertFieldById('edit-submit', t('Import all'));
 
     // Import and verify that both do not appear anymore.
@@ -134,7 +123,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertNoRaw('<td>' . $dynamic_name);
     $this->assertNoRaw('<td>core.extension');
     $this->assertNoRaw('<td>system.theme');
-    $this->assertNoRaw('<td>automated_cron.settings');
+    $this->assertNoRaw('<td>action.settings');
 
     $this->assertNoFieldById('edit-submit', t('Import all'));
 
@@ -154,34 +143,36 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module installed during import.');
     $this->assertTrue(\Drupal::database()->schema()->tableExists('ban_ip'), 'The database table ban_ip exists.');
-    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('automated_cron'), 'Automated Cron module installed during import.');
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('action'), 'Action module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('options'), 'Options module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('text'), 'Text module installed during import.');
-    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('bartik'), 'Bartik theme installed during import.');
+
+    $theme_info = \Drupal::service('theme_handler')->listInfo();
+    $this->assertTrue($theme_info['bartik']->status, 'Bartik theme installed during import.');
 
     // Ensure installations and uninstallation occur as expected.
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
-    $expected = ['automated_cron', 'ban', 'text', 'options'];
-    $this->assertIdentical($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
+    $expected = ['action', 'ban', 'text', 'options'];
+    $this->assertIdentical($expected, $installed, 'Action, Ban, Text and Options modules installed in the correct order.');
     $this->assertTrue(empty($uninstalled), 'No modules uninstalled during import');
 
-    // Verify that the automated_cron configuration object was only written
+    // Verify that the action.settings configuration object was only written
     // once during the import process and only with the value set in the staged
     // configuration. This verifies that the module's default configuration is
     // used during configuration import and, additionally, that after installing
     // a module, that configuration is not synced twice.
-    $interval_values = \Drupal::state()->get('ConfigImportUITest.automated_cron.settings.interval', []);
-    $this->assertIdentical($interval_values, [10000]);
+    $recursion_limit_values = \Drupal::state()->get('ConfigImportUITest.action.settings.recursion_limit', []);
+    $this->assertIdentical($recursion_limit_values, [50]);
 
     $core_extension = $this->config('core.extension')->get();
-    unset($core_extension['module']['automated_cron']);
+    unset($core_extension['module']['action']);
     unset($core_extension['module']['ban']);
     unset($core_extension['module']['options']);
     unset($core_extension['module']['text']);
     unset($core_extension['theme']['bartik']);
     $sync->write('core.extension', $core_extension);
-    $sync->delete('automated_cron.settings');
+    $sync->delete('action.settings');
     $sync->delete('text.settings');
 
     $system_theme = $this->config('system.theme')->get();
@@ -197,35 +188,35 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration');
     $this->assertRaw('<td>core.extension');
     $this->assertRaw('<td>system.theme');
-    $this->assertRaw('<td>automated_cron.settings');
+    $this->assertRaw('<td>action.settings');
 
     // Import and verify that both do not appear anymore.
     $this->drupalPostForm(NULL, [], t('Import all'));
     $this->assertNoRaw('<td>core.extension');
     $this->assertNoRaw('<td>system.theme');
-    $this->assertNoRaw('<td>automated_cron.settings');
+    $this->assertNoRaw('<td>action.settings');
 
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('ban'), 'Ban module uninstalled during import.');
     $this->assertFalse(\Drupal::database()->schema()->tableExists('ban_ip'), 'The database table ban_ip does not exist.');
-    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('automated_cron'), 'Automated cron module uninstalled during import.');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('action'), 'Action module uninstalled during import.');
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('options'), 'Options module uninstalled during import.');
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('text'), 'Text module uninstalled during import.');
 
     // Ensure installations and uninstallation occur as expected.
     $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
-    $expected = ['options', 'text', 'ban', 'automated_cron'];
-    $this->assertIdentical($expected, $uninstalled, 'Options, Text, Ban and Automated Cron modules uninstalled in the correct order.');
+    $expected = ['options', 'text', 'ban', 'action'];
+    $this->assertIdentical($expected, $uninstalled, 'Options, Text, Ban and Action modules uninstalled in the correct order.');
     $this->assertTrue(empty($installed), 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
     $this->assertFalse(isset($theme_info['bartik']), 'Bartik theme uninstalled during import.');
 
-    // Verify that the automated_cron.settings configuration object was only
-    // deleted once during the import process.
-    $delete_called = \Drupal::state()->get('ConfigImportUITest.automated_cron.settings.delete', 0);
-    $this->assertIdentical($delete_called, 1, "The automated_cron.settings configuration was deleted once during configuration import.");
+    // Verify that the action.settings configuration object was only deleted
+    // once during the import process.
+    $delete_called = \Drupal::state()->get('ConfigImportUITest.action.settings.delete', 0);
+    $this->assertIdentical($delete_called, 1, "The action.settings configuration was deleted once during configuration import.");
   }
 
   /**
@@ -301,7 +292,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Load the diff UI and verify that the diff reflects the change.
     $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
     $this->assertNoRaw('&amp;nbsp;');
-    $this->assertTitle("View changes of $config_name | Drupal");
+    $this->assertTitle(format_string('View changes of @config_name | Drupal', ['@config_name' => $config_name]));
 
     // The following assertions do not use $this::assertEscaped() because
     // \Drupal\Component\Diff\DiffFormatter adds markup that signifies what has
@@ -319,7 +310,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify diff colors are displayed.
     $result = $this->xpath('//table[contains(@class, :class)]', [':class' => 'diff']);
-    $this->assertCount(1, $result, "Diff UI is displaying colors.");
+    $this->assertEqual(count($result), 1, "Diff UI is displaying colors.");
 
     // Reset data back to original, and remove a key
     $sync_data = $original_data;
@@ -462,11 +453,11 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration');
     // The node type, body field and entity displays will be scheduled for
     // removal.
-    $this->assertText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('node.type.@type', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('field.field.node.@type.body', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
 
     // Attempt to import configuration and verify that an error message appears
     // and the node type, body field and entity displays are still scheduled for
@@ -474,22 +465,22 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Import all'));
     $validation_message = t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $node->getEntityType()->getLabel(), '%bundle_label' => $node->getEntityType()->getBundleLabel(), '%bundle' => $node_type->label()]);
     $this->assertRaw($validation_message);
-    $this->assertText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('node.type.@type', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('field.field.node.@type.body', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText(format_string('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
 
     // Delete the node and try to import again.
     $node->delete();
     $this->drupalPostForm(NULL, [], t('Import all'));
     $this->assertNoRaw($validation_message);
     $this->assertText(t('There are no configuration changes to import.'));
-    $this->assertNoText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertNoText(format_string('node.type.@type', ['@type' => $node_type->id()]));
+    $this->assertNoText(format_string('field.field.node.@type.body', ['@type' => $node_type->id()]));
+    $this->assertNoText(format_string('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
+    $this->assertNoText(format_string('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertNoText(format_string('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
   }
 
   /**
@@ -499,7 +490,7 @@ class ConfigImportUITest extends BrowserTestBase {
    */
   public function testExtensionValidation() {
     \Drupal::service('module_installer')->install(['node']);
-    \Drupal::service('theme_installer')->install(['bartik']);
+    \Drupal::service('theme_handler')->install(['bartik']);
     $this->rebuildContainer();
 
     $sync = $this->container->get('config.storage.sync');
@@ -507,7 +498,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $core = $sync->read('core.extension');
     // Node depends on text.
     unset($core['module']['text']);
-    $module_data = $this->container->get('extension.list.module')->getList();
+    $module_data = system_rebuild_module_data();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
     // Bartik depends on classy.
     unset($core['theme']['classy']);

@@ -22,11 +22,6 @@ class MenuLinkContentFormTest extends BrowserTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * User with 'administer menu' and 'link to any page' permission.
    *
    * @var \Drupal\user\Entity\User
@@ -47,10 +42,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser([
-      'administer menu',
-      'link to any page',
-    ]);
+    $this->adminUser = $this->drupalCreateUser(['administer menu', 'link to any page']);
     $this->basicUser = $this->drupalCreateUser(['administer menu']);
     $this->drupalLogin($this->adminUser);
   }
@@ -70,12 +62,12 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     // The user should be able to edit a menu link to the page, even though
     // the user cannot access the page itself.
     $this->drupalGet('/admin/structure/menu/item/' . $menu_link->id() . '/edit');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalLogin($this->basicUser);
 
     $this->drupalGet('/admin/structure/menu/item/' . $menu_link->id() . '/edit');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
   }
 
   /**
@@ -84,7 +76,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
   public function testMenuLinkContentForm() {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $element = $this->xpath('//select[@id = :id]/option[@selected]', [':id' => 'edit-menu-parent']);
-    $this->assertNotEmpty($element, 'A default menu parent was found.');
+    $this->assertTrue($element, 'A default menu parent was found.');
     $this->assertEqual('admin:', $element[0]->getValue(), '<Administration> menu is the parent.');
     // Test that the field description is present.
     $this->assertRaw('The location this menu link points to.');
@@ -113,7 +105,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
       ],
       t('Save')
     );
-    $this->assertText(t('Manually entered paths should start with one of the following characters: / ? #'));
+    $this->assertText(t('Manually entered paths should start with /, ? or #.'));
   }
 
 }

@@ -23,17 +23,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = [
-    'language',
-    'content_translation',
-    'user',
-    'views',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
+  public static $modules = ['language', 'content_translation', 'user', 'views'];
 
   protected function setUp() {
     $this->entityTypeId = 'user';
@@ -41,7 +31,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
     $this->name = $this->randomMachineName();
     parent::setUp();
 
-    \Drupal::entityTypeManager()->getStorage('user')->resetCache();
+    \Drupal::entityManager()->getStorage('user')->resetCache();
   }
 
   /**
@@ -73,7 +63,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
       // We only want to test the title for non-english translations.
       if ($langcode != 'en') {
         $options = ['language' => $languages[$langcode]];
-        $url = $entity->toUrl('edit-form', $options);
+        $url = $entity->urlInfo('edit-form', $options);
         $this->drupalGet($url);
 
         $title = t('@title [%language translation]', [

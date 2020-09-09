@@ -13,17 +13,9 @@ class UserRolesAssignmentTest extends BrowserTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser([
-      'administer permissions',
-      'administer users',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer permissions', 'administer users']);
     $this->drupalLogin($admin_user);
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests that a user can be assigned a role and that the role can be removed
@@ -88,14 +80,14 @@ class UserRolesAssignmentTest extends BrowserTestBase {
    *   Defaults to TRUE.
    */
   private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE) {
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $user_storage = $this->container->get('entity.manager')->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     if ($is_assigned) {
-      $this->assertContains($rid, $account->getRoles());
+      $this->assertFalse(array_search($rid, $account->getRoles()) === FALSE, 'The role is present in the user object.');
     }
     else {
-      $this->assertNotContains($rid, $account->getRoles());
+      $this->assertTrue(array_search($rid, $account->getRoles()) === FALSE, 'The role is not present in the user object.');
     }
   }
 

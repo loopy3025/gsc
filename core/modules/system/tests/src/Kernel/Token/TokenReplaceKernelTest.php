@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Kernel\Token;
 
-use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
@@ -48,7 +47,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
       $output = $this->tokenService->replace($input, [], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertTrue($output == $expected, new FormattableMarkup('Token recognized in string %string', ['%string' => $input]));
+      $this->assertTrue($output == $expected, format_string('Token recognized in string %string', ['%string' => $input]));
     }
 
     // Test token replacement when the string contains no tokens.
@@ -102,9 +101,9 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $tests['[site:name]'] = Html::escape($config->get('name'));
     $tests['[site:slogan]'] = $safe_slogan;
     $tests['[site:mail]'] = $config->get('mail');
-    $tests['[site:url]'] = Url::fromRoute('<front>', [], $url_options)->toString();
-    $tests['[site:url-brief]'] = preg_replace(['!^https?://!', '!/$!'], '', Url::fromRoute('<front>', [], $url_options)->toString());
-    $tests['[site:login-url]'] = Url::fromRoute('user.page', [], $url_options)->toString();
+    $tests['[site:url]'] = \Drupal::url('<front>', [], $url_options);
+    $tests['[site:url-brief]'] = preg_replace(['!^https?://!', '!/$!'], '', \Drupal::url('<front>', [], $url_options));
+    $tests['[site:login-url]'] = \Drupal::url('user.page', [], $url_options);
 
     $base_bubbleable_metadata = new BubbleableMetadata();
 
@@ -118,7 +117,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $metadata_tests['[site:login-url]'] = $bubbleable_metadata;
 
     // Test to make sure that we generated something for each token.
-    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated.');
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
@@ -146,11 +145,11 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     $tests['[date:raw]'] = Xss::filter($date);
 
     // Test to make sure that we generated something for each token.
-    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated.');
+    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, ['date' => $date], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertEqual($output, $expected, new FormattableMarkup('Date token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($output, $expected, format_string('Date token %token replaced.', ['%token' => $input]));
     }
   }
 

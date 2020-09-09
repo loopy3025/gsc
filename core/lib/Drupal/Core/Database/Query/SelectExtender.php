@@ -25,8 +25,6 @@ class SelectExtender implements SelectInterface {
 
   /**
    * A unique identifier for this query object.
-   *
-   * @var string
    */
   protected $uniqueIdentifier;
 
@@ -476,14 +474,6 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function alwaysFalse() {
-    $this->query->alwaysFalse();
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function __toString() {
     return (string) $this->query;
   }
@@ -528,7 +518,7 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    return $this->connection->condition($conjunction);
+    return new Condition($conjunction);
   }
 
   /**

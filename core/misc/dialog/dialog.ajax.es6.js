@@ -23,7 +23,7 @@
         // Add 'ui-front' jQuery UI class so jQuery UI widgets like autocomplete
         // sit on top of dialogs. For more information see
         // http://api.jqueryui.com/theming/stacking-elements/.
-        $('<div id="drupal-modal" class="ui-front"></div>')
+        $('<div id="drupal-modal" class="ui-front"/>')
           .hide()
           .appendTo('body');
       }
@@ -65,7 +65,19 @@
         '.form-actions input[type=submit], .form-actions a.button',
       );
       $buttons.each(function() {
-        const $originalButton = $(this).css({ display: 'none' });
+        // Hidden form buttons need special attention. For browser consistency,
+        // the button needs to be "visible" in order to have the enter key fire
+        // the form submit event. So instead of a simple "hide" or
+        // "display: none", we set its dimensions to zero.
+        // See http://mattsnider.com/how-forms-submit-when-pressing-enter/
+        const $originalButton = $(this).css({
+          display: 'block',
+          width: 0,
+          height: 0,
+          padding: 0,
+          border: 0,
+          overflow: 'hidden',
+        });
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
@@ -109,10 +121,7 @@
     if (!$dialog.length) {
       // Create the element if needed.
       $dialog = $(
-        `<div id="${response.selector.replace(
-          /^#/,
-          '',
-        )}" class="ui-front"></div>`,
+        `<div id="${response.selector.replace(/^#/, '')}" class="ui-front"/>`,
       ).appendTo('body');
     }
     // Set up the wrapper, if there isn't one.

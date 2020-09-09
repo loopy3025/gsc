@@ -31,11 +31,6 @@ class PagerTest extends ViewTestBase {
   public static $modules = ['node', 'views_ui'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * String translation storage object.
    *
    * @var \Drupal\locale\StringStorageInterface
@@ -51,10 +46,7 @@ class PagerTest extends ViewTestBase {
     // Show the master display so the override selection is shown.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
 
-    $admin_user = $this->drupalCreateUser([
-      'administer views',
-      'administer site configuration',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
     $this->drupalLogin($admin_user);
     // Test behavior described in
     //   https://www.drupal.org/node/652712#comment-2354918.
@@ -62,31 +54,9 @@ class PagerTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/test_view/edit');
 
     $edit = [
-      'pager[type]' => 'some',
-    ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
-
-    $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 10, '"Items per page" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
-
-    $edit = [
-      'pager[type]' => 'none',
-    ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
-
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
-
-    $edit = [
       'pager[type]' => 'full',
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
-
-    $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 10, '"Items to display" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[id]" and @type="number" and @min="0"]', 0, '"Pager ID" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[total_pages]" and @type="number" and @min="0"]', '', '"Number of pages" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[quantity]" and @type="number" and @min="0"]', 9, '"Number of pager links" field was found.');
-
     $edit = [
       'pager_options[items_per_page]' => 20,
     ];
@@ -151,11 +121,6 @@ class PagerTest extends ViewTestBase {
     $this->assertFieldByName('override[dropdown]', 'page_1', 'The override element is displayed on plugin selection form.');
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager_options');
     $this->assertNoFieldByName('override[dropdown]', NULL, 'The override element is not displayed on plugin settings form.');
-
-    $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 20, '"Items per page" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[id]" and @type="number" and @min="0"]', 0, '"Pager ID" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[total_pages]" and @type="number" and @min="0"]', '', '"Number of pages" field was found.');
   }
 
   /**
@@ -170,7 +135,7 @@ class PagerTest extends ViewTestBase {
     }
     $view = Views::getView('test_pager_none');
     $this->executeView($view);
-    $this->assertCount(11, $view->result, 'Make sure that every item is returned in the result');
+    $this->assertEqual(count($view->result), 11, 'Make sure that every item is returned in the result');
 
     // Setup and test a offset.
     $view = Views::getView('test_pager_none');
@@ -184,7 +149,7 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
 
-    $this->assertCount(8, $view->result, 'Make sure that every item beside the first three is returned in the result');
+    $this->assertEqual(count($view->result), 8, 'Make sure that every item beside the first three is returned in the result');
 
     // Check some public functions.
     $this->assertFalse($view->pager->usePager());
@@ -218,7 +183,7 @@ class PagerTest extends ViewTestBase {
 
     $view = Views::getView('test_pager_some');
     $this->executeView($view);
-    $this->assertCount(5, $view->result, 'Make sure that only a certain count of items is returned');
+    $this->assertEqual(count($view->result), 5, 'Make sure that only a certain count of items is returned');
 
     // Setup and test a offset.
     $view = Views::getView('test_pager_some');
@@ -232,7 +197,7 @@ class PagerTest extends ViewTestBase {
     ];
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
-    $this->assertCount(3, $view->result, 'Make sure that only a certain count of items is returned');
+    $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
     // Check some public functions.
     $this->assertFalse($view->pager->usePager());
@@ -252,7 +217,7 @@ class PagerTest extends ViewTestBase {
 
     $view = Views::getView('test_pager_full');
     $this->executeView($view);
-    $this->assertCount(5, $view->result, 'Make sure that only a certain count of items is returned');
+    $this->assertEqual(count($view->result), 5, 'Make sure that only a certain count of items is returned');
 
     // Setup and test a offset.
     $view = Views::getView('test_pager_full');
@@ -266,13 +231,13 @@ class PagerTest extends ViewTestBase {
     ];
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
-    $this->assertCount(3, $view->result, 'Make sure that only a certain count of items is returned');
+    $this->assertEqual(count($view->result), 3, 'Make sure that only a certain count of items is returned');
 
     // Test items per page = 0
     $view = Views::getView('test_view_pager_full_zero_items_per_page');
     $this->executeView($view);
 
-    $this->assertCount(11, $view->result, 'All items are return');
+    $this->assertEqual(count($view->result), 11, 'All items are return');
 
     // TODO test number of pages.
 
@@ -291,7 +256,7 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $this->executeView($view);
     $this->assertEqual($view->pager->getItemsPerPage(), 0);
-    $this->assertCount(11, $view->result);
+    $this->assertEqual(count($view->result), 11);
 
     // Test pager cache contexts.
     $this->drupalGet('test_pager_full');
@@ -387,12 +352,7 @@ class PagerTest extends ViewTestBase {
     $this->container->get('module_installer')->install(['locale', 'language', 'config_translation']);
     $this->resetAll();
 
-    $admin_user = $this->drupalCreateUser([
-      'access content overview',
-      'administer nodes',
-      'bypass node access',
-      'translate configuration',
-    ]);
+    $admin_user = $this->drupalCreateUser(['access content overview', 'administer nodes', 'bypass node access', 'translate configuration']);
     $this->drupalLogin($admin_user);
 
     $langcode = 'nl';

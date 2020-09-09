@@ -16,11 +16,6 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
     // Set up permissions for anonymous attacker user.
@@ -40,7 +35,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Load the node form.
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'Loaded the article node form.');
     $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     $edit = [
@@ -48,7 +43,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       'body[0][value]' => 'Test article',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $matches = [];
@@ -71,7 +66,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Load the node form.
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'Loaded the article node form.');
     $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
@@ -84,7 +79,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $matches = [];
@@ -93,7 +88,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
-      $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri());
+      $this->assertFileExists(File::load($node->field_image->target_id), 'The image was uploaded successfully.');
     }
   }
 
@@ -128,7 +123,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
 
     // Load the node form.
     $this->drupalGet('node/add/article');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'Loaded the article node form.');
     $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
@@ -146,7 +141,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       $label = 'Save';
     }
     $this->drupalPostForm(NULL, $edit, $label);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $this->assertText('Title field is required.');
@@ -167,7 +162,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
-      $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri());
+      $this->assertFileExists(File::load($node->field_image->target_id), 'The image was uploaded successfully.');
     }
   }
 

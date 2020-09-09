@@ -42,9 +42,6 @@
  *   parent: system.admin_reports
  *   description: 'View events that have recently been logged.'
  *   route_name: dblog.overview
- *   options:
- *     query:
- *       uid: 1
  *   weight: -1
  * @endcode
  * Some notes:
@@ -53,9 +50,6 @@
  * - parent: The machine name of the menu link that is the parent in the
  *   administrative hierarchy. See system.links.menu.yml to find the main
  *   skeleton of the hierarchy.
- * - options: Define additional route options such as query parameters. See
- *   https://www.drupal.org/docs/8/api/menu-api/providing-module-defined-menu-links
- *   for more information.
  * - weight: Lower (negative) numbers come before higher (positive) numbers,
  *   for menu items with the same parent.
  *
@@ -329,7 +323,7 @@ function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\Ref
       ],
   ];
   // The tab we're adding is dependent on a user's access to add content.
-  $cacheability->addCacheContexts(['user.permissions']);
+  $cacheability->addCacheTags(['user.permissions']);
 }
 
 /**
@@ -400,7 +394,7 @@ function hook_contextual_links_alter(array &$links, $group, array $route_paramet
   if ($group == 'menu') {
     // Dynamically use the menu name for the title of the menu_edit contextual
     // link.
-    $menu = \Drupal::entityTypeManager()->getStorage('menu')->load($route_parameters['menu']);
+    $menu = \Drupal::entityManager()->getStorage('menu')->load($route_parameters['menu']);
     $links['menu_edit']['title'] = t('Edit menu: @label', ['@label' => $menu->label()]);
   }
 }

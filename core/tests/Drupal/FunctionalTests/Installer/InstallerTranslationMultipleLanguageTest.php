@@ -10,11 +10,6 @@ namespace Drupal\FunctionalTests\Installer;
 class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Switch to the multilingual testing profile.
    *
    * @var string
@@ -38,7 +33,6 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
    *
    * @param string $langcode
    *   The language code.
-   *
    * @return string
    *   Contents for the test .po file.
    */

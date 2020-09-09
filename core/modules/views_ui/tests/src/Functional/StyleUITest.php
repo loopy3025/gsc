@@ -20,11 +20,6 @@ class StyleUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests changing the style plugin and changing some options of a style.
    */
   public function testStyleUI() {
@@ -51,7 +46,7 @@ class StyleUITest extends UITestBase {
     $this->assertFieldByName('style_options[test_option]', $random_name, 'Make sure the custom settings form field has the expected value stored.');
 
     $this->drupalPostForm($view_edit_url, [], t('Save'));
-    $this->assertSession()->linkExists(t('Test style plugin'), 0, 'Make sure the test style plugin is shown in the UI');
+    $this->assertLink(t('Test style plugin'), 0, 'Make sure the test style plugin is shown in the UI');
 
     $view = Views::getView($view_name);
     $view->initDisplay();

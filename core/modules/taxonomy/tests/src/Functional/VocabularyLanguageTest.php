@@ -14,11 +14,6 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
   public static $modules = ['language'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   protected function setUp() {
     parent::setUp();
 
@@ -85,7 +80,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
     // Check that the vocabulary was actually created.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $edit['vid']);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'The vocabulary has been created.');
 
     // Check that the language settings were saved.
     $language_settings = ContentLanguageSettings::loadByEntityTypeBundle('taxonomy_term', $edit['vid']);

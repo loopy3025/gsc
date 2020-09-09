@@ -13,11 +13,6 @@ use Drupal\field\Entity\FieldConfig;
 class ImageFieldValidateTest extends ImageFieldTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Test the validation message is displayed only once for ajax uploads.
    */
   public function testAJAXValidationMessage() {
@@ -36,7 +31,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $elements = $this->xpath('//div[contains(@class, :class)]', [
       ':class' => 'messages--error',
     ]);
-    $this->assertCount(1, $elements, 'Ajax validation messages are displayed once.');
+    $this->assertEqual(count($elements), 1, 'Ajax validation messages are displayed once.');
   }
 
   /**

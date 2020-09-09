@@ -25,11 +25,6 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * The test media type.
    *
    * @var \Drupal\media\MediaTypeInterface
@@ -86,7 +81,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $source = $media_type->getSource();
     /** @var \Drupal\field\FieldConfigInterface $source_field */
     $source_field = $source->getSourceFieldDefinition($media_type);
-    $this->assertInstanceOf(FieldConfigInterface::class, $source_field);
+    $this->assertInstanceOf(FieldConfigInterface::class, $source_field, 'Source field exists.');
     $this->assertFalse($source_field->isNew(), 'Source field was saved.');
     /** @var \Drupal\field\FieldStorageConfigInterface $storage */
     $storage = $source_field->getFieldStorageDefinition();

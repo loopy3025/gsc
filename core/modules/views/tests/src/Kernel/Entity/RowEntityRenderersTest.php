@@ -21,15 +21,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
-    'field',
-    'filter',
-    'text',
-    'node',
-    'user',
-    'language',
-    'views_test_language',
-  ];
+  public static $modules = ['field', 'filter', 'text', 'node', 'user', 'language', 'views_test_language'];
 
   /**
    * Views used by this test.
@@ -102,7 +94,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
 
     $this->values = [];
     $this->ids = [];
-    $controller = \Drupal::entityTypeManager()->getStorage('node');
+    $controller = \Drupal::entityManager()->getStorage('node');
     $langcode_index = 0;
 
     for ($i = 0; $i < count($this->langcodes); $i++) {

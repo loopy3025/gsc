@@ -26,11 +26,6 @@ class ResourceTest extends BrowserTestBase {
   public static $modules = ['hal', 'rest', 'entity_test', 'rest_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * The entity.
    *
    * @var \Drupal\Core\Entity\EntityInterface
@@ -77,13 +72,13 @@ class ResourceTest extends BrowserTestBase {
     ])->save();
 
     // Verify that accessing the resource returns 406.
-    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'hal_json'));
+    $this->drupalGet($this->entity->urlInfo()->setRouteParameter('_format', 'hal_json'));
     // \Drupal\Core\Routing\RequestFormatRouteFilter considers the canonical,
     // non-REST route a match, but a lower quality one: no format restrictions
     // means there's always a match and hence when there is no matching REST
     // route, the non-REST route is used, but can't render into
     // application/hal+json, so it returns a 406.
-    $this->assertSession()->statusCodeEquals(406);
+    $this->assertResponse('406', 'HTTP response code is 406 when the resource does not define formats, because it falls back to the canonical, non-REST route.');
   }
 
   /**
@@ -103,13 +98,13 @@ class ResourceTest extends BrowserTestBase {
     ])->save();
 
     // Verify that accessing the resource returns 401.
-    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'hal_json'));
+    $this->drupalGet($this->entity->urlInfo()->setRouteParameter('_format', 'hal_json'));
     // \Drupal\Core\Routing\RequestFormatRouteFilter considers the canonical,
     // non-REST route a match, but a lower quality one: no format restrictions
     // means there's always a match and hence when there is no matching REST
     // route, the non-REST route is used, but can't render into
     // application/hal+json, so it returns a 406.
-    $this->assertSession()->statusCodeEquals(406);
+    $this->assertResponse('406', 'HTTP response code is 406 when the resource does not define formats, because it falls back to the canonical, non-REST route.');
   }
 
   /**
@@ -157,7 +152,7 @@ class ResourceTest extends BrowserTestBase {
 
     foreach ($manager->getDefinitions() as $resource => $definition) {
       foreach ($definition['uri_paths'] as $key => $uri_path) {
-        $this->assertStringNotContainsString('//', $uri_path, 'The resource URI path does not have duplicate slashes.');
+        $this->assertFalse(strpos($uri_path, '//'), 'The resource URI path does not have duplicate slashes.');
       }
     }
   }

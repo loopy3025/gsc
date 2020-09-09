@@ -44,33 +44,6 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
-    parent::setUp();
-
-    \Drupal::configFactory()
-      ->getEditable('media.settings')
-      ->set('standalone_url', TRUE)
-      ->save(TRUE);
-
-    // Provisioning the Media REST resource without the File REST resource does
-    // not make sense.
-    $this->resourceConfigStorage->create([
-      'id' => 'entity.file',
-      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
-      'configuration' => [
-        'methods' => ['GET'],
-        'formats' => [static::$format],
-        'authentication' => isset(static::$auth) ? [static::$auth] : [],
-      ],
-      'status' => TRUE,
-    ])->save();
-
-    $this->container->get('router.builder')->rebuild();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
@@ -189,19 +162,19 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'target_id' => (int) $file->id(),
           'target_type' => 'file',
           'target_uuid' => $file->uuid(),
-          'url' => $file->createFileUrl(FALSE),
+          'url' => $file->url(),
         ],
       ],
       'thumbnail' => [
         [
-          'alt' => '',
+          'alt' => 'Thumbnail',
           'width' => 180,
           'height' => 180,
           'target_id' => (int) $thumbnail->id(),
           'target_type' => 'file',
           'target_uuid' => $thumbnail->uuid(),
-          'title' => NULL,
-          'url' => $thumbnail->createFileUrl(FALSE),
+          'title' => 'Llama',
+          'url' => $thumbnail->url(),
         ],
       ],
       'status' => [
@@ -290,7 +263,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
     switch ($method) {
       case 'GET';
-        return "The 'view media' permission is required when the media item is published.";
+        return "The 'view media' permission is required and the media item must be published.";
 
       case 'POST':
         return "The following permissions are required: 'administer media' OR 'create media' OR 'create camelids media'.";
@@ -372,7 +345,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
     // To still run the complete test coverage for POSTing a Media entity, we
     // must revoke the additional permissions that we granted.
-    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
+    $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::AUTHENTICATED_ID);
     $role->revokePermission('create camelids media');
     $role->trustData()->save();
   }
@@ -449,9 +422,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+  protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+    return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['media:1']);
   }
 

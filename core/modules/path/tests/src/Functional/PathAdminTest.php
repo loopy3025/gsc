@@ -16,21 +16,11 @@ class PathAdminTest extends PathTestBase {
    */
   public static $modules = ['path'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   protected function setUp() {
     parent::setUp();
 
     // Create test user and log in.
-    $web_user = $this->drupalCreateUser([
-      'create page content',
-      'edit own page content',
-      'administer url aliases',
-      'create url aliases',
-    ]);
+    $web_user = $this->drupalCreateUser(['create page content', 'edit own page content', 'administer url aliases', 'create url aliases']);
     $this->drupalLogin($web_user);
   }
 
@@ -46,22 +36,22 @@ class PathAdminTest extends PathTestBase {
     // Create aliases.
     $alias1 = '/' . $this->randomMachineName(8);
     $edit = [
-      'path[0][value]' => '/node/' . $node1->id(),
-      'alias[0][value]' => $alias1,
+      'source' => '/node/' . $node1->id(),
+      'alias' => $alias1,
     ];
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     $alias2 = '/' . $this->randomMachineName(8);
     $edit = [
-      'path[0][value]' => '/node/' . $node2->id(),
-      'alias[0][value]' => $alias2,
+      'source' => '/node/' . $node2->id(),
+      'alias' => $alias2,
     ];
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     $alias3 = '/' . $this->randomMachineName(4) . '/' . $this->randomMachineName(4);
     $edit = [
-      'path[0][value]' => '/node/' . $node3->id(),
-      'alias[0][value]' => $alias3,
+      'source' => '/node/' . $node3->id(),
+      'alias' => $alias3,
     ];
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 

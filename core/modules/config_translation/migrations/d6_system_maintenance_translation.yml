@@ -5,7 +5,7 @@ migration_tags:
   - Configuration
   - Multilingual
 source:
-  plugin: d6_variable_translation
+  plugin: variable_translation
   variables:
     - site_offline_message
   source_module: i18n

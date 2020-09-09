@@ -33,11 +33,6 @@ class AdminTest extends BrowserTestBase {
    */
   public static $modules = ['locale'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   protected function setUp() {
     // testAdminPages() requires Locale module.
     parent::setUp();
@@ -63,7 +58,7 @@ class AdminTest extends BrowserTestBase {
     // Verify that all visible, top-level administration links are listed on
     // the main administration page.
     foreach ($this->getTopLevelMenuLinks() as $item) {
-      $this->assertSession()->linkExists($item->getTitle());
+      $this->assertLink($item->getTitle());
       $this->assertLinkByHref($item->getUrlObject()->toString());
       // The description should appear below the link.
       $this->assertText($item->getDescription());
@@ -157,16 +152,16 @@ class AdminTest extends BrowserTestBase {
     $frontpage_url = 'user/' . $this->adminUser->id();
 
     $this->drupalGet('admin/compact/on');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'A valid page is returned after turning on compact mode.');
     $this->assertUrl($frontpage_url, [], 'The user is redirected to the front page after turning on compact mode.');
-    $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns on.');
+    $this->assertTrue($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns on.');
     $this->drupalGet('admin/compact/on');
-    $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains on after a repeat call.');
+    $this->assertTrue($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains on after a repeat call.');
     $this->drupalGet('');
-    $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists on new requests.');
+    $this->assertTrue($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists on new requests.');
 
     $this->drupalGet('admin/compact/off');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'A valid page is returned after turning off compact mode.');
     $this->assertUrl($frontpage_url, [], 'The user is redirected to the front page after turning off compact mode.');
     $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns off.');
     $this->drupalGet('admin/compact/off');

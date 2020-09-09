@@ -3,6 +3,7 @@
 namespace Drupal\Component\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ResettableContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -41,12 +42,9 @@ use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceExce
  * - The function getServiceIds() was added as it has a use-case in core and
  *   contrib.
  *
- * @todo Implement Symfony\Contracts\Service\ResetInterface once Symfony 4
- *   is being used. See https://www.drupal.org/project/drupal/issues/3032605
- *
  * @ingroup container
  */
-class Container implements ContainerInterface {
+class Container implements ContainerInterface, ResettableContainerInterface {
 
   /**
    * The parameters of the container.
@@ -147,7 +145,7 @@ class Container implements ContainerInterface {
 
     if (!$definition && $invalid_behavior === ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       if (!$id) {
-        throw new ServiceNotFoundException('');
+        throw new ServiceNotFoundException($id);
       }
 
       throw new ServiceNotFoundException($id, NULL, NULL, $this->getServiceAlternatives($id));
@@ -189,12 +187,7 @@ class Container implements ContainerInterface {
   }
 
   /**
-   * Resets shared services from the container.
-   *
-   * The container is not intended to be used again after being reset in a
-   * normal workflow. This method is meant as a way to release references for
-   * ref-counting. A subsequent call to ContainerInterface::get() will recreate
-   * a new instance of the shared service.
+   * {@inheritdoc}
    */
   public function reset() {
     if (!empty($this->scopedServices)) {
@@ -256,7 +249,60 @@ class Container implements ContainerInterface {
     }
     else {
       $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
-      $service = new $class(...$arguments);
+      $length = isset($definition['arguments_count']) ? $definition['arguments_count'] : count($arguments);
+
+      // Optimize class instantiation for services with up to 10 parameters as
+      // ReflectionClass is noticeably slow.
+      switch ($length) {
+        case 0:
+          $service = new $class();
+          break;
+
+        case 1:
+          $service = new $class($arguments[0]);
+          break;
+
+        case 2:
+          $service = new $class($arguments[0], $arguments[1]);
+          break;
+
+        case 3:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2]);
+          break;
+
+        case 4:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3]);
+          break;
+
+        case 5:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4]);
+          break;
+
+        case 6:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]);
+          break;
+
+        case 7:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6]);
+          break;
+
+        case 8:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7]);
+          break;
+
+        case 9:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8]);
+          break;
+
+        case 10:
+          $service = new $class($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5], $arguments[6], $arguments[7], $arguments[8], $arguments[9]);
+          break;
+
+        default:
+          $r = new \ReflectionClass($class);
+          $service = $r->newInstanceArgs($arguments);
+          break;
+      }
     }
 
     if (!isset($definition['shared']) || $definition['shared'] !== FALSE) {
@@ -322,7 +368,7 @@ class Container implements ContainerInterface {
   public function getParameter($name) {
     if (!(isset($this->parameters[$name]) || array_key_exists($name, $this->parameters))) {
       if (!$name) {
-        throw new ParameterNotFoundException('');
+        throw new ParameterNotFoundException($name);
       }
 
       throw new ParameterNotFoundException($name, NULL, NULL, NULL, $this->getParameterAlternatives($name));
@@ -363,7 +409,7 @@ class Container implements ContainerInterface {
   /**
    * Resolves arguments that represent services or variables to the real values.
    *
-   * @param array|object $arguments
+   * @param array|\stdClass $arguments
    *   The arguments to resolve.
    *
    * @return array
@@ -464,11 +510,6 @@ class Container implements ContainerInterface {
           else {
             $arguments[$key] = $value;
           }
-
-          continue;
-        }
-        elseif ($type == 'raw') {
-          $arguments[$key] = $argument->value;
 
           continue;
         }

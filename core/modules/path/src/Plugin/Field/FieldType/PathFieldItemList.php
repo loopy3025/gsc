@@ -26,15 +26,15 @@ class PathFieldItemList extends FieldItemList {
 
     $entity = $this->getEntity();
     if (!$entity->isNew()) {
-      /** @var \Drupal\path_alias\AliasRepositoryInterface $path_alias_repository */
-      $path_alias_repository = \Drupal::service('path_alias.repository');
+      // @todo Support loading languge neutral aliases in
+      //   https://www.drupal.org/node/2511968.
+      $alias = \Drupal::service('path.alias_storage')->load([
+        'source' => '/' . $entity->toUrl()->getInternalPath(),
+        'langcode' => $this->getLangcode(),
+      ]);
 
-      if ($path_alias = $path_alias_repository->lookupBySystemPath('/' . $entity->toUrl()->getInternalPath(), $this->getLangcode())) {
-        $value = [
-          'alias' => $path_alias['alias'],
-          'pid' => $path_alias['id'],
-          'langcode' => $path_alias['langcode'],
-        ];
+      if ($alias) {
+        $value = $alias;
       }
     }
 
@@ -57,12 +57,11 @@ class PathFieldItemList extends FieldItemList {
   public function delete() {
     // Delete all aliases associated with this entity in the current language.
     $entity = $this->getEntity();
-    $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
-    $entities = $path_alias_storage->loadByProperties([
-      'path' => '/' . $entity->toUrl()->getInternalPath(),
+    $conditions = [
+      'source' => '/' . $entity->toUrl()->getInternalPath(),
       'langcode' => $entity->language()->getId(),
-    ]);
-    $path_alias_storage->delete($entities);
+    ];
+    \Drupal::service('path.alias_storage')->delete($conditions);
   }
 
 }

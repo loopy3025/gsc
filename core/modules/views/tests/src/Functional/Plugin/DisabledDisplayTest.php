@@ -26,11 +26,6 @@ class DisabledDisplayTest extends ViewTestBase {
    */
   public static $modules = ['block', 'node', 'views'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
-
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
@@ -38,9 +33,7 @@ class DisabledDisplayTest extends ViewTestBase {
 
     $this->drupalPlaceBlock('page_title_block');
 
-    $admin_user = $this->drupalCreateUser([
-      'administer site configuration',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
   }
 
@@ -59,7 +52,7 @@ class DisabledDisplayTest extends ViewTestBase {
     $this->drupalCreateNode();
 
     // Load the test view and initialize its displays.
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_disabled_display');
+    $view = $this->container->get('entity.manager')->getStorage('view')->load('test_disabled_display');
     $view->getExecutable()->setDisplay();
 
     // Enabled page display should return content.
@@ -69,7 +62,7 @@ class DisabledDisplayTest extends ViewTestBase {
 
     // Disabled page view should 404.
     $this->drupalGet('test-disabled-display-2');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404);
 
     // Enable each disabled display and save the view.
     foreach ($display_ids as $display_id) {
@@ -98,11 +91,11 @@ class DisabledDisplayTest extends ViewTestBase {
 
     // Check that the page_1 display still works.
     $this->drupalGet('test-disabled-display');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     // Check that the page_2 display is now disabled again.
     $this->drupalGet('test-disabled-display-2');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404);
   }
 
 }

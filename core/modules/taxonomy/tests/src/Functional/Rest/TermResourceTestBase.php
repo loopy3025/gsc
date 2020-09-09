@@ -111,7 +111,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           ],
         ];
         break;
-
       case [2]:
         $expected_parent_normalization = [
           [
@@ -122,7 +121,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           ],
         ];
         break;
-
       case [0, 2]:
         $expected_parent_normalization = [
           [
@@ -136,7 +134,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           ],
         ];
         break;
-
       case [3, 2]:
         $expected_parent_normalization = [
           [
@@ -157,9 +154,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
 
     return [
       'tid' => [
-        ['value' => 1],
-      ],
-      'revision_id' => [
         ['value' => 1],
       ],
       'uuid' => [
@@ -211,16 +205,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
           'value' => TRUE,
         ],
       ],
-      'revision_created' => [
-        $this->formatExpectedTimestampItemValues((int) $this->entity->getRevisionCreationTime()),
-      ],
-      'revision_user' => [],
-      'revision_log_message' => [],
-      'revision_translation_affected' => [
-        [
-          'value' => TRUE,
-        ],
-      ],
     ];
   }
 
@@ -259,16 +243,12 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'access content' permission is required and the taxonomy term must be published.";
-
       case 'POST':
         return "The following permissions are required: 'create terms in camelids' OR 'administer taxonomy'.";
-
       case 'PATCH':
         return "The following permissions are required: 'edit terms in camelids' OR 'administer taxonomy'.";
-
       case 'DELETE':
         return "The following permissions are required: 'delete terms in camelids' OR 'administer taxonomy'.";
-
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
@@ -376,9 +356,9 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+  protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\taxonomy\TermAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+    return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['taxonomy_term:1']);
   }
 

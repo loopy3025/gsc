@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\field\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -17,7 +16,6 @@ abstract class FieldTestBase extends BrowserTestBase {
    *
    * @param $cardinality
    *   Number of values to generate.
-   *
    * @return
    *   An array of random values, in the format expected for field values.
    */
@@ -60,7 +58,7 @@ abstract class FieldTestBase extends BrowserTestBase {
     $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
-      $this->assertEqual($values[$key][$column], $value, new FormattableMarkup('Value @value was saved correctly.', ['@value' => $value]));
+      $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', ['@value' => $value]));
     }
   }
 

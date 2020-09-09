@@ -34,11 +34,6 @@ class DeleteMultipleFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -46,9 +41,7 @@ class DeleteMultipleFormTest extends BrowserTestBase {
       'id' => 'default',
       'label' => 'Default',
     ])->save();
-    $this->account = $this->drupalCreateUser([
-      'administer entity_test content',
-    ]);
+    $this->account = $this->drupalCreateUser(['administer entity_test content']);
     $this->drupalLogin($this->account);
   }
 

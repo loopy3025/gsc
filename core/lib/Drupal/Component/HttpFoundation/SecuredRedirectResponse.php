@@ -36,13 +36,11 @@ abstract class SecuredRedirectResponse extends RedirectResponse {
    * Copies over the values from the given response.
    *
    * @param \Symfony\Component\HttpFoundation\RedirectResponse $response
-   *   The redirect response object.
+   *   The redirect reponse object.
    */
   protected function fromResponse(RedirectResponse $response) {
     $this->setProtocolVersion($response->getProtocolVersion());
-    if ($response->getCharset()) {
-      $this->setCharset($response->getCharset());
-    }
+    $this->setCharset($response->getCharset());
     // Cookies are separate from other headers and have to be copied over
     // directly.
     foreach ($response->headers->getCookies() as $cookie) {

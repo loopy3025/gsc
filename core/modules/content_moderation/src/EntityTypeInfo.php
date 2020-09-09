@@ -129,11 +129,8 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    */
   public function entityTypeAlter(array &$entity_types) {
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      // Internal entity types should never be moderated, and the 'path_alias'
-      // entity type needs to be excluded for now.
-      // @todo Enable moderation for path aliases after they become publishable
-      //   in https://www.drupal.org/project/drupal/issues/3007669.
-      if ($entity_type->isRevisionable() && !$entity_type->isInternal() && $entity_type_id !== 'path_alias') {
+      // The ContentModerationState entity type should never be moderated.
+      if ($entity_type->isRevisionable() && !$entity_type->isInternal()) {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
       }
     }
@@ -243,7 +240,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    * @see hook_entity_base_field_info()
    */
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
-    if (!$this->moderationInfo->isModeratedEntityType($entity_type)) {
+    if (!$this->moderationInfo->canModerateEntitiesOfEntityType($entity_type)) {
       return [];
     }
 
@@ -321,36 +318,37 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof BundleEntityFormBase) {
-      $config_entity = $form_object->getEntity();
-      $bundle_of = $config_entity->getEntityType()->getBundleOf();
+      $config_entity_type = $form_object->getEntity()->getEntityType();
+      $bundle_of = $config_entity_type->getBundleOf();
       if ($bundle_of
           && ($bundle_of_entity_type = $this->entityTypeManager->getDefinition($bundle_of))
-          && $this->moderationInfo->shouldModerateEntitiesOfBundle($bundle_of_entity_type, $config_entity->id())) {
-        $this->entityTypeManager->getHandler($bundle_of, 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
+          && $this->moderationInfo->canModerateEntitiesOfEntityType($bundle_of_entity_type)) {
+        $this->entityTypeManager->getHandler($config_entity_type->getBundleOf(), 'moderation')->enforceRevisionsBundleFormAlter($form, $form_state, $form_id);
       }
     }
     elseif ($this->isModeratedEntityEditForm($form_object)) {
       /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $entity = $form_object->getEntity();
+      if ($this->moderationInfo->isModeratedEntity($entity)) {
+        $this->entityTypeManager
+          ->getHandler($entity->getEntityTypeId(), 'moderation')
+          ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
 
-      $this->entityTypeManager
-        ->getHandler($entity->getEntityTypeId(), 'moderation')
-        ->enforceRevisionsEntityFormAlter($form, $form_state, $form_id);
+        // Submit handler to redirect to the latest version, if available.
+        $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
 
-      // Submit handler to redirect to the latest version, if available.
-      $form['actions']['submit']['#submit'][] = [EntityTypeInfo::class, 'bundleFormRedirect'];
+        // Move the 'moderation_state' field widget to the footer region, if
+        // available.
+        if (isset($form['footer'])) {
+          $form['moderation_state']['#group'] = 'footer';
+        }
 
-      // Move the 'moderation_state' field widget to the footer region, if
-      // available.
-      if (isset($form['footer']) && in_array($form_object->getOperation(), ['edit', 'default'], TRUE)) {
-        $form['moderation_state']['#group'] = 'footer';
-      }
-
-      // If the publishing status exists in the meta region, replace it with
-      // the current state instead.
-      if (isset($form['meta']['published'])) {
-        $form['meta']['published']['#markup'] = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($entity->moderation_state->value)->label();
+        // If the publishing status exists in the meta region, replace it with
+        // the current state instead.
+        if (isset($form['meta']['published'])) {
+          $form['meta']['published']['#markup'] = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($entity->moderation_state->value)->label();
+        }
       }
     }
   }
@@ -366,7 +364,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    */
   protected function isModeratedEntityEditForm(FormInterface $form_object) {
     return $form_object instanceof ContentEntityFormInterface &&
-      in_array($form_object->getOperation(), ['edit', 'default', 'layout_builder'], TRUE) &&
+      in_array($form_object->getOperation(), ['edit', 'default'], TRUE) &&
       $this->moderationInfo->isModeratedEntity($form_object->getEntity());
   }
 

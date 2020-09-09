@@ -10,11 +10,6 @@ namespace Drupal\Tests\aggregator\Functional;
 class FeedAdminDisplayTest extends AggregatorTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests the "Next update" and "Last update" fields.
    */
   public function testFeedUpdateFields() {
@@ -22,7 +17,7 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
     $scheduled_feed = $this->createFeed(NULL, ['refresh' => '900']);
 
     $this->drupalGet('admin/config/services/aggregator');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'Aggregator feed overview page exists.');
 
     // The scheduled feed shows that it has not been updated yet and is
     // scheduled.

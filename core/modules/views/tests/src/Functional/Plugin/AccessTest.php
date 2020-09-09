@@ -30,11 +30,6 @@ class AccessTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Web user for testing.
    *
    * @var \Drupal\user\UserInterface
@@ -58,9 +53,7 @@ class AccessTest extends ViewTestBase {
     $this->webUser = $this->drupalCreateUser();
 
     $normal_role = $this->drupalCreateRole([]);
-    $this->normalUser = $this->drupalCreateUser([
-      'views_test_data test permission',
-    ]);
+    $this->normalUser = $this->drupalCreateUser(['views_test_data test permission']);
     $this->normalUser->addRole($normal_role);
     // @todo when all the plugin information is cached make a reset function and
     // call it here.
@@ -94,7 +87,7 @@ class AccessTest extends ViewTestBase {
 
     $this->assertFalse($access_plugin->access($this->normalUser));
     $this->drupalGet('test_access_static');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
 
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['access']['options']['access'] = TRUE;
@@ -107,7 +100,7 @@ class AccessTest extends ViewTestBase {
     $this->assertTrue($access_plugin->access($this->normalUser));
 
     $this->drupalGet('test_access_static');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
   }
 
 }

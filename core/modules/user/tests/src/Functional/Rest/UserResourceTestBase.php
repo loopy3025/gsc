@@ -57,7 +57,6 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access user profiles']);
         break;
-
       case 'POST':
       case 'PATCH':
       case 'DELETE':
@@ -309,13 +308,10 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     switch ($method) {
       case 'GET':
         return "The 'access user profiles' permission is required and the user must be active.";
-
       case 'PATCH':
-        return "Users can only update their own account, unless they have the 'administer users' permission.";
-
+        return "You are not authorized to update this user entity.";
       case 'DELETE':
-        return "The 'cancel account' permission is required.";
-
+        return 'You are not authorized to delete this user entity.';
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
@@ -324,21 +320,10 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
+  protected function getExpectedUnauthorizedAccessCacheability() {
     // @see \Drupal\user\UserAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
+    return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['user:3']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'url.site',
-      // Due to the 'mail' field's access varying by user.
-      'user',
-    ];
   }
 
 }

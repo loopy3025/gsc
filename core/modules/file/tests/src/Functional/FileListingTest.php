@@ -21,11 +21,6 @@ class FileListingTest extends FileFieldTestBase {
   public static $modules = ['views', 'file', 'image', 'entity_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
-
-  /**
    * An authenticated user.
    *
    * @var \Drupal\user\UserInterface
@@ -40,10 +35,7 @@ class FileListingTest extends FileFieldTestBase {
       ->set('make_unused_managed_files_temporary', TRUE)
       ->save();
 
-    $this->adminUser = $this->drupalCreateUser([
-      'access files overview',
-      'bypass node access',
-    ]);
+    $this->adminUser = $this->drupalCreateUser(['access files overview', 'bypass node access']);
     $this->baseUser = $this->drupalCreateUser();
     $this->createFileField('file', 'node', 'article', [], ['file_extensions' => 'txt png']);
   }
@@ -53,7 +45,6 @@ class FileListingTest extends FileFieldTestBase {
    *
    * @param $usage array
    *   Array of file usage information as returned from file_usage subsystem.
-   *
    * @return int
    *   Total usage count.
    */
@@ -78,7 +69,7 @@ class FileListingTest extends FileFieldTestBase {
     // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->baseUser);
     $this->drupalGet('admin/content/files');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
 
     // Log in with user with right permissions and test listing.
     $this->drupalLogin($this->adminUser);
@@ -88,17 +79,17 @@ class FileListingTest extends FileFieldTestBase {
     }
 
     $this->drupalGet('admin/content/files');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertText('No files available.');
     $this->drupalGet('admin/content/files');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     // Create a file with no usage.
     $file = $this->createFile();
 
     $this->drupalGet('admin/content/files/usage/' . $file->id());
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertTitle('File usage information for ' . $file->getFilename() . ' | Drupal');
+    $this->assertResponse(200);
+    $this->assertTitle(t('File usage information for @file | Drupal', ['@file' => $file->getFilename()]));
 
     foreach ($nodes as &$node) {
       $this->drupalGet('node/' . $node->id() . '/edit');
@@ -119,8 +110,7 @@ class FileListingTest extends FileFieldTestBase {
       $this->assertLinkByHref(file_create_url($file->getFileUri()));
       $this->assertLinkByHref('admin/content/files/usage/' . $file->id());
     }
-    $this->assertSession()->elementTextNotContains('css', 'table.views-table', 'Temporary');
-    $this->assertSession()->elementTextContains('css', 'table.views-table', 'Permanent');
+    $this->assertFalse(preg_match('/views-field-status priority-low\">\s*' . t('Temporary') . '/', $this->getSession()->getPage()->getContent()), 'All files are stored as permanent.');
 
     // Use one file two times and check usage information.
     $orphaned_file = $nodes[1]->file->target_id;
@@ -138,14 +128,14 @@ class FileListingTest extends FileFieldTestBase {
     $this->assertRaw('admin/content/files/usage/' . $file->id() . '">' . $usage);
 
     $result = $this->xpath("//td[contains(@class, 'views-field-status') and contains(text(), :value)]", [':value' => 'Temporary']);
-    $this->assertCount(1, $result, 'Unused file marked as temporary.');
+    $this->assertEqual(1, count($result), 'Unused file marked as temporary.');
 
     // Test file usage page.
     foreach ($nodes as $node) {
       $file = File::load($node->file->target_id);
       $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
-      $this->assertSession()->statusCodeEquals(200);
+      $this->assertResponse(200);
       $this->assertText($node->getTitle(), 'Node title found on usage page.');
       $this->assertText('node', 'Registering entity type found on usage page.');
       $this->assertText('file', 'Registering module found on usage page.');
@@ -201,12 +191,12 @@ class FileListingTest extends FileFieldTestBase {
     // Load the file usage page for the created and attached file.
     $this->drupalGet('admin/content/files/usage/' . $file->id());
 
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     // Entity name should be displayed, but not linked if Entity::toUrl
     // throws an exception
     $this->assertText($entity_name, 'Entity name is added to file usage listing.');
-    $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
-    $this->assertSession()->linkExists($node->getTitle());
+    $this->assertNoLink($entity_name, 'Linked entity name not added to file usage listing.');
+    $this->assertLink($node->getTitle());
   }
 
   /**

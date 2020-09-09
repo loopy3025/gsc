@@ -17,11 +17,6 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
   protected static $modules = ['node', 'search', 'dblog'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * A node to use for testing.
    *
    * @var \Drupal\node\NodeInterface
@@ -35,12 +30,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create and log in user.
-    $test_user = $this->drupalCreateUser([
-      'access content',
-      'search content',
-      'use advanced search',
-      'administer nodes',
-    ]);
+    $test_user = $this->drupalCreateUser(['access content', 'search content', 'use advanced search', 'administer nodes']);
     $this->drupalLogin($test_user);
 
     // Create initial node.
@@ -48,6 +38,11 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
     // First update the index. This does the initial processing.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+
+    // Then, run the shutdown function. Testing is a unique case where indexing
+    // and searching has to happen in the same request, so running the shutdown
+    // function manually is needed to finish the indexing process.
+    search_update_totals();
   }
 
   /**

@@ -106,7 +106,6 @@ abstract class CachePluginBase extends PluginBase {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
         break;
-
       case 'results':
         $data = [
           'result' => $this->prepareViewResult($this->view->result),
@@ -136,7 +135,6 @@ abstract class CachePluginBase extends PluginBase {
       case 'query':
         // Not supported currently, but this is certainly where we'd put it.
         return FALSE;
-
       case 'results':
         // Values to set: $view->result, $view->total_rows, $view->execute_time,
         // $view->current_page.
@@ -243,7 +241,7 @@ abstract class CachePluginBase extends PluginBase {
     if (!empty($entity_information)) {
       // Add the list cache tags for each entity type used by this view.
       foreach ($entity_information as $table => $metadata) {
-        $tags = Cache::mergeTags($tags, \Drupal::entityTypeManager()->getDefinition($metadata['entity_type'])->getListCacheTags());
+        $tags = Cache::mergeTags($tags, \Drupal::entityManager()->getDefinition($metadata['entity_type'])->getListCacheTags());
       }
     }
 

@@ -2,22 +2,17 @@
 
 namespace Drupal\Tests\system\Functional\File;
 
-use Drupal\Component\FileSecurity\FileSecurity;
+use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the log message added by file_save_htaccess().
+ * Tests the log message added by file_save_htacess().
  *
  * @group File
  */
 class FileSaveHtaccessLoggingTest extends BrowserTestBase {
 
   protected static $modules = ['dblog'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests file_save_htaccess().
@@ -29,16 +24,14 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
     // Verify that file_save_htaccess() returns FALSE if .htaccess cannot be
     // written and writes a correctly formatted message to the error log. Set
     // $private to TRUE so all possible .htaccess lines are written.
-    /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccess */
-    $htaccess = \Drupal::service('file.htaccess_writer');
-    $this->assertFalse($htaccess->write($private, TRUE));
+    $this->assertFalse(file_save_htaccess($private, TRUE));
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/reports/dblog');
     $this->clickLink("Security warning: Couldn't write .htaccess file. Please…");
 
-    $lines = FileSecurity::htaccessLines(TRUE);
+    $lines = FileStorage::htaccessLines(TRUE);
     foreach (array_filter(explode("\n", $lines)) as $line) {
-      $this->assertSession()->assertEscaped($line);
+      $this->assertEscaped($line);
     }
   }
 

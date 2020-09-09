@@ -28,16 +28,11 @@ class AreaHTTPStatusCodeTest extends ViewTestBase {
   public static $modules = ['node'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests the area handler.
    */
   public function testHTTPStatusCodeHandler() {
     $this->drupalGet('test-http-status-code');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     // Change the HTTP status code to 418.
     $view = Views::getView('test_http_status_code');
@@ -47,7 +42,7 @@ class AreaHTTPStatusCodeTest extends ViewTestBase {
 
     // Test that the HTTP response is "I'm a teapot".
     $this->drupalGet('test-http-status-code');
-    $this->assertSession()->statusCodeEquals(418);
+    $this->assertResponse(418);
   }
 
 }

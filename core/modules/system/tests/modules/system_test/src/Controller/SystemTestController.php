@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
@@ -20,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Controller routines for system_test routes.
  */
-class SystemTestController extends ControllerBase implements TrustedCallbackInterface {
+class SystemTestController extends ControllerBase {
 
   /**
    * The lock service.
@@ -283,12 +282,12 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * A simple page callback that uses a plain Symfony response object.
    */
-  public function respondWithResponse(Request $request) {
+  public function respondWithReponse(Request $request) {
     return new Response('test');
   }
 
   /**
-   * A plain Symfony response with Cache-Control: public, max-age=60.
+   * A plain Symfony reponse with Cache-Control: public, max-age=60.
    */
   public function respondWithPublicResponse() {
     return (new Response('test'))->setPublic()->setMaxAge(60);
@@ -297,7 +296,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * A simple page callback that uses a CacheableResponse object.
    */
-  public function respondWithCacheableResponse(Request $request) {
+  public function respondWithCacheableReponse(Request $request) {
     return new CacheableResponse('test');
   }
 
@@ -397,21 +396,6 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    */
   public function getCacheableResponseWithCustomCacheControl() {
     return new CacheableResponse('Foo', 200, ['Cache-Control' => 'bar']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderCacheTags'];
-  }
-
-  /**
-   * Use a plain Symfony response object to output the current install_profile.
-   */
-  public function getInstallProfile() {
-    $install_profile = \Drupal::installProfile() ?: 'NONE';
-    return new Response('install_profile: ' . $install_profile);
   }
 
 }

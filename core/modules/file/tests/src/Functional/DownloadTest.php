@@ -2,19 +2,12 @@
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Core\File\FileSystemInterface;
-
 /**
  * Tests for download/file transfer functions.
  *
  * @group file
  */
 class DownloadTest extends FileManagedTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   protected function setUp() {
     parent::setUp();
@@ -72,14 +65,11 @@ class DownloadTest extends FileManagedTestBase {
     $url = file_create_url($file->getFileUri());
 
     // Set file_test access header to allow the download.
-    file_test_reset();
     file_test_set_return('download', ['x-foo' => 'Bar']);
     $this->drupalGet($url);
     $this->assertEqual($this->drupalGetHeader('x-foo'), 'Bar', 'Found header set by file_test module on private download.');
-    $this->assertNull($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
-    $this->assertSession()->statusCodeEquals(200);
-    // Ensure hook_file_download is fired correctly.
-    $this->assertEquals($file->getFileUri(), \Drupal::state()->get('file_test.results')['download'][0][0]);
+    $this->assertFalse($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
+    $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
 
     // Test that the file transferred correctly.
     $this->assertSame($contents, $this->getSession()->getPage()->getContent(), 'Contents of the file are correct.');
@@ -91,32 +81,26 @@ class DownloadTest extends FileManagedTestBase {
     $this->assertSame(403, $response->getStatusCode(), 'Correctly denied access to a file when file_test sets the header to -1.');
 
     // Try non-existent file.
-    file_test_reset();
     $url = file_create_url('private://' . $this->randomMachineName());
     $response = $http_client->head($url, ['http_errors' => FALSE]);
     $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
-    // Assert that hook_file_download is not called.
-    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
-
-    // Try requesting the private file url without a file specified.
-    file_test_reset();
-    $this->drupalGet('/system/files');
-    $this->assertSession()->statusCodeEquals(404);
-    // Assert that hook_file_download is not called.
-    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
   }
 
   /**
    * Test file_create_url().
    */
   public function testFileCreateUrl() {
+
+    // Tilde (~) is excluded from this test because it is encoded by
+    // rawurlencode() in PHP 5.2 but not in PHP 5.3, as per RFC 3986.
+    // @see http://php.net/manual/function.rawurlencode.php#86506
     // "Special" ASCII characters.
-    $basename = " -._~!$'\"()*@[]?&+%#,;=:\n\x00" .
+    $basename = " -._!$'\"()*@[]?&+%#,;=:\n\x00" .
       // Characters that look like a percent-escaped string.
       "%23%25%26%2B%2F%3F" .
       // Characters from various non-ASCII alphabets.
       "éøïвβ中國書۞";
-    $basename_encoded = '%20-._~%21%24%27%22%28%29%2A%40%5B%5D%3F%26%2B%25%23%2C%3B%3D%3A__' .
+    $basename_encoded = '%20-._%21%24%27%22%28%29%2A%40%5B%5D%3F%26%2B%25%23%2C%3B%3D%3A__' .
       '%2523%2525%2526%252B%252F%253F' .
       '%C3%A9%C3%B8%C3%AF%D0%B2%CE%B2%E4%B8%AD%E5%9C%8B%E6%9B%B8%DB%9E';
 
@@ -159,9 +143,9 @@ class DownloadTest extends FileManagedTestBase {
     // Convert $filename to a valid filename, i.e. strip characters not
     // supported by the filesystem, and create the file in the specified
     // directory.
-    $filepath = \Drupal::service('file_system')->createFilename($filename, $directory);
+    $filepath = file_create_filename($filename, $directory);
     $directory_uri = $scheme . '://' . dirname($filepath);
-    \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
+    file_prepare_directory($directory_uri, FILE_CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, $scheme);
 
     $url = file_create_url($file->getFileUri());
@@ -174,8 +158,9 @@ class DownloadTest extends FileManagedTestBase {
     }
 
     $this->drupalGet($url);
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(file_get_contents($file->getFileUri()));
+    if ($this->assertResponse(200) == 'pass') {
+      $this->assertRaw(file_get_contents($file->getFileUri()), 'Contents of the file are correct.');
+    }
 
     $file->delete();
   }

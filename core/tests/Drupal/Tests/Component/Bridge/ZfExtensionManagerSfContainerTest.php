@@ -6,8 +6,8 @@ use Drupal\Component\Bridge\ZfExtensionManagerSfContainer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Laminas\Feed\Reader\Extension\Atom\Entry;
-use Laminas\Feed\Reader\StandaloneExtensionManager;
+use Zend\Feed\Reader\Extension\Atom\Entry;
+use Zend\Feed\Reader\StandaloneExtensionManager;
 
 /**
  * @coversDefaultClass \Drupal\Component\Bridge\ZfExtensionManagerSfContainer
@@ -58,8 +58,13 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    * @covers ::setStandalone
    */
   public function testSetStandaloneException() {
-    $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Laminas\Feed\Reader\ExtensionManagerInterface or Laminas\Feed\Writer\ExtensionManagerInterface');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(\RuntimeException::class);
+      $this->expectExceptionMessage('Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
+    }
+    else {
+      $this->setExpectedException(\RuntimeException::class, 'Drupal\Tests\Component\Bridge\ZfExtensionManagerSfContainerTest must implement Zend\Feed\Reader\ExtensionManagerInterface or Zend\Feed\Writer\ExtensionManagerInterface');
+    }
     $bridge = new ZfExtensionManagerSfContainer();
     $bridge->setStandalone(static::class);
   }
@@ -68,8 +73,13 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    * @covers ::get
    */
   public function testGetContainerException() {
-    $this->expectException(ServiceNotFoundException::class);
-    $this->expectExceptionMessage('You have requested a non-existent service "test.foo".');
+    if (method_exists($this, 'expectException')) {
+      $this->expectException(ServiceNotFoundException::class);
+      $this->expectExceptionMessage('You have requested a non-existent service "test.foo".');
+    }
+    else {
+      $this->setExpectedException(ServiceNotFoundException::class, 'You have requested a non-existent service "test.foo".');
+    }
     $container = new ContainerBuilder();
     $bridge = new ZfExtensionManagerSfContainer('test.');
     $bridge->setContainer($container);

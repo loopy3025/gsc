@@ -12,11 +12,6 @@ use Drupal\Component\Utility\Crypt;
 class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * The directory where the sync directory should be created during install.
    *
    * @var string
@@ -29,7 +24,7 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->configDirectory = $this->publicFilesDirectory . '/config_' . Crypt::randomBytesBase64();
-    $this->settings['settings']['config_sync_directory'] = (object) [
+    $this->settings['config_directories'][CONFIG_SYNC_DIRECTORY] = (object) [
       'value' => $this->configDirectory . '/sync',
       'required' => TRUE,
     ];
@@ -60,7 +55,7 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
    */
   public function testError() {
     $this->assertText("An automated attempt to create the directory {$this->configDirectory}/sync failed, possibly due to a permissions problem.");
-    $this->assertDirectoryNotExists($this->configDirectory . '/sync');
+    $this->assertFalse(file_exists($this->configDirectory . '/sync') && is_dir($this->configDirectory . '/sync'), "The directory {$this->configDirectory}/sync does not exist.");
   }
 
 }

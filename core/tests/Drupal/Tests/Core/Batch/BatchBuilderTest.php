@@ -23,9 +23,9 @@ class BatchBuilderTest extends UnitTestCase {
   public function testDefaultValues() {
     $batch = (new BatchBuilder())->toArray();
 
-    $this->assertIsArray($batch);
+    $this->assertInternalType('array', $batch);
     $this->assertArrayHasKey('operations', $batch);
-    $this->assertIsArray($batch['operations']);
+    $this->assertInternalType('array', $batch['operations']);
     $this->assertEmpty($batch['operations'], 'Operations array is empty.');
     $this->assertEquals(new TranslatableMarkup('Processing'), $batch['title']);
     $this->assertEquals(new TranslatableMarkup('Initializing.'), $batch['init_message']);
@@ -34,10 +34,10 @@ class BatchBuilderTest extends UnitTestCase {
     $this->assertNull($batch['finished']);
     $this->assertNull($batch['file']);
     $this->assertArrayHasKey('library', $batch);
-    $this->assertIsArray($batch['library']);
+    $this->assertInternalType('array', $batch['library']);
     $this->assertEmpty($batch['library']);
     $this->assertArrayHasKey('url_options', $batch);
-    $this->assertIsArray($batch['url_options']);
+    $this->assertInternalType('array', $batch['url_options']);
     $this->assertEmpty($batch['url_options']);
     $this->assertArrayHasKey('progressive', $batch);
     $this->assertTrue($batch['progressive']);
@@ -113,20 +113,11 @@ class BatchBuilderTest extends UnitTestCase {
    * @covers ::setFile
    */
   public function testSetFile() {
-    $filename = dirname(__DIR__, 6) . '/core/modules/system/tests/modules/batch_test/batch_test.callbacks.inc';
-    $this->assertIsNotCallable('_batch_test_callback_1');
-    $this->assertIsNotCallable('_batch_test_finished_1');
-
     $batch = (new BatchBuilder())
-      ->setFile($filename)
-      ->setFinishCallback('_batch_test_finished_1')
-      ->addOperation('_batch_test_callback_1', [])
+      ->setFile('filename.php')
       ->toArray();
-    $this->assertEquals($filename, $batch['file']);
-    $this->assertEquals([['_batch_test_callback_1', []]], $batch['operations']);
-    $this->assertEquals('_batch_test_finished_1', $batch['finished']);
-    $this->assertIsCallable('_batch_test_callback_1');
-    $this->assertIsCallable('_batch_test_finished_1');
+
+    $this->assertEquals('filename.php', $batch['file']);
   }
 
   /**
@@ -185,8 +176,7 @@ class BatchBuilderTest extends UnitTestCase {
    */
   public function testQueueExists() {
     $batch_builder = (new BatchBuilder());
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Class \ThisIsNotAClass does not exist.');
+    $this->setExpectedException(\InvalidArgumentException::class, 'Class \ThisIsNotAClass does not exist.');
     $batch_builder->setQueue('BatchName', '\ThisIsNotAClass');
   }
 
@@ -197,8 +187,7 @@ class BatchBuilderTest extends UnitTestCase {
    */
   public function testQueueImplements() {
     $batch_builder = (new BatchBuilder());
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Class Exception does not implement \Drupal\Core\Queue\QueueInterface.');
+    $this->setExpectedException(\InvalidArgumentException::class, 'Class Exception does not implement \Drupal\Core\Queue\QueueInterface.');
     $batch_builder->setQueue('BatchName', \Exception::class);
   }
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\filter\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
@@ -375,10 +374,6 @@ class FilterKernelTest extends KernelTestBase {
       // Bug 810824, paragraphs were appearing around iframe tags.
       "<iframe>aaa</iframe>\n\n" => [
         "<p><iframe>aaa</iframe></p>" => FALSE,
-      ],
-      // Bug 3097338, paragraphs were appearing around drupalmedia tags.
-      '<drupal-media data-caption=" " data-entity-type="media" data-entity-uuid="dbb16f97-cd11-4357-acde-cd09e19e312b"></drupal-media>' => [
-        '<p><drupal-media data-caption=" " data-entity-type="media" data-entity-uuid="dbb16f97-cd11-4357-acde-cd09e19e312b"></drupal-media></p>' => FALSE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);
@@ -879,19 +874,27 @@ www.example.com with a newline in comments -->
     foreach ($tests as $source => $tasks) {
       $result = $filter->process($source, $filter)->getProcessedText();
       foreach ($tasks as $value => $is_expected) {
+        // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
-          $this->assertStringContainsString($value, $result, new FormattableMarkup('@source: @value found. Filtered result: @result.', [
+          $success = $this->assertTrue(strpos($result, $value) !== FALSE, format_string('@source: @value found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
           ]));
         }
         else {
-          $this->assertStringNotContainsString($value, $result, new FormattableMarkup('@source: @value not found. Filtered result: @result.', [
+          $success = $this->assertTrue(strpos($result, $value) === FALSE, format_string('@source: @value not found. Filtered result: @result.', [
             '@source' => var_export($source, TRUE),
             '@value' => var_export($value, TRUE),
             '@result' => var_export($result, TRUE),
           ]));
+        }
+        if (!$success) {
+          $this->verbose('Source:<pre>' . Html::escape(var_export($source, TRUE)) . '</pre>'
+            . '<hr />' . 'Result:<pre>' . Html::escape(var_export($result, TRUE)) . '</pre>'
+            . '<hr />' . ($is_expected ? 'Expected:' : 'Not expected:')
+            . '<pre>' . Html::escape(var_export($value, TRUE)) . '</pre>'
+          );
         }
       }
     }
@@ -1063,7 +1066,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/'])
     );
 
     $filtered_data = Html::normalize('<p><style>
@@ -1082,7 +1085,7 @@ body {color:red}
 
 /*--><!]]>*/
 </style></p>',
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/'])
     );
 
     $filtered_data = Html::normalize('<p><script>
@@ -1099,7 +1102,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--'])
     );
 
     $filtered_data = Html::normalize('<p><script>
@@ -1116,7 +1119,7 @@ body {color:red}
 
 //--><!]]>
 </script></p>',
-      new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
+      format_string('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA['])
     );
 
   }
@@ -1143,7 +1146,7 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   public function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) !== FALSE, $message, $group);
   }
 
   /**
@@ -1168,7 +1171,7 @@ body {color:red}
    *   TRUE on pass, FALSE on fail.
    */
   public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    return $this->assertTrue(strpos(strtolower(Html::decodeEntities($haystack)), $needle) === FALSE, $message, $group);
   }
 
 }

@@ -17,11 +17,6 @@ class DeleteFeedTest extends AggregatorTestBase {
   public static $modules = ['block'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Deletes a feed and ensures that all of its services are deleted.
    */
   public function testDeleteFeed() {
@@ -39,17 +34,17 @@ class DeleteFeedTest extends AggregatorTestBase {
     // Delete feed.
     $this->deleteFeed($feed1);
     $this->assertText($feed2->label());
-    $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
+    $block_storage = $this->container->get('entity.manager')->getStorage('block');
     $this->assertNull($block_storage->load($block->id()), 'Block for the deleted feed was deleted.');
     $this->assertEqual($block2->id(), $block_storage->load($block2->id())->id(), 'Block for not deleted feed still exists.');
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed1->id());
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404, 'Deleted feed source does not exist.');
 
     // Check database for feed.
-    $result = \Drupal::entityQuery('aggregator_feed')->condition('title', $feed1->label())->condition('url', $feed1->getUrl())->count()->execute();
-    $this->assertEquals(0, $result, 'Feed not found in database');
+    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", [':title' => $feed1->label(), ':url' => $feed1->getUrl()])->fetchField();
+    $this->assertFalse($result, 'Feed not found in database');
   }
 
 }

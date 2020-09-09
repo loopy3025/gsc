@@ -20,11 +20,6 @@ class TwigSettingsTest extends BrowserTestBase {
   public static $modules = ['theme_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Ensures Twig template auto reload setting can be overridden.
    */
   public function testTwigAutoReloadOverride() {
@@ -81,8 +76,8 @@ class TwigSettingsTest extends BrowserTestBase {
    */
   public function testTwigCacheOverride() {
     $extension = twig_extension();
-    $theme_installer = $this->container->get('theme_installer');
-    $theme_installer->install(['test_theme']);
+    $theme_handler = $this->container->get('theme_handler');
+    $theme_handler->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
     // The registry still works on theme globals, so set them here.
@@ -101,11 +96,7 @@ class TwigSettingsTest extends BrowserTestBase {
     // theme_test.template_test.html.twig.
     $info = $templates->get('theme_test_template_test');
     $template_filename = $info['path'] . '/' . $info['template'] . $extension;
-
-    $environment = $this->container->get('twig');
-    $cache = $environment->getCache();
-    $class = $environment->getTemplateClass($template_filename);
-    $cache_filename = $cache->generateKey($template_filename, $class);
+    $cache_filename = $this->container->get('twig')->getCacheFilename($template_filename);
 
     // Navigate to the page and make sure the template gets cached.
     $this->drupalGet('theme-test/template-test');
@@ -132,9 +123,9 @@ class TwigSettingsTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     $this->drupalGet('theme-test/inline-template-test');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->drupalGet('theme-test/inline-template-test');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
   }
 
 }

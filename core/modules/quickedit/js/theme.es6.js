@@ -17,7 +17,7 @@
    */
   Drupal.theme.quickeditBackstage = function(settings) {
     let html = '';
-    html += `<div id="${settings.id}"></div>`;
+    html += `<div id="${settings.id}" />`;
     return html;
   };
 
@@ -34,15 +34,17 @@
    */
   Drupal.theme.quickeditEntityToolbar = function(settings) {
     let html = '';
-    html += `<div id="${settings.id}" class="quickedit quickedit-toolbar-container clearfix">`;
+    html += `<div id="${
+      settings.id
+    }" class="quickedit quickedit-toolbar-container clearfix">`;
     html += '<i class="quickedit-toolbar-pointer"></i>';
     html += '<div class="quickedit-toolbar-content">';
     html +=
       '<div class="quickedit-toolbar quickedit-toolbar-entity clearfix icon icon-pencil">';
-    html += '<div class="quickedit-toolbar-label"></div>';
+    html += '<div class="quickedit-toolbar-label" />';
     html += '</div>';
     html +=
-      '<div class="quickedit-toolbar quickedit-toolbar-field clearfix"></div>';
+      '<div class="quickedit-toolbar quickedit-toolbar-field clearfix" />';
     html += '</div><div class="quickedit-toolbar-lining"></div></div>';
     return html;
   };
@@ -74,7 +76,7 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditEntityToolbarFence = function() {
-    return '<div id="quickedit-toolbar-fence"></div>';
+    return '<div id="quickedit-toolbar-fence" />';
   };
 
   /**
@@ -89,7 +91,7 @@
    *   The corresponding HTML.
    */
   Drupal.theme.quickeditFieldToolbar = function(settings) {
-    return `<div id="${settings.id}"></div>`;
+    return `<div id="${settings.id}" />`;
   };
 
   /**

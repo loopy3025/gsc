@@ -18,11 +18,6 @@ class CommentFieldFilterTest extends CommentTestBase {
   public static $modules = ['language'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -48,7 +43,7 @@ class CommentFieldFilterTest extends CommentTestBase {
     $this->commentTitles = [
       'en' => 'Food in Paris',
       'es' => 'Comida en Paris',
-      'fr' => 'Nourriture en Paris',
+      'fr' => 'Nouriture en Paris',
     ];
 
     // Create a new comment. Using the one created earlier will not work,

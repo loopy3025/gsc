@@ -11,7 +11,6 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
@@ -48,13 +47,13 @@ class RendererTest extends RendererTestBase {
     }
 
     if (isset($build['#markup'])) {
-      $this->assertNotInstanceOf(MarkupInterface::class, $build['#markup']);
+      $this->assertNotInstanceOf(MarkupInterface::class, $build['#markup'], 'The #markup value is not marked safe before rendering.');
     }
     $render_output = $this->renderer->renderRoot($build);
     $this->assertSame($expected, (string) $render_output);
     if ($render_output !== '') {
-      $this->assertInstanceOf(MarkupInterface::class, $render_output);
-      $this->assertInstanceOf(MarkupInterface::class, $build['#markup']);
+      $this->assertInstanceOf(MarkupInterface::class, $render_output, 'Output of render is marked safe.');
+      $this->assertInstanceOf(MarkupInterface::class, $build['#markup'], 'The #markup value is marked safe after rendering.');
     }
   }
 
@@ -933,7 +932,7 @@ class RendererTest extends RendererTestBase {
     // #custom_property_array can not be a safe_cache_property.
     $safe_cache_properties = array_diff(Element::properties(array_filter($expected_results)), ['#custom_property_array']);
     foreach ($safe_cache_properties as $cache_property) {
-      $this->assertInstanceOf(MarkupInterface::class, $data[$cache_property]);
+      $this->assertInstanceOf(MarkupInterface::class, $data[$cache_property], "$cache_property is marked as a safe string");
     }
   }
 
@@ -1036,7 +1035,7 @@ class RendererTest extends RendererTestBase {
 
 }
 
-class TestAccessClass implements TrustedCallbackInterface {
+class TestAccessClass {
 
   public static function accessTrue() {
     return TRUE;
@@ -1054,27 +1053,13 @@ class TestAccessClass implements TrustedCallbackInterface {
     return AccessResult::forbidden();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['accessTrue', 'accessFalse', 'accessResultAllowed', 'accessResultForbidden'];
-  }
-
 }
 
-class TestCallables implements TrustedCallbackInterface {
+class TestCallables {
 
   public function preRenderPrinted($elements) {
     $elements['#printed'] = TRUE;
     return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderPrinted'];
   }
 
 }

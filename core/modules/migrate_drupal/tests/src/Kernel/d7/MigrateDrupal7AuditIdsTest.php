@@ -8,7 +8,6 @@ use Drupal\migrate\Audit\IdAuditor;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use Drupal\Tests\DeprecatedModulesTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
@@ -21,7 +20,6 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   use FileSystemModuleDiscoveryDataProviderTrait;
   use CreateTestContentEntitiesTrait;
   use ContentModerationTestTrait;
-  use DeprecatedModulesTestTrait;
 
   /**
    * {@inheritdoc}
@@ -29,7 +27,6 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   protected function setUp() {
     // Enable all modules.
     self::$modules = array_keys($this->coreModuleListDataProvider());
-    self::$modules = $this->removeDeprecatedModules(self::$modules);
     parent::setUp();
 
     // Install required entity schemas.
@@ -62,7 +59,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     $node->moderation_state->value = 'published';
     $node->save();
 
-    // Insert data in the d7_node:page migration mapping table to simulate a
+    // Insert data in the d7_node:page migration mappping table to simulate a
     // previously migrated node.
     $id_map = $this->getMigration('d7_node:page')->getIdMap();
     $table_name = $id_map->mapTableName();
@@ -138,7 +135,6 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
       'd7_file_private',
       'd7_menu_links',
       'd7_node',
-      'd7_node_complete',
       'd7_node_revision',
       'd7_taxonomy_term',
       'd7_user',
@@ -161,8 +157,8 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     $node->setNewRevision(TRUE);
     $node->save();
 
-    // Insert data in the d7_node_revision:page migration mapping table to
-    // simulate a previously migrated node revision.
+    // Insert data in the d7_node_revision:page migration mappping table to
+    // simulate a previously migrated node revison.
     $id_map = $this->getMigration('d7_node_revision:page')->getIdMap();
     $table_name = $id_map->mapTableName();
     $id_map->getDatabase()->insert($table_name)

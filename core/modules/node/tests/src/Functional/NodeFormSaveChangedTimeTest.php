@@ -21,11 +21,6 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * An user with permissions to create and edit articles.
    *
    * @var \Drupal\user\UserInterface
@@ -44,11 +39,7 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
       'name' => 'Article',
     ]);
 
-    $this->authorUser = $this->drupalCreateUser([
-      'access content',
-      'create article content',
-      'edit any article content',
-    ], 'author');
+    $this->authorUser = $this->drupalCreateUser(['access content', 'create article content', 'edit any article content'], 'author');
     $this->drupalLogin($this->authorUser);
 
     // Create one node of the above node type .

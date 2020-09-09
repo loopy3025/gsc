@@ -27,11 +27,6 @@ class ContentTranslationContextualLinksTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -71,7 +66,7 @@ class ContentTranslationContextualLinksTest extends WebDriverTestBase {
     $this->drupalLogin($this->translator);
     $this->drupalGet('node/' . $node->id());
     $link = $this->assertSession()->waitForElement('css', '[data-contextual-id^="node:node=1"] .contextual-links a:contains("Translate")');
-    $this->assertStringContainsString('node/1/translations', $link->getAttribute('href'));
+    $this->assertContains('node/1/translations', $link->getAttribute('href'));
   }
 
 }

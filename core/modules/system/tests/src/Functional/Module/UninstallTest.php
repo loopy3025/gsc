@@ -24,11 +24,6 @@ class UninstallTest extends BrowserTestBase {
   public static $modules = ['module_test', 'user', 'views', 'node'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
   public function testUserPermsUninstalled() {
@@ -37,7 +32,7 @@ class UninstallTest extends BrowserTestBase {
     $this->container->get('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
-    $this->assertEmpty(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
+    $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
   }
 
   /**
@@ -60,7 +55,7 @@ class UninstallTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertTitle('Uninstall | Drupal');
+    $this->assertTitle(t('Uninstall') . ' | Drupal');
 
     foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $module => $info) {
       $field_name = "uninstall[$module]";
@@ -109,7 +104,7 @@ class UninstallTest extends BrowserTestBase {
     }
     $entity_types = array_unique($entity_types);
     foreach ($entity_types as $entity_type_id) {
-      $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+      $entity_type = \Drupal::entityManager()->getDefinition($entity_type_id);
       // Add h3's since the entity type label is often repeated in the entity
       // labels.
       $this->assertRaw('<h3>' . $entity_type->getLabel() . '</h3>');
@@ -136,7 +131,7 @@ class UninstallTest extends BrowserTestBase {
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
     $this->assertUrl('admin/modules/uninstall');
-    $this->assertTitle('Uninstall | Drupal');
+    $this->assertTitle(t('Uninstall') . ' | Drupal');
 
     // Make sure the correct error is shown when no modules are selected.
     $edit = [];

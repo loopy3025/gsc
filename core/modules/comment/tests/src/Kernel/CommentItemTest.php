@@ -27,7 +27,6 @@ class CommentItemTest extends FieldKernelTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installEntitySchema('comment');
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['comment']);
   }
@@ -48,19 +47,19 @@ class CommentItemTest extends FieldKernelTestBase {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertInstanceOf(FieldItemListInterface::class, $entity->comment);
-    $this->assertInstanceOf(CommentItemInterface::class, $entity->comment[0]);
+    $this->assertTrue($entity->comment instanceof FieldItemListInterface, 'Field implements interface.');
+    $this->assertTrue($entity->comment[0] instanceof CommentItemInterface, 'Field item implements interface.');
 
     // Test sample item generation.
     /** @var \Drupal\entity_test\Entity\EntityTest $entity */
     $entity = EntityTest::create();
     $entity->comment->generateSampleItems();
     $this->entityValidateAndSave($entity);
-    $this->assertContains($entity->get('comment')->status, [
+    $this->assertTrue(in_array($entity->get('comment')->status, [
       CommentItemInterface::HIDDEN,
       CommentItemInterface::CLOSED,
       CommentItemInterface::OPEN,
-    ], 'Comment status value in defined range');
+    ]), 'Comment status value in defined range');
 
     $mainProperty = $entity->comment[0]->mainPropertyName();
     $this->assertEqual('status', $mainProperty);
@@ -71,7 +70,6 @@ class CommentItemTest extends FieldKernelTestBase {
    */
   public function testCommentAuthorName() {
     $this->installEntitySchema('comment');
-    $this->addDefaultCommentField('entity_test', 'entity_test', 'comment');
 
     $host = EntityTest::create(['name' => $this->randomString()]);
     $host->save();
@@ -83,7 +81,6 @@ class CommentItemTest extends FieldKernelTestBase {
       'name' => 'entity-test',
       'mail' => 'entity@localhost',
       'entity_type' => 'entity_test',
-      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'status' => 1,
@@ -102,7 +99,6 @@ class CommentItemTest extends FieldKernelTestBase {
       'mail' => 'test@example.com',
       'homepage' => 'https://example.com',
       'entity_type' => 'entity_test',
-      'field_name' => 'comment',
       'entity_id' => $host->id(),
       'comment_type' => 'entity_test',
       'status' => 1,

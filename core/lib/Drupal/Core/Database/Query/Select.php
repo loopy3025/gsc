@@ -134,8 +134,8 @@ class Select extends Query implements SelectInterface {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
-    $this->condition = $this->connection->condition($conjunction);
-    $this->having = $this->connection->condition($conjunction);
+    $this->condition = new Condition($conjunction);
+    $this->having = new Condition($conjunction);
     $this->addJoin(NULL, $table, $alias);
   }
 
@@ -914,8 +914,6 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function __clone() {
-    parent::__clone();
-
     // On cloning, also clone the dependent objects. However, we do not
     // want to clone the database connection object as that would duplicate the
     // connection itself.
@@ -924,11 +922,6 @@ class Select extends Query implements SelectInterface {
     $this->having = clone($this->having);
     foreach ($this->union as $key => $aggregate) {
       $this->union[$key]['query'] = clone($aggregate['query']);
-    }
-    foreach ($this->tables as $alias => $table) {
-      if ($table['table'] instanceof SelectInterface) {
-        $this->tables[$alias]['table'] = clone $table['table'];
-      }
     }
   }
 

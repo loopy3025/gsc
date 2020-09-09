@@ -20,11 +20,6 @@ class AjaxFormCacheTest extends WebDriverTestBase {
   public static $modules = ['ajax_test', 'ajax_forms_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests the usage of form cache for AJAX forms.
    */
   public function testFormCacheUsage() {
@@ -33,7 +28,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
     $this->drupalLogin($this->rootUser);
 
     // Ensure that the cache is empty.
-    $this->assertCount(0, $key_value_expirable->getAll());
+    $this->assertEqual(0, count($key_value_expirable->getAll()));
 
     // Visit an AJAX form that is not cached, 3 times.
     $uncached_form_url = Url::fromRoute('ajax_forms_test.commands_form');
@@ -42,7 +37,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
     $this->drupalGet($uncached_form_url);
 
     // The number of cache entries should not have changed.
-    $this->assertCount(0, $key_value_expirable->getAll());
+    $this->assertEqual(0, count($key_value_expirable->getAll()));
   }
 
   /**

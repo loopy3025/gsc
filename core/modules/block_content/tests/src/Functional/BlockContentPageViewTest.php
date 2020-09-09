@@ -17,11 +17,6 @@ class BlockContentPageViewTest extends BlockContentTestBase {
   public static $modules = ['block_content_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
-
-  /**
    * Checks block edit and fallback functionality.
    */
   public function testPageEdit() {
@@ -31,8 +26,8 @@ class BlockContentPageViewTest extends BlockContentTestBase {
     // Attempt to view the block.
     $this->drupalGet('block-content/' . $block->id());
 
-    // Ensure user was able to view the block.
-    $this->assertSession()->statusCodeEquals(200);
+    // Assert response was '200' and not '403 Access denied'.
+    $this->assertResponse('200', 'User was able the view the block');
     $this->drupalGet('<front>');
     $this->assertRaw(t('This block is broken or missing. You may be missing content or you might need to enable the original module.'));
   }

@@ -12,9 +12,7 @@ use Drupal\simpletest\WebTestBase;
  * database tables. Therefore, we ensure that tests which are not set up
  * properly are skipped.
  *
- * @group WebTestBase
- * @group legacy
- *
+ * @group simpletest
  * @see \Drupal\simpletest\WebTestBase
  */
 class BrokenSetUpTest extends WebTestBase {

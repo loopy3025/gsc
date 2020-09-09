@@ -2,16 +2,13 @@
 
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
-use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
-use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 
 /**
  * Base class for Drupal 6 migration tests.
  */
 abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
 
-  use NodeMigrateTypeTestTrait;
   /**
    * {@inheritdoc}
    */
@@ -31,9 +28,6 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    // Add a node classic migrate table to the destination site so that tests
-    // run by default with the classic node migrations.
-    $this->makeNodeMigrateMapTable(NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC, '6');
     $this->loadFixture($this->getFixtureFilePath());
   }
 
@@ -99,7 +93,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
    *   Extra things to include as part of the migrations. Values may be
    *   'revisions' or 'translations'.
    */
-  protected function migrateContent(array $include = []) {
+  protected function migrateContent($include = []) {
     if (in_array('translations', $include)) {
       $this->executeMigrations(['language']);
     }
@@ -110,7 +104,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
     $this->executeMigrations(['d6_node_settings', 'd6_node']);
 
     if (in_array('translations', $include)) {
-      $this->executeMigrations(['d6_node_translation']);
+      $this->executeMigrations(['translations']);
     }
     if (in_array('revisions', $include)) {
       $this->executeMigrations(['d6_node_revision']);

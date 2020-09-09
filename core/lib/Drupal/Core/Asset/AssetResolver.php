@@ -188,7 +188,6 @@ class AssetResolver implements AssetResolverInterface {
    *
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
    *   The assets attached to the current response.
-   *
    * @return array
    *   A (possibly optimized) collection of JavaScript assets.
    */
@@ -313,7 +312,7 @@ class AssetResolver implements AssetResolverInterface {
         $settings = $this->getJsSettingsAssets($assets);
         // Allow modules to add cached JavaScript settings.
         foreach ($this->moduleHandler->getImplementations('js_settings_build') as $module) {
-          $function = $module . '_js_settings_build';
+          $function = $module . '_' . 'js_settings_build';
           $function($settings, $assets);
         }
       }

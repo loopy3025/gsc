@@ -25,11 +25,6 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
   public static $modules = ['editor', 'editor_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * A user with permission as administer for testing.
    *
    * @var \Drupal\user\Entity\User
@@ -66,10 +61,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
     ])->save();
 
     // Create admin user.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer filters',
-      'use text format basic_html',
-    ]);
+    $this->adminUser = $this->drupalCreateUser(['administer filters', 'use text format basic_html']);
     $this->drupalLogin($this->adminUser);
   }
 

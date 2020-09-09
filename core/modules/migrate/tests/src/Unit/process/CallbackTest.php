@@ -34,13 +34,12 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test callback exceptions.
+   * Test callback excpetions.
    *
    * @dataProvider providerCallbackExceptions
    */
   public function testCallbackExceptions($message, $configuration) {
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage($message);
+    $this->setExpectedException(\InvalidArgumentException::class, $message);
     $this->plugin = new Callback($configuration, 'map', []);
   }
 

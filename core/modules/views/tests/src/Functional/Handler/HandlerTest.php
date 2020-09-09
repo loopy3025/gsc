@@ -32,11 +32,6 @@ class HandlerTest extends ViewTestBase {
    */
   public static $modules = ['views_ui', 'comment', 'node'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
     $this->drupalCreateContentType(['type' => 'page']);
@@ -310,15 +305,15 @@ class HandlerTest extends ViewTestBase {
 
     $field->options['relationship'] = NULL;
     $field->setRelationship();
-    $this->assertNull($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
+    $this->assertFalse($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = $this->randomMachineName();
     $field->setRelationship();
-    $this->assertNull($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
+    $this->assertFalse($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = 'broken_relationship';
     $field->setRelationship();
-    $this->assertNull($field->relationship, 'Make sure that a broken relationship does not create a relationship on the field.');
+    $this->assertFalse($field->relationship, 'Make sure that a broken relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = 'valid_relationship';
     $field->setRelationship();
@@ -382,7 +377,7 @@ class HandlerTest extends ViewTestBase {
 
     foreach ($views_data['access_callback'] as $type => $info) {
       if (!in_array($type, ['title', 'help'])) {
-        $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback']);
+        $this->assertTrue($view->field['access_callback'] instanceof HandlerBase, 'Make sure the user got access to the access_callback field ');
         $this->assertFalse(isset($view->field['access_callback_arguments']), 'Make sure the user got no access to the access_callback_arguments field ');
       }
     }
@@ -397,7 +392,7 @@ class HandlerTest extends ViewTestBase {
     foreach ($views_data['access_callback'] as $type => $info) {
       if (!in_array($type, ['title', 'help'])) {
         $this->assertFalse(isset($view->field['access_callback']), 'Make sure the user got no access to the access_callback field ');
-        $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback_arguments']);
+        $this->assertTrue($view->field['access_callback_arguments'] instanceof HandlerBase, 'Make sure the user got access to the access_callback_arguments field ');
       }
     }
   }

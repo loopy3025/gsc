@@ -30,7 +30,6 @@ trait AssertConfigTrait {
         case 'Drupal\Component\Diff\Engine\DiffOpCopy':
           // Nothing to do, a copy is what we expect.
           break;
-
         case 'Drupal\Component\Diff\Engine\DiffOpDelete':
         case 'Drupal\Component\Diff\Engine\DiffOpChange':
           // It is not part of the skipped config, so we can directly throw the
@@ -41,7 +40,7 @@ trait AssertConfigTrait {
 
           // Allow to skip entire config files.
           if ($skipped_config[$config_name] === TRUE) {
-            break;
+            continue;
           }
 
           // Allow to skip some specific lines of imported config files.
@@ -69,21 +68,19 @@ trait AssertConfigTrait {
             throw new \Exception($config_name . ': ' . var_export($op, TRUE));
           }
           break;
-
         case 'Drupal\Component\Diff\Engine\DiffOpAdd':
           // The _core property does not exist in the default config.
           if ($op->closing[0] === '_core:') {
-            break;
+            continue;
           }
           foreach ($op->closing as $closing) {
             // The UUIDs don't exist in the default config.
             if (strpos($closing, 'uuid: ') === 0) {
-              break;
+              continue;
             }
             throw new \Exception($config_name . ': ' . var_export($op, TRUE));
           }
           break;
-
         default:
           throw new \Exception($config_name . ': ' . var_export($op, TRUE));
       }

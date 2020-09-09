@@ -284,15 +284,9 @@ class RequestHandler implements ContainerInjectionInterface {
     }
 
     if (in_array($request->getMethod(), ['PATCH', 'POST'], TRUE)) {
-      if (is_object($unserialized)) {
-        $upcasted_route_arguments['entity'] = $unserialized;
-        $upcasted_route_arguments['data'] = $unserialized;
-        $upcasted_route_arguments['unserialized'] = $unserialized;
-      }
-      else {
-        $raw_route_arguments['data'] = $unserialized;
-        $raw_route_arguments['unserialized'] = $unserialized;
-      }
+      $upcasted_route_arguments['entity'] = $unserialized;
+      $upcasted_route_arguments['data'] = $unserialized;
+      $upcasted_route_arguments['unserialized'] = $unserialized;
       $upcasted_route_arguments['original_entity'] = $route_arguments_entity;
     }
     else {
@@ -323,7 +317,7 @@ class RequestHandler implements ContainerInjectionInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
-   * @deprecated in drupal:8.4.0 and is removed from drupal:9.0.0. Use the
+   * @deprecated in Drupal 8.4.0, will be removed before Drupal 9.0.0. Use the
    *   argument resolver method instead, see ::createArgumentResolver().
    *
    * @see https://www.drupal.org/node/2894819
@@ -336,7 +330,7 @@ class RequestHandler implements ContainerInjectionInterface {
     $parameters = [];
     // Filter out all internal parameters starting with "_".
     foreach ($route_parameters as $key => $parameter) {
-      if (substr((string) $key, 0, 1) !== '_') {
+      if ($key{0} !== '_') {
         $parameters[] = $parameter;
       }
     }

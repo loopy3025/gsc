@@ -2,11 +2,10 @@
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Core\Url;
-use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Adds a new locale and translates its name. Checks the validation of
@@ -24,18 +23,10 @@ class LocaleTranslationUiTest extends BrowserTestBase {
   public static $modules = ['locale'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Enable interface translation to English.
    */
   public function testEnglishTranslation() {
-    $admin_user = $this->drupalCreateUser([
-      'administer languages',
-      'access administration pages',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     $this->drupalLogin($admin_user);
 
     $this->drupalPostForm('admin/config/regional/language/edit/en', ['locale_translate_english' => TRUE], t('Save language'));
@@ -47,15 +38,9 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    */
   public function testStringTranslation() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser([
-      'administer languages',
-      'access administration pages',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     // User to translate and delete string.
-    $translate_user = $this->drupalCreateUser([
-      'translate interface',
-      'access administration pages',
-    ]);
+    $translate_user = $this->drupalCreateUser(['translate interface', 'access administration pages']);
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
@@ -111,7 +96,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
     $this->assertText(t('The strings have been saved.'), 'The strings have been saved.');
     $url_bits = explode('?', $this->getUrl());
-    $this->assertEqual($url_bits[0], Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), 'Correct page redirection.');
+    $this->assertEqual($url_bits[0], \Drupal::url('locale.translate_page', [], ['absolute' => TRUE]), 'Correct page redirection.');
     $search = [
       'string' => $name,
       'langcode' => $langcode,
@@ -191,7 +176,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Reload to remove $name.
     $this->drupalGet($path);
     // Verify that language is no longer found.
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404, 'Language no longer found.');
     $this->drupalLogout();
 
     // Delete the string.
@@ -225,11 +210,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * properly created and rebuilt on deletion.
    */
   public function testJavaScriptTranslation() {
-    $user = $this->drupalCreateUser([
-      'translate interface',
-      'administer languages',
-      'access administration pages',
-    ]);
+    $user = $this->drupalCreateUser(['translate interface', 'administer languages', 'access administration pages']);
     $this->drupalLogin($user);
     $config = $this->config('locale.settings');
 
@@ -251,7 +232,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     // Retrieve the source string of the first string available in the
     // {locales_source} table and translate it.
-    $query = Database::getConnection()->select('locales_source', 's');
+    $query = db_select('locales_source', 's');
     $query->addJoin('INNER', 'locales_location', 'l', 's.lid = l.lid');
     $source = $query->fields('s', ['source'])
       ->condition('l.type', 'javascript')
@@ -278,13 +259,13 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: [];
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
-    $this->assertFileExists($js_file);
+    $this->assertTrue($result = file_exists($js_file), new FormattableMarkup('JavaScript file created: %file', ['%file' => $result ? $js_file : 'not found']));
 
     // Test JavaScript translation rebuilding.
-    \Drupal::service('file_system')->delete($js_file);
-    $this->assertFileNotExists($js_file);
+    file_unmanaged_delete($js_file);
+    $this->assertTrue($result = !file_exists($js_file), new FormattableMarkup('JavaScript file deleted: %file', ['%file' => $result ? $js_file : 'found']));
     _locale_rebuild_js($langcode);
-    $this->assertFileExists($js_file);
+    $this->assertTrue($result = file_exists($js_file), new FormattableMarkup('JavaScript file rebuilt: %file', ['%file' => $result ? $js_file : 'not found']));
   }
 
   /**
@@ -292,11 +273,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    */
   public function testStringValidation() {
     // User to add language and strings.
-    $admin_user = $this->drupalCreateUser([
-      'administer languages',
-      'access administration pages',
-      'translate interface',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'translate interface']);
     $this->drupalLogin($admin_user);
     $langcode = 'xx';
     // The English name for the language. This will be translated.
@@ -340,7 +317,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
       // Check for a form error on the textarea.
       $form_class = $this->xpath('//form[@id="locale-translate-edit-form"]//textarea/@class');
-      $this->assertStringContainsString('error', $form_class[0]->getText(), 'The string was rejected as unsafe.');
+      $this->assertContains('error', $form_class[0]->getText(), 'The string was rejected as unsafe.');
       $this->assertNoText(t('The string has been saved.'), 'The string was not saved.');
     }
   }
@@ -350,15 +327,9 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    */
   public function testStringSearch() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser([
-      'administer languages',
-      'access administration pages',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     // User to translate and delete string.
-    $translate_user = $this->drupalCreateUser([
-      'translate interface',
-      'access administration pages',
-    ]);
+    $translate_user = $this->drupalCreateUser(['translate interface', 'access administration pages']);
 
     // Code for the language.
     $langcode = 'xx';
@@ -497,11 +468,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * Tests that only changed strings are saved customized when edited.
    */
   public function testUICustomizedStrings() {
-    $user = $this->drupalCreateUser([
-      'translate interface',
-      'administer languages',
-      'access administration pages',
-    ]);
+    $user = $this->drupalCreateUser(['translate interface', 'administer languages', 'access administration pages']);
     $this->drupalLogin($user);
     ConfigurableLanguage::createFromLangcode('de')->save();
 

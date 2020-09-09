@@ -13,11 +13,6 @@ use Drupal\comment\Entity\Comment;
 class CommentRestExportTest extends CommentTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -27,13 +22,7 @@ class CommentRestExportTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'node',
-    'comment',
-    'comment_test_views',
-    'rest',
-    'hal',
-  ];
+  public static $modules = ['node', 'comment', 'comment_test_views', 'rest', 'hal'];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
@@ -62,11 +51,11 @@ class CommentRestExportTest extends CommentTestBase {
    */
   public function testCommentRestExport() {
     $this->drupalGet(sprintf('node/%d/comments', $this->nodeUserCommented->id()), ['query' => ['_format' => 'hal_json']]);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $contents = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($contents[0]['subject'], 'How much wood would a woodchuck chuck');
     $this->assertEqual($contents[1]['subject'], 'A lot, apparently');
-    $this->assertCount(2, $contents);
+    $this->assertEqual(count($contents), 2);
 
     // Ensure field-level access is respected - user shouldn't be able to see
     // mail or hostname fields.

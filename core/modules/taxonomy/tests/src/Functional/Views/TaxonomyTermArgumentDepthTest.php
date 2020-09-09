@@ -12,17 +12,7 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
-    'taxonomy',
-    'taxonomy_test_views',
-    'views',
-    'node',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  public static $modules = ['taxonomy', 'taxonomy_test_views', 'views', 'node'];
 
   /**
    * {@inheritdoc}

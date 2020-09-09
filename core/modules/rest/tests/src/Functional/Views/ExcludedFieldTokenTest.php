@@ -29,11 +29,6 @@ class ExcludedFieldTokenTest extends ViewTestBase {
   public static $testViews = ['test_excluded_field_token_display'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * The modules that need to be installed for this test.
    *
    * @var array
@@ -72,7 +67,7 @@ class ExcludedFieldTokenTest extends ViewTestBase {
    */
   public function testExcludedTitleTokenDisplay() {
     $actual_json = $this->drupalGet($this->view->getPath(), ['query' => ['_format' => 'json']]);
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $expected = [
       ['nothing' => 'Article test 10'],

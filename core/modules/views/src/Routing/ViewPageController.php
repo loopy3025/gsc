@@ -19,9 +19,7 @@ class ViewPageController {
    *   The ID of the display.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
-   *
-   * @return array|\Symfony\Component\HttpFoundation\Response
-   *   A render array or a Response object.
+   * @return null|void
    */
   public function handle($view_id, $display_id, RouteMatchInterface $route_match) {
     $args = [];
@@ -47,13 +45,13 @@ class ViewPageController {
       }
     }
 
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase $class */
     $class = $route->getOption('_view_display_plugin_class');
     if ($route->getOption('returns_response')) {
       /** @var \Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface $class */
       return $class::buildResponse($view_id, $display_id, $args);
     }
     else {
-      /** @var \Drupal\views\Plugin\views\display\Page $class */
       $build = $class::buildBasicRenderable($view_id, $display_id, $args, $route);
       Page::setPageRenderArray($build);
 

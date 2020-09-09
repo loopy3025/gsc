@@ -12,7 +12,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  *
  * @group field
  */
-class ReEnableModuleFieldTest extends BrowserTestBase {
+class reEnableModuleFieldTest extends BrowserTestBase {
 
   use CronRunTrait;
 
@@ -28,11 +28,6 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
     // hidden and does not display on the admin/modules page.
     'telephone',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   protected function setUp() {
     parent::setUp();
@@ -50,6 +45,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
    * @see field_system_info_alter()
    */
   public function testReEnabledField() {
+
     // Add a telephone field to the article content type.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_telephone',
@@ -63,9 +59,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
       'label' => 'Telephone Number',
     ])->save();
 
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-    $display_repository->getFormDisplay('node', 'article')
+    entity_get_form_display('node', 'article', 'default')
       ->setComponent('field_telephone', [
         'type' => 'telephone_default',
         'settings' => [
@@ -74,7 +68,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
       ])
       ->save();
 
-    $display_repository->getViewDisplay('node', 'article')
+    entity_get_display('node', 'article', 'default')
       ->setComponent('field_telephone', [
         'type' => 'telephone_link',
         'weight' => 1,
@@ -96,10 +90,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
 
     // Test that the module can't be uninstalled from the UI while there is data
     // for its fields.
-    $admin_user = $this->drupalCreateUser([
-      'access administration pages',
-      'administer modules',
-    ]);
+    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer modules']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText("The Telephone number field type is used in the following field: node.field_telephone");
@@ -107,7 +98,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
     // Add another telephone field to a different entity type in order to test
     // the message for the case when multiple fields are blocking the
     // uninstallation of a module.
-    $field_storage2 = FieldStorageConfig::create([
+    $field_storage2 = entity_create('field_storage_config', [
       'field_name' => 'field_telephone_2',
       'entity_type' => 'user',
       'type' => 'telephone',

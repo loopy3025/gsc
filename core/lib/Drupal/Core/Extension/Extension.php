@@ -4,13 +4,8 @@ namespace Drupal\Core\Extension;
 
 /**
  * Defines an extension (file) object.
- *
- * This class does not implement the Serializable interface since problems
- * occurred when using the serialize method.
- *
- * @see https://bugs.php.net/bug.php?id=66052
  */
-class Extension {
+class Extension implements \Serializable {
 
   /**
    * The type of the extension (e.g., 'module').
@@ -63,8 +58,6 @@ class Extension {
    *   (optional) The filename of the main extension file; e.g., 'node.module'.
    */
   public function __construct($root, $type, $pathname, $filename = NULL) {
-    // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()
-    assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
     $this->root = $root;
     $this->type = $type;
     $this->pathname = $pathname;
@@ -157,33 +150,53 @@ class Extension {
    */
   public function __call($method, array $args) {
     if (!isset($this->splFileInfo)) {
-      $this->splFileInfo = new \SplFileInfo($this->root . '/' . $this->pathname);
+      $this->splFileInfo = new \SplFileInfo($this->pathname);
     }
     return call_user_func_array([$this->splFileInfo, $method], $args);
   }
 
   /**
-   * Magic method implementation to serialize the extension object.
+   * Implements Serializable::serialize().
    *
-   * @return array
-   *   The names of all variables that should be serialized.
+   * Serializes the Extension object in the most optimized way.
    */
-  public function __sleep() {
-    // @todo \Drupal\Core\Extension\ThemeExtensionList is adding custom
-    //   properties to the Extension object.
-    $properties = get_object_vars($this);
+  public function serialize() {
     // Don't serialize the app root, since this could change if the install is
-    // moved. Don't serialize splFileInfo because it can not be.
-    unset($properties['splFileInfo'], $properties['root']);
-    return array_keys($properties);
+    // moved.
+    $data = [
+      'type' => $this->type,
+      'pathname' => $this->pathname,
+      'filename' => $this->filename,
+    ];
+
+    // @todo ThemeHandler::listInfo(), ThemeHandler::rebuildThemeData(), and
+    //   system_list() are adding custom properties to the Extension object.
+    $info = new \ReflectionObject($this);
+    foreach ($info->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+      $data[$property->getName()] = $property->getValue($this);
+    }
+
+    return serialize($data);
   }
 
   /**
-   * Magic method implementation to unserialize the extension object.
+   * {@inheritdoc}
    */
-  public function __wakeup() {
+  public function unserialize($data) {
+    $data = unserialize($data);
     // Get the app root from the container.
-    $this->root = \Drupal::hasService('app.root') ? \Drupal::root() : DRUPAL_ROOT;
+    $this->root = DRUPAL_ROOT;
+    $this->type = $data['type'];
+    $this->pathname = $data['pathname'];
+    $this->filename = $data['filename'];
+
+    // @todo ThemeHandler::listInfo(), ThemeHandler::rebuildThemeData(), and
+    //   system_list() are adding custom properties to the Extension object.
+    foreach ($data as $property => $value) {
+      if (!isset($this->$property)) {
+        $this->$property = $value;
+      }
+    }
   }
 
 }

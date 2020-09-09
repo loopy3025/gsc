@@ -15,11 +15,6 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
    *
    * Configures a preexisting settings.php file without an install_profile
    * setting before invoking the interactive installer.
@@ -45,11 +40,13 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
     ];
 
     // Pre-configure config directories.
-    $this->settings['settings']['config_sync_directory'] = (object) [
-      'value' => DrupalKernel::findSitePath(Request::createFromGlobals()) . '/files/config_sync',
-      'required' => TRUE,
+    $this->settings['config_directories'] = [
+      CONFIG_SYNC_DIRECTORY => (object) [
+        'value' => DrupalKernel::findSitePath(Request::createFromGlobals()) . '/files/config_sync',
+        'required' => TRUE,
+      ],
     ];
-    mkdir($this->settings['settings']['config_sync_directory']->value, 0777, TRUE);
+    mkdir($this->settings['config_directories'][CONFIG_SYNC_DIRECTORY]->value, 0777, TRUE);
   }
 
   /**
@@ -65,7 +62,7 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
    */
   public function testInstaller() {
     $this->assertUrl('user/1');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertEqual('testing', \Drupal::installProfile());
   }
 

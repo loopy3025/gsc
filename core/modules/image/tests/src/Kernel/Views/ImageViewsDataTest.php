@@ -19,23 +19,7 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
-    'image',
-    'file',
-    'views',
-    'entity_test',
-    'user',
-    'field',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp($import_test_views = TRUE) {
-    parent::setUp($import_test_views);
-    $this->installEntitySchema('entity_test');
-    $this->installEntitySchema('entity_test_mul');
-  }
+  public static $modules = ['image', 'file', 'views', 'entity_test', 'user', 'field'];
 
   /**
    * Tests views data generated for image field relationship.

@@ -3,7 +3,6 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
@@ -15,11 +14,9 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\FileBag;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ingroup form_api
  */
-class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface, TrustedCallbackInterface {
+class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface {
 
   /**
    * The module handler.
@@ -222,9 +219,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function buildForm($form_arg, FormStateInterface &$form_state) {
+  public function buildForm($form_id, FormStateInterface &$form_state) {
     // Ensure the form ID is prepared.
-    $form_id = $this->getFormId($form_arg, $form_state);
+    $form_id = $this->getFormId($form_id, $form_state);
 
     $request = $this->requestStack->getCurrentRequest();
 
@@ -384,17 +381,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     //   there's some other error, so it's ok if an exception is thrown.
     if ($form_state->isMethodType('POST')) {
       $form_state->setCached();
-    }
-
-    // \Drupal\Component\Utility\Html::getUniqueId() maintains a cache of
-    // element IDs it has seen, so it can prevent duplicates. We want to be
-    // sure we reset that cache when a form is processed, so scenarios that
-    // result in the form being built behind the scenes and again for the
-    // browser don't increment all the element IDs needlessly.
-    if (!FormState::hasAnyErrors()) {
-      // We only reset HTML ID's when there are no validation errors as this can
-      // cause ID collisions with other forms on the page otherwise.
-      Html::resetSeenIds();
     }
 
     // If only parts of the form will be returned to the browser (e.g., Ajax or
@@ -588,6 +574,16 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
       $this->formValidator->validateForm($form_id, $form, $form_state);
 
+      // \Drupal\Component\Utility\Html::getUniqueId() maintains a cache of
+      // element IDs it has seen, so it can prevent duplicates. We want to be
+      // sure we reset that cache when a form is processed, so scenarios that
+      // result in the form being built behind the scenes and again for the
+      // browser don't increment all the element IDs needlessly.
+      if (!FormState::hasAnyErrors()) {
+        // In case of errors, do not break HTML IDs of other forms.
+        Html::resetSeenIds();
+      }
+
       // If there are no errors and the form is not rebuilding, submit the form.
       if (!$form_state->isRebuilding() && !FormState::hasAnyErrors()) {
         $submit_response = $this->formSubmitter->doSubmitForm($form, $form_state);
@@ -691,7 +687,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // will be replaced at the very last moment. This ensures forms with
       // dynamically generated action URLs don't have poor cacheability.
       // Use the proper API to generate the placeholder, when we have one. See
-      // https://www.drupal.org/node/2562341. The placeholder uses a fixed string
+      // https://www.drupal.org/node/2562341. The placholder uses a fixed string
       // that is Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm');
       $placeholder = 'form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM';
 
@@ -958,16 +954,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
             // This value is checked in self::handleInputElement().
             $form_state->setInvalidToken(TRUE);
 
-            // Ignore all submitted values.
-            $form_state->setUserInput([]);
-
-            $request = $this->requestStack->getCurrentRequest();
-            // Do not trust any POST data.
-            $request->request = new ParameterBag();
             // Make sure file uploads do not get processed.
-            $request->files = new FileBag();
-            // Ensure PHP globals reflect these changes.
-            $request->overrideGlobals();
+            $this->requestStack->getCurrentRequest()->files = new FileBag();
           }
         }
       }
@@ -1402,7 +1390,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   based on the PHP upload_max_filesize and post_max_size.
    */
   protected function getFileUploadMaxSize() {
-    return Environment::getUploadMaxSize();
+    return file_upload_max_size();
   }
 
   /**
@@ -1415,13 +1403,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderPlaceholderFormAction', 'renderFormTokenPlaceholder'];
   }
 
 }

@@ -17,11 +17,6 @@ class NodeIntegrationTest extends NodeTestBase {
   public static $testViews = ['test_node_view'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests basic node view with a node type argument.
    */
   public function testNodeViewTypeArgument() {
@@ -41,10 +36,10 @@ class NodeIntegrationTest extends NodeTestBase {
     }
 
     $this->drupalGet('test-node-view');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404);
 
     $this->drupalGet('test-node-view/all');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertNids($all_nids);
 
     foreach ($types as $type) {

@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Functional\Entity\Update;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\Tests\system\Functional\Update\DbUpdatesTrait;
 
 /**
@@ -15,7 +14,6 @@ use Drupal\Tests\system\Functional\Update\DbUpdatesTrait;
 class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
   use DbUpdatesTrait;
-  use EntityDefinitionTestTrait;
 
   /**
    * {@inheritdoc}
@@ -23,15 +21,27 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
   protected static $modules = ['entity_test'];
 
   /**
-   * {@inheritdoc}
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
-  protected $defaultTheme = 'stark';
+  protected $entityManager;
+
+  /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
+  protected $updatesManager;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->entityManager = $this->container->get('entity.manager');
+    $this->updatesManager = $this->container->get('entity.definition_update_manager');
 
     $admin = $this->drupalCreateUser([], FALSE, TRUE);
     $this->drupalLogin($admin);
@@ -48,7 +58,7 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that only a single value is stored for 'user_id'.
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Make 'user_id' multiple by applying updates.
@@ -60,14 +70,14 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that data was correctly migrated.
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Store multiple data and check it is correctly stored.
     $entity->user_id = $user_ids;
     $entity->save();
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(2, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 2);
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
     $this->assertEqual($entity->user_id[1]->target_id, $user_ids[1]);
 
@@ -77,14 +87,14 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that data was correctly migrated/dropped.
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Check that only a single value is stored for 'user_id' again.
     $entity->user_id = $user_ids;
     $entity->save();
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
   }
 
@@ -99,7 +109,7 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that only a single value is stored for 'user_id'.
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Make 'user_id' multiple and then single again by applying updates.
@@ -108,14 +118,14 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Check that data was correctly migrated back and forth.
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id->target_id, $user_ids[0]);
 
     // Check that only a single value is stored for 'user_id' again.
     $entity->user_id = $user_ids;
     $entity->save();
     $entity = $this->reloadEntity($entity);
-    $this->assertCount(1, $entity->user_id);
+    $this->assertEqual(count($entity->user_id), 1);
     $this->assertEqual($entity->user_id[0]->target_id, $user_ids[0]);
   }
 
@@ -155,7 +165,7 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
 
     // Apply the entity updates and check that the entity update status report
     // item is no longer displayed.
-    $this->applyEntityUpdates();
+    $this->updatesManager->applyUpdates();
     $this->drupalGet('admin/reports/status');
     $this->assertNoRaw('Out of date');
     $this->assertNoRaw('Mismatched entity and/or field definitions');
@@ -171,8 +181,8 @@ class UpdateApiEntityDefinitionUpdateTest extends BrowserTestBase {
    *   The reloaded entity object.
    */
   protected function reloadEntity(EntityTest $entity) {
-    \Drupal::entityTypeManager()->useCaches(FALSE);
-    \Drupal::service('entity_field.manager')->useCaches(FALSE);
+    $this->entityManager->useCaches(FALSE);
+    $this->entityManager->getStorage('entity_test')->resetCache([$entity->id()]);
     return EntityTest::load($entity->id());
   }
 

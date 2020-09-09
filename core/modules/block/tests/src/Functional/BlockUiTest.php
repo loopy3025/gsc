@@ -3,8 +3,6 @@
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Component\Utility\Html;
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -20,11 +18,6 @@ class BlockUiTest extends BrowserTestBase {
    * @var array
    */
   public static $modules = ['block', 'block_test', 'help', 'condition_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
 
   protected $regions;
 
@@ -89,15 +82,13 @@ class BlockUiTest extends BrowserTestBase {
     $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', [':title' => 'Highlighted']);
     $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
 
-    // Ensure that other themes can use the block demo page.
-    \Drupal::service('theme_installer')->install(['test_theme']);
+    \Drupal::service('theme_handler')->install(['test_theme']);
     $this->drupalGet('admin/structure/block/demo/test_theme');
     $this->assertEscaped('<strong>Test theme</strong>');
 
-    // Ensure that a hidden theme cannot use the block demo page.
-    \Drupal::service('theme_installer')->install(['stable']);
+    \Drupal::service('theme_handler')->install(['stable']);
     $this->drupalGet('admin/structure/block/demo/stable');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404, 'Hidden themes that are not the default theme are not supported by the block demo screen');
   }
 
   /**
@@ -152,23 +143,20 @@ class BlockUiTest extends BrowserTestBase {
     \Drupal::service('theme_installer')->install(['stable', 'stark']);
     $this->drupalGet('admin/structure/block');
     $theme_handler = \Drupal::service('theme_handler');
-    $this->assertSession()->linkExists($theme_handler->getName('classy'));
-    $this->assertSession()->linkExists($theme_handler->getName('stark'));
-    $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
+    $this->assertLink($theme_handler->getName('classy'));
+    $this->assertLink($theme_handler->getName('stark'));
+    $this->assertNoLink($theme_handler->getName('stable'));
 
-    // Ensure that a hidden theme cannot use the block demo page.
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertResponse(404, 'Placing blocks through UI is not possible for a hidden base theme.');
 
-    // Ensure that a hidden theme set as the admin theme can use the block demo
-    // page.
     \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->linkExists($theme_handler->getName('stable'));
+    $this->assertLink($theme_handler->getName('stable'));
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'Placing blocks through UI is possible for a hidden base theme that is the admin theme.');
   }
 
   /**
@@ -221,7 +209,7 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the behavior of context-aware blocks.
    */
   public function testContextAwareBlocks() {
-    $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getAccountName() . '</div>';
+    $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getUsername() . '</div>';
     $this->drupalGet('');
     $this->assertNoText('Test context-aware block');
     $this->assertNoRaw($expected_text);
@@ -250,13 +238,6 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertText('Test context-aware block');
     $this->assertText('User context found.');
     $this->assertRaw($expected_text);
-
-    // Test context mapping form element is not visible if there are no valid
-    // context options for the block (the test_context_aware_no_valid_context_options
-    // block has one context defined which is not available for it on the
-    // Block Layout interface).
-    $this->drupalGet('admin/structure/block/add/test_context_aware_no_valid_context_options/classy');
-    $this->assertSession()->fieldNotExists('edit-settings-context-mapping-email');
 
     // Test context mapping allows empty selection for optional contexts.
     $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
@@ -300,24 +281,6 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the block placement indicator.
    */
   public function testBlockPlacementIndicator() {
-    // Test the block placement indicator with using the domain as URL language
-    // indicator. This causes destination query parameters to be absolute URLs.
-    \Drupal::service('module_installer')->install(['language', 'locale']);
-    $this->container = \Drupal::getContainer();
-    ConfigurableLanguage::createFromLangcode('it')->save();
-    $config = $this->config('language.types');
-    $config->set('negotiation.language_interface.enabled', [
-      LanguageNegotiationUrl::METHOD_ID => -10,
-    ]);
-    $config->save();
-    $config = $this->config('language.negotiation');
-    $config->set('url.source', LanguageNegotiationUrl::CONFIG_DOMAIN);
-    $config->set('url.domains', [
-      'en' => \Drupal::request()->getHost(),
-      'it' => 'it.example.com',
-    ]);
-    $config->save();
-
     // Select the 'Powered by Drupal' block to be placed.
     $block = [];
     $block['id'] = strtolower($this->randomMachineName());
@@ -326,30 +289,11 @@ class BlockUiTest extends BrowserTestBase {
 
     // After adding a block, it will indicate which block was just added.
     $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
+    $this->assertUrl('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
 
-    // Resaving the block page will remove the block placement indicator.
+    // Resaving the block page will remove the block indicator.
     $this->drupalPostForm(NULL, [], t('Save blocks'));
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy');
-
-    // Place another block and test the remove functionality works with the
-    // block placement indicator. Click the first 'Place block' link to bring up
-    // the list of blocks to place in the first available region.
-    $this->clickLink('Place block');
-    // Select the first available block.
-    $this->clickLink('Place block');
-    $block = [];
-    $block['id'] = strtolower($this->randomMachineName());
-    $block['theme'] = 'classy';
-    $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
-
-    // Removing a block will remove the block placement indicator.
-    $this->clickLink('Remove');
-    $this->submitForm([], 'Remove');
-    // @todo https://www.drupal.org/project/drupal/issues/2980527 this should be
-    //   'admin/structure/block/list/classy' but there is a bug.
-    $this->assertSession()->addressEquals('admin/structure/block');
+    $this->assertUrl('admin/structure/block/list/classy');
   }
 
   /**
@@ -361,11 +305,11 @@ class BlockUiTest extends BrowserTestBase {
     $arguments = [':message' => 'Only digits are allowed'];
     $pattern = '//div[contains(@class,"messages messages--error")]/div[contains(text()[2],:message)]';
     $elements = $this->xpath($pattern, $arguments);
-    $this->assertNotEmpty($elements, 'Plugin error message found in parent form.');
+    $this->assertTrue($elements, 'Plugin error message found in parent form.');
 
     $error_class_pattern = '//div[contains(@class,"form-item-settings-digits")]/input[contains(@class,"error")]';
     $error_class = $this->xpath($error_class_pattern);
-    $this->assertNotEmpty($error_class, 'Plugin error class found in parent form.');
+    $this->assertTrue($error_class, 'Plugin error class found in parent form.');
   }
 
   /**
@@ -377,9 +321,9 @@ class BlockUiTest extends BrowserTestBase {
     $block = reset($this->blocks);
     // Ensure that the enable and disable routes are protected.
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/disable');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/enable');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
   }
 
 }

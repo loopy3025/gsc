@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Tests\Core\Database\Stub\StubConnection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -46,7 +45,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerPrefixRoundTrip
    */
   public function testPrefixRoundTrip($expected, $prefix_info) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
 
     // setPrefix() is protected, so we make it accessible with reflection.
@@ -95,7 +94,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerTestPrefixTables
    */
   public function testPrefixTables($expected, $prefix_info, $query) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info]);
     $this->assertEquals($expected, $connection->prefixTables($query));
   }
@@ -129,7 +128,7 @@ class ConnectionTest extends UnitTestCase {
    * @todo Separate test method for each escape method?
    */
   public function testEscapeMethods($expected, $name) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
     $this->assertEquals($expected, $connection->escapeDatabase($name));
     $this->assertEquals($expected, $connection->escapeTable($name));
@@ -173,7 +172,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerGetDriverClass
    */
   public function testGetDriverClass($expected, $namespace, $class) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
     // Set the driver using our stub class' public property.
     $this->assertEquals($expected, $connection->getDriverClass($class));
@@ -204,7 +203,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerSchema
    */
   public function testSchema($expected, $driver, $namespace) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
     $connection->driver = $driver;
     $this->assertInstanceOf($expected, $connection->schema());
@@ -214,9 +213,13 @@ class ConnectionTest extends UnitTestCase {
    * Test Connection::destroy().
    */
   public function testDestroy() {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     // Mocking StubConnection gives us access to the $schema attribute.
-    $connection = new StubConnection($mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver']);
+    $connection = $this->getMock(
+      'Drupal\Tests\Core\Database\Stub\StubConnection',
+      NULL,
+      [$mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver']]
+    );
     // Generate a schema object in order to verify that we've NULLed it later.
     $this->assertInstanceOf(
       'Drupal\\Tests\\Core\\Database\\Stub\\Driver\\Schema',
@@ -257,7 +260,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerMakeComments
    */
   public function testMakeComments($expected, $comment_array) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
     $this->assertEquals($expected, $connection->makeComment($comment_array));
   }
@@ -284,7 +287,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerFilterComments
    */
   public function testFilterComments($expected, $comment) {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $mock_pdo = $this->getMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
 
     // filterComment() is protected, so we make it accessible with reflection.
@@ -296,60 +299,6 @@ class ConnectionTest extends UnitTestCase {
       $expected,
       $filter_comment->invokeArgs($connection, [$comment])
     );
-  }
-
-  /**
-   * Test rtrim() of query strings.
-   *
-   * @dataProvider provideQueriesToTrim
-   */
-  public function testQueryTrim($expected, $query, $options) {
-    $mock_pdo = $this->getMockBuilder(StubPdo::class)
-      ->setMethods(['execute', 'prepare', 'setAttribute'])
-      ->getMock();
-
-    // Ensure that PDO::prepare() is called only once, and with the
-    // correctly trimmed query string.
-    $mock_pdo->expects($this->once())
-      ->method('prepare')
-      ->with($expected)
-      ->willReturnSelf();
-    $connection = new StubConnection($mock_pdo, []);
-    $connection->query($query, [], $options);
-  }
-
-  /**
-   * Dataprovider for testQueryTrim().
-   *
-   * @return array
-   *   Array of arrays with the following elements:
-   *   - Expected trimmed query.
-   *   - Padded query.
-   *   - Query options.
-   */
-  public function provideQueriesToTrim() {
-    return [
-      'remove_semicolon' => [
-        'SELECT * FROM test',
-        'SELECT * FROM test;',
-        [],
-      ],
-      'keep_trailing_semicolon' => [
-        'SELECT * FROM test;',
-        'SELECT * FROM test;',
-        ['allow_delimiter_in_query' => TRUE],
-      ],
-      'remove_semicolon_with_whitespace' => [
-        'SELECT * FROM test',
-        'SELECT * FROM test; ',
-        [],
-      ],
-      'keep_trailing_semicolon_with_whitespace' => [
-        'SELECT * FROM test;',
-        'SELECT * FROM test; ',
-        ['allow_delimiter_in_query' => TRUE],
-      ],
-    ];
   }
 
 }

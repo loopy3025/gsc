@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\user\RoleInterface;
 
 /**
@@ -11,12 +10,6 @@ use Drupal\user\RoleInterface;
  * @group node
  */
 class NodeAdminTest extends NodeTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
-
   /**
    * A user with permission to bypass access content.
    *
@@ -60,21 +53,10 @@ class NodeAdminTest extends NodeTestBase {
     // correctly.
     user_role_revoke_permissions(RoleInterface::AUTHENTICATED_ID, ['view own unpublished content']);
 
-    $this->adminUser = $this->drupalCreateUser([
-      'access administration pages',
-      'access content overview',
-      'administer nodes',
-      'bypass node access',
-    ]);
+    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'access content overview', 'administer nodes', 'bypass node access']);
     $this->baseUser1 = $this->drupalCreateUser(['access content overview']);
-    $this->baseUser2 = $this->drupalCreateUser([
-      'access content overview',
-      'view own unpublished content',
-    ]);
-    $this->baseUser3 = $this->drupalCreateUser([
-      'access content overview',
-      'bypass node access',
-    ]);
+    $this->baseUser2 = $this->drupalCreateUser(['access content overview', 'view own unpublished content']);
+    $this->baseUser3 = $this->drupalCreateUser(['access content overview', 'bypass node access']);
   }
 
   /**
@@ -84,18 +66,17 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     $changed = REQUEST_TIME;
-    $connection = Database::getConnection();
     foreach (['dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB'] as $prefix) {
       $changed += 1000;
       $node = $this->drupalCreateNode(['title' => $prefix . $this->randomMachineName(6)]);
-      $connection->update('node_field_data')
+      db_update('node_field_data')
         ->fields(['changed' => $changed])
         ->condition('nid', $node->id())
         ->execute();
     }
 
     // Test that the default sort by node.changed DESC actually fires properly.
-    $nodes_query = $connection->select('node_field_data', 'n')
+    $nodes_query = db_select('node_field_data', 'n')
       ->fields('n', ['title'])
       ->orderBy('changed', 'DESC')
       ->execute()
@@ -109,7 +90,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Compare the rendered HTML node list to a query for the nodes ordered by
     // title to account for possible database-dependent sort order.
-    $nodes_query = $connection->select('node_field_data', 'n')
+    $nodes_query = db_select('node_field_data', 'n')
       ->fields('n', ['title'])
       ->orderBy('title')
       ->execute()
@@ -144,7 +125,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $node_type_labels = $this->xpath('//td[contains(@class, "views-field-type")]');
     $delta = 0;
@@ -174,7 +155,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertLinkByHref('node/' . $nodes['published_page']->id());
     $this->assertLinkByHref('node/' . $nodes['published_article']->id());
     $this->assertNoLinkByHref('node/' . $nodes['published_page']->id() . '/edit');
@@ -194,7 +175,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertLinkByHref('node/' . $nodes['unpublished_page_2']->id());
     // Verify no operation links are displayed.
     $this->assertNoLinkByHref('node/' . $nodes['unpublished_page_2']->id() . '/edit');
@@ -212,7 +193,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->baseUser3);
     $this->drupalGet('admin/content');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     foreach ($nodes as $node) {
       $this->assertLinkByHref('node/' . $node->id());
       $this->assertLinkByHref('node/' . $node->id() . '/edit');

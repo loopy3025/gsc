@@ -17,11 +17,6 @@ class UnsavedPreviewTest extends UITestBase {
   public static $testViews = ['content'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * An admin user with the 'administer views' permission.
    *
    * @var \Drupal\user\UserInterface
@@ -53,29 +48,29 @@ class UnsavedPreviewTest extends UITestBase {
     }
 
     $this->drupalGet('admin/structure/views/view/content');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalPostForm(NULL, [], t('Add Page'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalGet('admin/structure/views/nojs/display/content/page_2/path');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalPostForm(NULL, ['path' => 'foobarbaz'], t('Apply'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertText(t('This display has no path'));
 
     $this->drupalGet('admin/structure/views/view/content/edit/page_2');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertLinkByHref('foobarbaz');
   }
 

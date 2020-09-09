@@ -26,11 +26,6 @@ class NodeTypeTest extends NodeTestBase {
   public static $modules = ['field_ui', 'block'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'classy';
-
-  /**
    * Ensures that node type functions (node_type_get_*) work correctly.
    *
    * Load available node types and validate the returned data.
@@ -60,26 +55,21 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
     // Log in a test user.
-    $web_user = $this->drupalCreateUser([
-      'create ' . $type->label() . ' content',
-    ]);
+    $web_user = $this->drupalCreateUser(['create ' . $type->label() . ' content']);
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/' . $type->id());
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'The new content type can be accessed at node/add.');
 
     // Create a content type via the user interface.
-    $web_user = $this->drupalCreateUser([
-      'bypass node access',
-      'administer content types',
-    ]);
+    $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types']);
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add');
     $this->assertCacheTag('config:node_type_list');
     $this->assertCacheContext('user.permissions');
     $elements = $this->cssSelect('dl.node-type-list dt');
-    $this->assertCount(3, $elements);
+    $this->assertEqual(3, count($elements));
 
     $edit = [
       'name' => 'foo',
@@ -92,7 +82,7 @@ class NodeTypeTest extends NodeTestBase {
 
     $this->drupalGet('node/add');
     $elements = $this->cssSelect('dl.node-type-list dt');
-    $this->assertCount(4, $elements);
+    $this->assertEqual(4, count($elements));
   }
 
   /**
@@ -101,11 +91,7 @@ class NodeTypeTest extends NodeTestBase {
   public function testNodeTypeEditing() {
     $assert = $this->assertSession();
     $this->drupalPlaceBlock('system_breadcrumb_block');
-    $web_user = $this->drupalCreateUser([
-      'bypass node access',
-      'administer content types',
-      'administer node fields',
-    ]);
+    $web_user = $this->drupalCreateUser(['bypass node access', 'administer content types', 'administer node fields']);
     $this->drupalLogin($web_user);
 
     $field = FieldConfig::loadByName('node', 'page', 'body');
@@ -211,16 +197,16 @@ class NodeTypeTest extends NodeTestBase {
     // way installing a module through the UI does.
     $this->resetAll();
     $this->drupalGet('admin/structure/types/manage/default');
-    $this->assertSession()->linkNotExists(t('Delete'));
+    $this->assertNoLink(t('Delete'));
     $this->drupalGet('admin/structure/types/manage/default/delete');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
     $this->container->get('module_installer')->uninstall(['node_test_config']);
     $this->container = \Drupal::getContainer();
     unset($locked['default']);
     \Drupal::state()->set('node.type.locked', $locked);
     $this->drupalGet('admin/structure/types/manage/default');
     $this->clickLink(t('Delete'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertFalse((bool) NodeType::load('default'), 'Node type with machine default deleted.');
   }
@@ -230,25 +216,19 @@ class NodeTypeTest extends NodeTestBase {
    */
   public function testNodeTypeFieldUiPermissions() {
     // Create an admin user who can only manage node fields.
-    $admin_user_1 = $this->drupalCreateUser([
-      'administer content types',
-      'administer node fields',
-    ]);
+    $admin_user_1 = $this->drupalCreateUser(['administer content types', 'administer node fields']);
     $this->drupalLogin($admin_user_1);
 
-    // Test that the user only sees the actions available to them.
+    // Test that the user only sees the actions available to him.
     $this->drupalGet('admin/structure/types');
     $this->assertLinkByHref('admin/structure/types/manage/article/fields');
     $this->assertNoLinkByHref('admin/structure/types/manage/article/display');
 
     // Create another admin user who can manage node fields display.
-    $admin_user_2 = $this->drupalCreateUser([
-      'administer content types',
-      'administer node display',
-    ]);
+    $admin_user_2 = $this->drupalCreateUser(['administer content types', 'administer node display']);
     $this->drupalLogin($admin_user_2);
 
-    // Test that the user only sees the actions available to them.
+    // Test that the user only sees the actions available to him.
     $this->drupalGet('admin/structure/types');
     $this->assertNoLinkByHref('admin/structure/types/manage/article/fields');
     $this->assertLinkByHref('admin/structure/types/manage/article/display');
@@ -260,7 +240,7 @@ class NodeTypeTest extends NodeTestBase {
   public function testNodeTypeNoContentType() {
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
     $bundle_info = \Drupal::service('entity_type.bundle.info');
-    $this->assertCount(2, $bundle_info->getBundleInfo('node'), 'The bundle information service has 2 bundles for the Node entity type.');
+    $this->assertEqual(2, count($bundle_info->getBundleInfo('node')), 'The bundle information service has 2 bundles for the Node entity type.');
     $web_user = $this->drupalCreateUser(['administer content types']);
     $this->drupalLogin($web_user);
 
@@ -276,7 +256,7 @@ class NodeTypeTest extends NodeTestBase {
       ]), 'Empty text when there are no content types in the system is correct.');
 
     $bundle_info->clearCachedBundles();
-    $this->assertCount(0, $bundle_info->getBundleInfo('node'), 'The bundle information service has 0 bundles for the Node entity type.');
+    $this->assertEqual(0, count($bundle_info->getBundleInfo('node')), 'The bundle information service has 0 bundles for the Node entity type.');
   }
 
 }

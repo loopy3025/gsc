@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\language\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
@@ -23,11 +21,6 @@ class LanguageConfigurationTest extends BrowserTestBase {
   public static $modules = ['language'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Functional tests for adding, editing and deleting languages.
    */
   public function testLanguageConfiguration() {
@@ -36,10 +29,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->assertEqual(ConfigurableLanguage::load('en')->getWeight(), 0, 'The English language has a weight of 0.');
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser([
-      'administer languages',
-      'access administration pages',
-    ]);
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     $this->drupalLogin($admin_user);
 
     // Check if the Default English language has no path prefix.
@@ -56,7 +46,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Add language');
     $this->assertText('French');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE])->toString(), [], 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE]), [], 'Correct page redirection.');
     // Langcode for Languages is always 'en'.
     $language = $this->config('language.entity.fr')->get();
     $this->assertEqual($language['langcode'], 'en');
@@ -79,7 +69,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
     $this->assertFieldChecked('edit-site-default-language-fr', 'Default language updated.');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE, 'langcode' => 'fr'])->toString(), [], 'Correct page redirection.');
+    $this->assertUrl(\Drupal::url('entity.configurable_language.collection', [], ['absolute' => TRUE, 'langcode' => 'fr']), [], 'Correct page redirection.');
 
     // Check if a valid language prefix is added after changing the default
     // language.
@@ -160,10 +150,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
    */
   public function testLanguageConfigurationWeight() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser([
-      'administer languages',
-      'access administration pages',
-      ]);
+    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
     $this->drupalLogin($admin_user);
     $this->checkConfigurableLanguageWeight();
 
@@ -201,7 +188,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $replacements = ['@event' => $state];
     foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $locked_language) {
       $replacements['%language'] = $locked_language->getName();
-      $this->assertTrue($locked_language->getWeight() > $max_configurable_language_weight, new FormattableMarkup('System language %language has higher weight than configurable languages @event', $replacements));
+      $this->assertTrue($locked_language->getWeight() > $max_configurable_language_weight, format_string('System language %language has higher weight than configurable languages @event', $replacements));
     }
   }
 

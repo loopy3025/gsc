@@ -17,7 +17,6 @@ use Drupal\migrate\Row;
  *
  * Available configuration keys:
  * - cache_counts: (optional) If set, cache the source count.
- * - cache_key: (optional) Uniquely named cache key used for cache_counts.
  * - skip_count: (optional) If set, do not attempt to count the source.
  * - track_changes: (optional) If set, track changes to incoming data.
  * - high_water_property: (optional) It is an array of name & alias values
@@ -84,7 +83,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * The current row from the query.
    *
-   * @var \Drupal\migrate\Row
+   * @var \Drupal\Migrate\Row
    */
   protected $currentRow;
 
@@ -354,7 +353,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
       $row_data = $this->getIterator()->current() + $this->configuration;
       $this->fetchNextRow();
-      $row = new Row($row_data, $this->getIds());
+      $row = new Row($row_data, $this->migration->getSourcePlugin()->getIds(), $this->migration->getDestinationIds());
 
       // Populate the source key for this row.
       $this->currentSourceIds = $row->getSourceIdValues();

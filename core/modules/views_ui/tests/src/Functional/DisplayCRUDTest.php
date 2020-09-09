@@ -26,11 +26,6 @@ class DisplayCRUDTest extends UITestBase {
   public static $modules = ['contextual'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests adding a display.
    */
   public function testAddDisplay() {
@@ -47,8 +42,8 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm(NULL, [], 'Add Page');
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
-    $this->assertSession()->linkNotExists('Master*', 'Make sure the master display is not marked as changed.');
-    $this->assertSession()->linkExists('Page*', 0, 'Make sure the added display is marked as changed.');
+    $this->assertNoLink('Master*', 'Make sure the master display is not marked as changed.');
+    $this->assertLink('Page*', 0, 'Make sure the added display is marked as changed.');
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", ['path' => 'test/path'], t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
@@ -94,7 +89,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id", ['display_id' => $machine_name], 'Apply');
     $this->drupalPostForm(NULL, [], 'Delete Page');
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
     $this->assertNoLinkByHref($path_prefix . '/new_machine_name', 'Make sure there is no display tab for the deleted display.');
   }
 
@@ -104,7 +99,7 @@ class DisplayCRUDTest extends UITestBase {
   public function testDefaultDisplay() {
     $this->drupalGet('admin/structure/views/view/test_display');
     $elements = $this->xpath('//*[@id="views-page-1-display-title"]');
-    $this->assertCount(1, $elements, 'The page display is loaded as the default display.');
+    $this->assertEqual(count($elements), 1, 'The page display is loaded as the default display.');
   }
 
   /**
@@ -138,11 +133,11 @@ class DisplayCRUDTest extends UITestBase {
     $view->initDisplay();
 
     $page_2 = $view->displayHandlers->get('page_2');
-    $this->assertNotEmpty($page_2, 'The new page display got saved.');
+    $this->assertTrue($page_2, 'The new page display got saved.');
     $this->assertEqual($page_2->display['display_title'], 'Page');
     $this->assertEqual($page_2->display['display_options']['path'], $path);
     $block_1 = $view->displayHandlers->get('block_1');
-    $this->assertNotEmpty($block_1, 'The new block display got saved.');
+    $this->assertTrue($block_1, 'The new block display got saved.');
     $this->assertEqual($block_1->display['display_plugin'], 'block');
     $this->assertEqual($block_1->display['display_title'], 'Block', 'The new display title got generated as expected.');
     $this->assertFalse(isset($block_1->display['display_options']['path']));

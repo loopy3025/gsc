@@ -34,11 +34,6 @@ class TaxonomyImageTest extends TaxonomyTestBase {
    */
   public static $modules = ['image'];
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
   protected function setUp() {
     parent::setUp();
 
@@ -63,15 +58,13 @@ class TaxonomyImageTest extends TaxonomyTestBase {
       'bundle' => $this->vocabulary->id(),
       'settings' => [],
     ])->save();
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-    $display_repository->getViewDisplay($entity_type, $this->vocabulary->id())
+    entity_get_display($entity_type, $this->vocabulary->id(), 'default')
       ->setComponent($name, [
         'type' => 'image',
         'settings' => [],
       ])
       ->save();
-    $display_repository->getFormDisplay($entity_type, $this->vocabulary->id())
+    entity_get_form_display($entity_type, $this->vocabulary->id(), 'default')
       ->setComponent($name, [
         'type' => 'image_image',
         'settings' => [],
@@ -80,11 +73,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
   }
 
   public function testTaxonomyImageAccess() {
-    $user = $this->drupalCreateUser([
-      'administer site configuration',
-      'administer taxonomy',
-      'access user profiles',
-    ]);
+    $user = $this->drupalCreateUser(['administer site configuration', 'administer taxonomy', 'access user profiles']);
     $this->drupalLogin($user);
 
     // Create a term and upload the image.
@@ -94,7 +83,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $edit['files[field_test_0]'] = \Drupal::service('file_system')->realpath($image->uri);
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, t('Save'));
     $this->drupalPostForm(NULL, ['field_test[0][alt]' => $this->randomMachineName()], t('Save'));
-    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $edit['name[0][value]']]);
+    $terms = entity_load_multiple_by_properties('taxonomy_term', ['name' => $edit['name[0][value]']]);
     $term = reset($terms);
     $this->assertText(t('Created new term @name.', ['@name' => $term->getName()]));
 
@@ -102,17 +91,13 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $access_user = $this->drupalCreateUser(['access content']);
     $no_access_user = $this->drupalCreateUser();
     $image = File::load($term->field_test->target_id);
-
-    // Ensure a user that should be able to access the file can access it.
     $this->drupalLogin($access_user);
     $this->drupalGet(file_create_url($image->getFileUri()));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200, 'Private image on term is accessible with right permission');
 
-    // Ensure a user that should not be able to access the file cannot access
-    // it.
     $this->drupalLogin($no_access_user);
     $this->drupalGet(file_create_url($image->getFileUri()));
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403, 'Private image on term not accessible without right permission');
   }
 
 }

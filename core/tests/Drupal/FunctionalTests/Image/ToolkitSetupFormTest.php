@@ -28,11 +28,6 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
     $this->adminUser = $this->drupalCreateUser([
@@ -73,7 +68,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Test access without the permission 'administer site configuration'.
     $this->drupalLogin($this->drupalCreateUser(['access administration pages']));
     $this->drupalGet('admin/config/media/image-toolkit');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertResponse(403);
   }
 
 }

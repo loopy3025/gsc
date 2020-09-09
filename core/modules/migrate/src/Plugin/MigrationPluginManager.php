@@ -208,14 +208,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
         $migration->set('requirements', $required_dependency_graph[$migration_id]['paths']);
       }
     }
-    // Sort weights, labels, and keys in the same order as each other.
-    array_multisort(
-      // Use the numerical weight as the primary sort.
-      $weights, SORT_DESC, SORT_NUMERIC,
-      // When migrations have the same weight, sort them alphabetically by ID.
-      array_keys($migrations), SORT_ASC, SORT_NATURAL,
-      $migrations
-    );
+    array_multisort($weights, SORT_DESC, SORT_NUMERIC, $migrations);
 
     return $migrations;
   }

@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Component\Gettext\PoItem;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -23,11 +23,6 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -44,7 +39,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   public function testCircularDependency() {
     // Ensure that we can enable early_translation_test on a non-english site.
     $this->drupalPostForm('admin/modules', ['modules[early_translation_test][enable]' => TRUE], t('Install'));
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertResponse(200);
   }
 
   /**
@@ -84,7 +79,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
     // Check that 'count[2]' was saved for source value.
     $translation = $string_storage->findTranslation(['language' => 'fr', 'lid' => $lid])->translation;
     $this->assertSame($translation_value, $translation, 'Source value not changed');
-    $this->assertStringContainsString('@count[2]', $translation, 'Source value contains @count[2]');
+    $this->assertNotFalse(strpos($translation, '@count[2]'), 'Source value contains @count[2]');
   }
 
   /**
@@ -98,7 +93,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   public function providerTestFixOldPluralStyle() {
     return [
       'non-plural translation' => ['@count[2] non-plural test', '@count[2] non-plural test'],
-      'plural translation' => ['@count[2] plural test' . PoItem::DELIMITER, '@count plural test'],
+      'plural translation' => ['@count[2] plural test' . PluralTranslatableMarkup::DELIMITER, '@count plural test'],
     ];
   }
 

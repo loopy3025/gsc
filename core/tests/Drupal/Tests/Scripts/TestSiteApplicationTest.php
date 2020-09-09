@@ -58,7 +58,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process = new Process($command_line, $this->root);
     $process->run();
 
-    $this->assertStringContainsString('The file this-class-does-not-exist does not exist.', $process->getErrorOutput());
+    $this->assertContains('The file this-class-does-not-exist does not exist.', $process->getErrorOutput());
     $this->assertSame(1, $process->getExitCode());
     $this->assertCount($table_count, $connection->schema()->findTables('%'), 'No additional tables created in the database');
   }
@@ -76,7 +76,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process = new Process($command_line, $this->root);
     $process->run();
 
-    $this->assertStringContainsString('The file core/tests/fixtures/empty_file.php.module does not contain a class', $process->getErrorOutput());
+    $this->assertContains('The file core/tests/fixtures/empty_file.php.module does not contain a class', $process->getErrorOutput());
     $this->assertSame(1, $process->getExitCode());
     $this->assertCount($table_count, $connection->schema()->findTables('%'), 'No additional tables created in the database');
   }
@@ -85,7 +85,6 @@ class TestSiteApplicationTest extends UnitTestCase {
    * @coversNothing
    */
   public function testInstallWithNonSetupClass() {
-    $this->markTestIncomplete('Fix this test in https://www.drupal.org/project/drupal/issues/2962157.');
 
     // Create a connection to the DB configured in SIMPLETEST_DB.
     $connection = Database::getConnection('default', $this->addTestDatabase(''));
@@ -96,8 +95,8 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process = new Process($command_line, $this->root, ['COLUMNS' => PHP_INT_MAX]);
     $process->run();
 
-    $this->assertStringContainsString('The class Drupal\Tests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
-    $this->assertStringContainsString('needs to implement \Drupal\TestSite\TestSetupInterface', $process->getErrorOutput());
+    $this->assertContains('The class Drupal\Tests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
+    $this->assertContains('needs to implement \Drupal\TestSite\TestSetupInterface', $process->getErrorOutput());
     $this->assertSame(1, $process->getExitCode());
     $this->assertCount($table_count, $connection->schema()->findTables('%'), 'No additional tables created in the database');
   }
@@ -129,7 +128,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     $response = $http_client->send($request);
     // Ensure the test_page_test module got installed.
-    $this->assertStringContainsString('Test page | Drupal', (string) $response->getBody());
+    $this->assertContains('Test page | Drupal', (string) $response->getBody());
 
     // Ensure that there are files and database tables for the tear down command
     // to clean up.
@@ -149,7 +148,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();
-    $this->assertStringContainsString('Successfully installed a test site', $process->getOutput());
+    $this->assertContains('Successfully installed a test site', $process->getOutput());
     $this->assertSame(0, $process->getExitCode());
     $regex = '/Database prefix\s+([^\s]*)/';
     $this->assertRegExp($regex, $process->getOutput());
@@ -168,7 +167,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process->setTimeout(500);
     $process->run();
     $this->assertSame(0, $process->getExitCode());
-    $this->assertStringContainsString("Successfully uninstalled $db_prefix test site", $process->getOutput());
+    $this->assertContains("Successfully uninstalled $db_prefix test site", $process->getOutput());
 
     // Ensure that all the tables and files for this DB prefix are gone.
     $this->assertCount(0, Database::getConnection('default', $key)->schema()->findTables('%'));
@@ -190,7 +189,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process->setTimeout(500);
     $process->run();
     $this->assertSame(0, $process->getExitCode());
-    $this->assertStringContainsString("Successfully uninstalled $other_db_prefix test site", $process->getOutput());
+    $this->assertContains("Successfully uninstalled $other_db_prefix test site", $process->getOutput());
 
     // Ensure that all the tables and files for this DB prefix are gone.
     $this->assertCount(0, Database::getConnection('default', $other_key)->schema()->findTables('%'));
@@ -211,7 +210,7 @@ class TestSiteApplicationTest extends UnitTestCase {
       $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");
     }
 
-    $command_line = $this->php . ' core/scripts/test-site.php install --json --langcode fr --setup-file core/tests/Drupal/TestSite/TestSiteMultilingualInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
+    $command_line = $this->php . ' core/scripts/test-site.php install --json --langcode fr --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = new Process($command_line, $this->root);
     $process->setTimeout(500);
     $process->run();
@@ -225,8 +224,8 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     $response = $http_client->send($request);
     // Ensure the test_page_test module got installed.
-    $this->assertStringContainsString('Test page | Drupal', (string) $response->getBody());
-    $this->assertStringContainsString('lang="fr"', (string) $response->getBody());
+    $this->assertContains('Test page | Drupal', (string) $response->getBody());
+    $this->assertContains('lang="fr"', (string) $response->getBody());
 
     // Now test the tear down process as well.
     $command_line = $this->php . ' core/scripts/test-site.php tear-down ' . $db_prefix . ' --db-url "' . getenv('SIMPLETEST_DB') . '"';
@@ -248,14 +247,13 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process->setTimeout(500);
     $process->run();
     $this->assertSame(1, $process->getExitCode());
-    $this->assertStringContainsString('Invalid database prefix: not-a-valid-prefix', $process->getErrorOutput());
+    $this->assertContains('Invalid database prefix: not-a-valid-prefix', $process->getErrorOutput());
   }
 
   /**
    * @coversNothing
    */
   public function testUserLogin() {
-    $this->markTestIncomplete('Fix this test in https://www.drupal.org/project/drupal/issues/2962157.');
     $simpletest_path = $this->root . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'simpletest';
     if (!is_writable($simpletest_path)) {
       $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");
@@ -279,7 +277,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process = new Process($command_line, $this->root);
     $process->run();
     $this->assertSame(0, $process->getExitCode());
-    $this->assertStringContainsString('/user/reset/1/', $process->getOutput());
+    $this->assertContains('/user/reset/1/', $process->getOutput());
 
     $http_client = new Client();
     $request = (new Request('GET', getenv('SIMPLETEST_BASE_URL') . trim($process->getOutput())))
@@ -295,7 +293,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process = new Process($command_line, $this->root);
     $process->run();
     $this->assertSame(1, $process->getExitCode());
-    $this->assertStringContainsString('The "uid" argument needs to be an integer, but it is "invalid-uid".', $process->getErrorOutput());
+    $this->assertContains('The "uid" argument needs to be an integer, but it is "invalid-uid".', $process->getErrorOutput());
 
     // Now tear down the test site.
     $command_line = $this->php . ' core/scripts/test-site.php tear-down ' . $db_prefix . ' --db-url "' . getenv('SIMPLETEST_DB') . '"';
@@ -304,7 +302,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process->setTimeout(500);
     $process->run();
     $this->assertSame(0, $process->getExitCode());
-    $this->assertStringContainsString("Successfully uninstalled $db_prefix test site", $process->getOutput());
+    $this->assertContains("Successfully uninstalled $db_prefix test site", $process->getOutput());
   }
 
   /**

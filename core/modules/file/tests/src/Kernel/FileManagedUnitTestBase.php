@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -56,16 +55,16 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
     if (count($uncalled)) {
-      $this->assertTrue(FALSE, new FormattableMarkup('Expected hooks %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
+      $this->assertTrue(FALSE, format_string('Expected hooks %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
-      $this->assertTrue(TRUE, new FormattableMarkup('All the expected hooks were called: %expected', ['%expected' => empty($expected) ? '(none)' : implode(', ', $expected)]));
+      $this->assertTrue(TRUE, format_string('All the expected hooks were called: %expected', ['%expected' => empty($expected) ? '(none)' : implode(', ', $expected)]));
     }
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
     if (count($unexpected)) {
-      $this->assertTrue(FALSE, new FormattableMarkup('Unexpected hooks were called: %unexpected.', ['%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected)]));
+      $this->assertTrue(FALSE, format_string('Unexpected hooks were called: %unexpected.', ['%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected)]));
     }
     else {
       $this->assertTrue(TRUE, 'No unexpected hooks were called.');
@@ -87,13 +86,13 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {
-        $message = new FormattableMarkup('hook_file_@name was called correctly.', ['@name' => $hook]);
+        $message = format_string('hook_file_@name was called correctly.', ['@name' => $hook]);
       }
       elseif ($expected_count == 0) {
         $message = \Drupal::translation()->formatPlural($actual_count, 'hook_file_@name was not expected to be called but was actually called once.', 'hook_file_@name was not expected to be called but was actually called @count times.', ['@name' => $hook, '@count' => $actual_count]);
       }
       else {
-        $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
+        $message = format_string('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
       }
     }
     $this->assertEqual($actual_count, $expected_count, $message);
@@ -156,7 +155,6 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    * @param string $scheme
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
-   *
    * @return \Drupal\file\FileInterface
    *   File entity.
    */
@@ -199,7 +197,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
       $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {
-      $scheme = 'public';
+      $scheme = file_default_scheme();
     }
     $filepath = $scheme . '://' . $filepath;
 
@@ -208,7 +206,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     }
 
     file_put_contents($filepath, $contents);
-    $this->assertFileExists($filepath);
+    $this->assertTrue(is_file($filepath), t('The test file exists on the disk.'), 'Create test file');
     return $filepath;
   }
 

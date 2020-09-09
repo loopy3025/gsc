@@ -20,11 +20,6 @@ class UserChangedTest extends ViewTestBase {
   public static $modules = ['views_ui', 'user_test_views'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -49,7 +44,7 @@ class UserChangedTest extends ViewTestBase {
 
     $this->drupalGet($path, $options);
 
-    $this->assertText('Updated date: ' . date('Y-m-d', REQUEST_TIME));
+    $this->assertText(t('Updated date') . ': ' . date('Y-m-d', REQUEST_TIME));
   }
 
 }
