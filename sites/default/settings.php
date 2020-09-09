@@ -798,3 +798,8 @@ $databases['default']['default'] = array (
 );
 $settings['install_profile'] = 'standard';
 $config_directories['sync'] = 'config/sync';
+
+
+if (file_exists($app_root . '/sites/default/settings/local.settings.php')) {
+  include $app_root . '/sites/default/settings/local.settings.php';
+}

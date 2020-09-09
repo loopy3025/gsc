@@ -4,3 +4,5 @@ sites/*/files
 sites/*/private
 sites/simpletest
 
+sites/default/local.drush.yml
+sites/default/settings/local.settings.php
