@@ -5,5 +5,4 @@ dependencies: {  }
 name: Events
 vid: events
 description: ''
-hierarchy: 0
 weight: 0
